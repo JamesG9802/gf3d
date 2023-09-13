@@ -3,6 +3,7 @@
 
 # Object files
 *.o
+*.obj
 *.ko
 *.elf
 
@@ -14,6 +15,10 @@
 # Precompiled Headers
 *.gch
 *.pch
+
+# Visual Studio Incremental Link-Time Code Generation
+*.iobj
+*.ipdb
 
 # Libraries
 *.lib
@@ -40,6 +45,7 @@
 *.su
 *.idb
 *.pdb
+*.tlog
 
 # Kernel Module Compile Results
 *.cmd
