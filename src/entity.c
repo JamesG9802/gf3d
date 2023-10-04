@@ -65,6 +65,7 @@ Entity *entity_new()
 void entity_free(Entity *self)
 {
     if (!self)return;
+    if (self->free)self->free(self);
     //MUST DESTROY
     gf3d_model_free(self->model);
     memset(self,0,sizeof(Entity));

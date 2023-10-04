@@ -82,6 +82,10 @@ int main(int argc,char *argv[])
     gfc_matrix_identity(skyMat);
     gfc_matrix_scale(skyMat,vector3d(100,100,100));
     
+
+
+    char mousepos[32];
+
     // main game loop
     slog("gf3d main loop begin");
     while(!done)
@@ -111,7 +115,10 @@ int main(int argc,char *argv[])
                 }
             //2D draws
                 gf2d_draw_rect_filled(gfc_rect(10 ,10,1000,32),gfc_color8(128,128,128,255));
-                gf2d_font_draw_line_tag("Press ALT+F4 to exit",FT_H1,gfc_color(1,1,1,1), vector2d(10,10));
+                
+                mousepos[0] = '\0';
+                sprintf_s(mousepos, sizeof(char) * 32, "Mouse: (%d, %d)", mousex, mousey);
+                gf2d_font_draw_line_tag(mousepos,FT_H1,gfc_color(1,1,1,1), vector2d(10,10));
                 
                 gf2d_draw_rect(gfc_rect(10 ,10,1000,32),gfc_color8(255,255,255,255));
                 
