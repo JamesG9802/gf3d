@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "gfc_list.h"
 #include "simple_logger.h"
 
 #include "entity.h"
@@ -54,7 +55,7 @@ Entity *entity_new()
             
             entity_manager.entity_list[i].color = gfc_color(1,1,1,1);
             entity_manager.entity_list[i].selectedColor = gfc_color(1,1,1,1);
-            
+
             return &entity_manager.entity_list[i];
         }
     }
@@ -66,6 +67,16 @@ void entity_free(Entity *self)
 {
     if (!self)return;
     if (self->free)self->free(self);
+    if (self->scripts) {
+        for (Uint32 i = 0; i < gfc_list_get_count(self->scripts); i++)
+        {
+            Script* script = (Script*)gfc_list_get_nth(self->scripts, i);
+            if (!script) continue;
+            if (script->Destroy)
+                script->Destroy();
+        }
+        gfc_list_delete(self->scripts);
+    }
     //MUST DESTROY
     gf3d_model_free(self->model);
     memset(self,0,sizeof(Entity));
@@ -103,6 +114,16 @@ void entity_think(Entity *self)
 {
     if (!self)return;
     if (self->think)self->think(self);
+    if (self->scripts) {
+        slog("Thinking scripts");
+        for (Uint32 i = 0; i < gfc_list_get_count(self->scripts); i++)
+        {
+            Script* script = (Script*)gfc_list_get_nth(self->scripts, i);
+            if (!script) continue;
+            if (script->Think)
+                script->Think();
+        }
+    }
 }
 
 void entity_think_all()
@@ -134,6 +155,17 @@ void entity_update(Entity *self)
     gfc_matrix_translate(self->modelMat,self->position);
     
     if (self->update)self->update(self);
+    if (self->scripts) {
+
+        slog("Updating scripts");
+        for (Uint32 i = 0; i < gfc_list_get_count(self->scripts); i++)
+        {
+            Script* script = (Script*)gfc_list_get_nth(self->scripts, i);
+            if (!script) continue;
+            if (script->Update)
+                script->Update();
+        }
+    }
 }
 
 void entity_update_all()

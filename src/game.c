@@ -20,8 +20,7 @@
 #include "entity.h"
 #include "agumon.h"
 #include "player.h"
-#include "world.h"
-
+#include "scene.h"
 extern int __DEBUG;
 
 int main(int argc,char *argv[])
@@ -31,11 +30,8 @@ int main(int argc,char *argv[])
     
     Sprite *mouse = NULL;
     int mousex,mousey;
-    //Uint32 then;
     float mouseFrame = 0;
-    World *w;
-    Entity *agu;
-    Particle particle[100];
+    Entity* player;
     Matrix4 skyMat;
     Model *sky;
 
@@ -46,7 +42,7 @@ int main(int argc,char *argv[])
             __DEBUG = 1;
         }
     }
-    
+
     init_logger("gf3d.log",0);    
     gfc_input_init("config/input.cfg");
     slog("gf3d begin");
@@ -60,32 +56,23 @@ int main(int argc,char *argv[])
     
     mouse = gf2d_sprite_load("images/pointer.png",32,32, 16);
     
-    
-    agu = agumon_new(vector3d(0 ,0,0));
-    if (agu)agu->selected = 1;
-    w = world_load("config/testworld.json");
-    
+    scene_load("config/main.scene");
+    agumon_new(vector3d(0, 0, 0));
+
     SDL_SetRelativeMouseMode(SDL_TRUE);
     slog_sync();
     gf3d_camera_set_scale(vector3d(1,1,1));
-    player_new(vector3d(-50,0,0));
+    player = player_new(vector3d(-50,0,0));
     
-    for (a = 0; a < 100; a++)
-    {
-        particle[a].position = vector3d(gfc_crandom() * 100,gfc_crandom() * 100,gfc_crandom() * 100);
-        particle[a].color = gfc_color(0,0,0,1);
-//        particle[a].color = gfc_color(gfc_random(),gfc_random(),gfc_random(),1);
-        particle[a].size = 100 * gfc_random();
-    }
-    a = 0;
     sky = gf3d_model_load("models/sky.model");
     gfc_matrix_identity(skyMat);
     gfc_matrix_scale(skyMat,vector3d(100,100,100));
     
 
 
-    char mousepos[32];
-
+    char mousepos[128];
+    int32_t max_x = 1;
+    int32_t max_y = 1;
     // main game loop
     slog("gf3d main loop begin");
     while(!done)
@@ -95,8 +82,9 @@ int main(int argc,char *argv[])
         SDL_GetMouseState(&mousex,&mousey);
         
         mouseFrame += 0.01;
-        if (mouseFrame >= 16)mouseFrame = 0;
-        world_run_updates(w);
+        if (mouseFrame >= 16)
+            mouseFrame = 0;
+
         entity_think_all();
         entity_update_all();
         gf3d_camera_update_view();
@@ -104,31 +92,30 @@ int main(int argc,char *argv[])
 
         gf3d_vgraphics_render_start();
 
-            //3D draws
-                gf3d_model_draw_sky(sky,skyMat,gfc_color(1,1,1,1));
-                world_draw(w);
-                entity_draw_all();
+        //3D draws
+        entity_draw_all();
+
+        //2D draws
+        gf2d_draw_rect_filled(gfc_rect(10 ,10,1000,32),gfc_color8(128,128,128,255));
                 
-                for (a = 0; a < 100; a++)
-                {
-                    gf3d_particle_draw(&particle[a]);
-                }
-            //2D draws
-                gf2d_draw_rect_filled(gfc_rect(10 ,10,1000,32),gfc_color8(128,128,128,255));
+        mousepos[0] = '\0';
+        if (max_x < mousex)
+            max_x = mousex;
+        if (max_y < mousey)
+            max_y = mousey;
+
+        sprintf_s(mousepos, sizeof(char) * 128, "Mouse: (%d, %d) Player (%.2f, %.2f, %.2f)", mousex, mousey, 
+            player->position.x, player->position.y, player->position.z);
+        gf2d_font_draw_line_tag(mousepos,FT_H1,gfc_color(1,1,1,1), vector2d(10,10));
                 
-                mousepos[0] = '\0';
-                sprintf_s(mousepos, sizeof(char) * 32, "Mouse: (%d, %d)", mousex, mousey);
-                gf2d_font_draw_line_tag(mousepos,FT_H1,gfc_color(1,1,1,1), vector2d(10,10));
+        gf2d_draw_rect(gfc_rect(10 ,10,1000,32),gfc_color8(255,255,255,255));
                 
-                gf2d_draw_rect(gfc_rect(10 ,10,1000,32),gfc_color8(255,255,255,255));
-                
-                gf2d_sprite_draw(mouse,vector2d(mousex,mousey),vector2d(2,2),vector3d(8,8,0),gfc_color(0.3,.9,1,0.9),(Uint32)mouseFrame);
+        gf2d_sprite_draw(mouse,vector2d(mousex,mousey),vector2d(1+2*(float)mousex/max_x,1+2*(float)mousey/max_y),vector3d(8,8,0),gfc_color(0.3,.9,1,0.9),(Uint32)mouseFrame);
         gf3d_vgraphics_render_end();
 
-        if (gfc_input_command_down("exit"))done = 1; // exit condition
+        if (gfc_input_command_down("exit"))
+            done = 1; // exit condition
     }    
-    
-    world_delete(w);
     
     vkDeviceWaitIdle(gf3d_vgraphics_get_default_logical_device());    
     //cleanup

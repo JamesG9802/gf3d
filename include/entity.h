@@ -1,12 +1,14 @@
 #ifndef __ENTITY_H__
 #define __ENTITY_H__
 
+#include "gfc_list.h"
 #include "gfc_types.h"
 #include "gfc_color.h"
 #include "gfc_primitives.h"
 
 #include "gf3d_model.h"
 
+#include "script.h"
 typedef enum
 {
     ES_idle = 0,
@@ -46,10 +48,8 @@ typedef struct Entity_S
     Vector3D    scale;
     Vector3D    rotation;
     
-    Uint32      health;     /**<entity dies when it reaches zero*/
-    // WHATEVER ELSE WE MIGHT NEED FOR ENTITIES
-    struct Entity_S *target;    /**<entity to target for weapons / ai*/
-    
+    List*     scripts;    /**List of scripts, if any */
+
     void *customData;   /**<IF an entity needs to keep track of extra data, we can do it here*/
 }Entity;
 

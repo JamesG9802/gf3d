@@ -13,6 +13,33 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\gf2d">
+      <UniqueIdentifier>{9a63276e-30e0-4e5b-b060-daf96d37a9c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gf3d">
+      <UniqueIdentifier>{a5526053-5bb6-44a7-b786-9f40b6d9c6a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gfc">
+      <UniqueIdentifier>{0d4f84df-db5d-4ccf-952e-04f2275cc13c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\simple_json">
+      <UniqueIdentifier>{e8d0bcee-f1ec-4bc7-85c9-6629fc887788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\simple_logger">
+      <UniqueIdentifier>{e4461aec-8a50-4ece-b566-a984d8a0e175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine_retrofit">
+      <UniqueIdentifier>{ed8cf22f-f90f-4021-b0c1-b4d311c8ca89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine_retrofit">
+      <UniqueIdentifier>{e5861260-452b-4d4f-8ed1-110442040be5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\script">
+      <UniqueIdentifier>{2aa7323c-4d14-4da0-9cc3-4cf4bcc32e47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\script">
+      <UniqueIdentifier>{7a76775d-1b51-46d0-8eb3-ebd67b2138ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\agumon.c">
@@ -24,149 +51,161 @@
     <ClCompile Include="..\src\game.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gf2d_draw.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf2d_font.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf2d_sprite.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_buffers.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_camera.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_commands.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_config.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_debug.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_device.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_extensions.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_mesh.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_model.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_obj_load.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_particle.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_pipeline.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_shaders.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_swapchain.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_texture.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_uniform_buffers.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_validation.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_vgraphics.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gf3d_vqueues.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\player.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\world.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\gfc\src\gfc_audio.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gfc\src\gfc_callbacks.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gfc\src\gfc_color.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gfc\src\gfc_config.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gfc\src\gfc_config_def.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gfc\src\gfc_hashmap.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gfc\src\gfc_input.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gfc\src\gfc_list.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gfc\src\gfc_matrix.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gfc\src\gfc_pak.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gfc\src\gfc_primitives.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gfc\src\gfc_shape.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gfc\src\gfc_text.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gfc\src\gfc_types.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gfc\src\gfc_vector.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\gfc\src\miniz.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\gf2d_draw.c">
+      <Filter>Source Files\gf2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf2d_font.c">
+      <Filter>Source Files\gf2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf2d_sprite.c">
+      <Filter>Source Files\gf2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_buffers.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_camera.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_commands.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_config.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_debug.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_device.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_extensions.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_mesh.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_model.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_obj_load.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_particle.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_pipeline.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_shaders.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_swapchain.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_texture.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_uniform_buffers.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_validation.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_vgraphics.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gf3d_vqueues.c">
+      <Filter>Source Files\gf3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gfc\src\gfc_audio.c">
+      <Filter>Source Files\gfc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gfc\src\gfc_callbacks.c">
+      <Filter>Source Files\gfc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gfc\src\gfc_color.c">
+      <Filter>Source Files\gfc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gfc\src\gfc_config.c">
+      <Filter>Source Files\gfc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gfc\src\gfc_config_def.c">
+      <Filter>Source Files\gfc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gfc\src\gfc_hashmap.c">
+      <Filter>Source Files\gfc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gfc\src\gfc_input.c">
+      <Filter>Source Files\gfc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gfc\src\gfc_list.c">
+      <Filter>Source Files\gfc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gfc\src\gfc_matrix.c">
+      <Filter>Source Files\gfc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gfc\src\gfc_pak.c">
+      <Filter>Source Files\gfc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gfc\src\gfc_primitives.c">
+      <Filter>Source Files\gfc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gfc\src\gfc_shape.c">
+      <Filter>Source Files\gfc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gfc\src\gfc_text.c">
+      <Filter>Source Files\gfc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gfc\src\gfc_types.c">
+      <Filter>Source Files\gfc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gfc\src\gfc_vector.c">
+      <Filter>Source Files\gfc</Filter>
+    </ClCompile>
     <ClCompile Include="..\gfc\simple_json\src\simple_json.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\simple_json</Filter>
     </ClCompile>
     <ClCompile Include="..\gfc\simple_json\src\simple_json_array.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\simple_json</Filter>
     </ClCompile>
     <ClCompile Include="..\gfc\simple_json\src\simple_json_error.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\simple_json</Filter>
     </ClCompile>
     <ClCompile Include="..\gfc\simple_json\src\simple_json_list.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\simple_json</Filter>
     </ClCompile>
     <ClCompile Include="..\gfc\simple_json\src\simple_json_object.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\simple_json</Filter>
     </ClCompile>
     <ClCompile Include="..\gfc\simple_json\src\simple_json_parse.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\simple_json</Filter>
     </ClCompile>
     <ClCompile Include="..\gfc\simple_json\src\simple_json_string.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\simple_json</Filter>
     </ClCompile>
     <ClCompile Include="..\gfc\simple_logger\src\simple_logger.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\simple_logger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\script_loader.c">
+      <Filter>Source Files\engine_retrofit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scene.c">
+      <Filter>Source Files\engine_retrofit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\script_debug.c">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\script.c">
+      <Filter>Source Files\engine_retrofit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -325,6 +364,18 @@
     </ClInclude>
     <ClInclude Include="..\gfc\simple_logger\include\simple_logger.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\scene.h">
+      <Filter>Header Files\engine_retrofit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\script.h">
+      <Filter>Header Files\engine_retrofit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\script_loader.h">
+      <Filter>Header Files\engine_retrofit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\script_defs.h">
+      <Filter>Header Files\script</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
