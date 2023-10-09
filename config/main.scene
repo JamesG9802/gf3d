@@ -17,6 +17,36 @@
 			"position":[70,-25,-50],
 			"scale":[25,25,25],
 			"rotation":[0,0.001,0]
+		},
+		{
+			"model":"models/dice.model",
+			"position":[-100,0,0],
+			"scale":[10,10,10],
+			"rotation":[0,0,0]
+		},
+		{
+			"model":"models/dice.model",
+			"position":[100,0,0],
+			"scale":[10,10,10],
+			"rotation":[45,0,0]
+		},
+		{
+			"model":"models/dice.model",
+			"position":[200,0,0],
+			"scale":[10,10,10],
+			"rotation":[0,45,0]
+		},
+		{
+			"model":"models/dice.model",
+			"position":[300,0,0],
+			"scale":[10,10,10],
+			"rotation":[0,0,45]
+		},
+		{
+			"model":"models/dice.model",
+			"position":[400,0,0],
+			"scale":[10,10,10],
+			"rotation":[45,45,45]
 		}
 	]
 }

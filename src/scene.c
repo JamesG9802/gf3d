@@ -113,12 +113,7 @@ void scene_load(char *filename)
         if (!entity) {
             slog("%dth object in %s scene couldn't allocate memory for entity", i, filename);
         }
-        entity->model = gf3d_model_load(model);
-        entity->scale = scale;
-        entity->position = position;
-        entity->rotation = rotation;
-        if (scripts)
-            entity->scripts = scripts;
+        entity_setup(entity, gf3d_model_load(model), scale, position, rotation, scripts);
         objectfail:
             continue;
     }

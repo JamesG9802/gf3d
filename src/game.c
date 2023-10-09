@@ -17,6 +17,7 @@
 #include "gf2d_font.h"
 #include "gf2d_draw.h"
 
+#include "engine_time.h"
 #include "entity.h"
 #include "agumon.h"
 #include "player.h"
@@ -49,7 +50,7 @@ int main(int argc,char *argv[])
     gf3d_vgraphics_init("config/setup.cfg");
     gf2d_font_init("config/font.cfg");
     gf2d_draw_manager_init(1000);
-    
+    engine_time_init();
     slog_sync();
     
     entity_system_init(1024);
@@ -77,6 +78,8 @@ int main(int argc,char *argv[])
     slog("gf3d main loop begin");
     while(!done)
     {
+        engine_time_renew();
+        printf(" %.6lf", engine_time_delta());
         gfc_input_update();
         gf2d_font_update();
         SDL_GetMouseState(&mousex,&mousey);

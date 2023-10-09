@@ -1,10 +1,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "gfc_list.h"
 #include "simple_logger.h"
 
+#include "gfc_list.h"
+#include "gfc_types.h"
+
+#include "gf3d_model.h"
+
 #include "entity.h"
+#include "script.h"
 
 typedef struct
 {
@@ -63,6 +68,27 @@ Entity *entity_new()
     return NULL;
 }
 
+
+void entity_setup(Entity* self, Model* model, Vector3D scale, Vector3D position, Vector3D rotation, List* scripts) {
+    if (!self)   return;
+    self->model = model;
+    self->scale = scale;
+    self->position = position;
+    self->rotation = rotation;
+    self->scripts = scripts;
+    if (scripts)
+    {
+        for (Uint32 i = 0; i < gfc_list_get_count(self->scripts); i++)
+        {
+            Script* script = (Script*)gfc_list_get_nth(self->scripts, i);
+            if (!script) continue;
+            if (script->Start)
+                script->Start(self);
+        }
+    }
+}
+
+
 void entity_free(Entity *self)
 {
     if (!self)return;
@@ -73,7 +99,7 @@ void entity_free(Entity *self)
             Script* script = (Script*)gfc_list_get_nth(self->scripts, i);
             if (!script) continue;
             if (script->Destroy)
-                script->Destroy();
+                script->Destroy(self);
         }
         gfc_list_delete(self->scripts);
     }
@@ -115,13 +141,12 @@ void entity_think(Entity *self)
     if (!self)return;
     if (self->think)self->think(self);
     if (self->scripts) {
-        slog("Thinking scripts");
         for (Uint32 i = 0; i < gfc_list_get_count(self->scripts); i++)
         {
             Script* script = (Script*)gfc_list_get_nth(self->scripts, i);
             if (!script) continue;
             if (script->Think)
-                script->Think();
+                script->Think(self);
         }
     }
 }
@@ -156,14 +181,12 @@ void entity_update(Entity *self)
     
     if (self->update)self->update(self);
     if (self->scripts) {
-
-        slog("Updating scripts");
         for (Uint32 i = 0; i < gfc_list_get_count(self->scripts); i++)
         {
             Script* script = (Script*)gfc_list_get_nth(self->scripts, i);
             if (!script) continue;
             if (script->Update)
-                script->Update();
+                script->Update(self);
         }
     }
 }

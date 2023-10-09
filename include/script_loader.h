@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "script.h"
 
 /**
  * @brief This class handles strings to script mapping (why dont c have reflection 😔)

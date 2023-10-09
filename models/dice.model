@@ -1,0 +1,7 @@
+{
+    "model":
+    {
+        "model":"models/dice/dice.obj",
+        "texture":"models/dice/dice.png"
+    }
+}

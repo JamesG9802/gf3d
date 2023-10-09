@@ -8,7 +8,6 @@
 
 #include "gf3d_model.h"
 
-#include "script.h"
 typedef enum
 {
     ES_idle = 0,
@@ -64,6 +63,18 @@ void entity_system_init(Uint32 maxEntities);
  * @return NULL on error or a valid entity pointer otherwise
  */
 Entity *entity_new();
+
+/**
+ * @brief Takes a new entity and sets it up based on parameters
+ * @param self the entity in question
+ * @param model model of the entity
+ * @param scale scale of the entity
+ * @param position position of the entity
+ * @param rotation rotation of the entity
+ * @param scripts a list of scripts that the entity has. Can be NULL
+ */
+void entity_setup(Entity* self, Model* model, Vector3D scale, Vector3D position, Vector3D rotation, List* scripts);
+
 
 /**
  * @brief free a previously created entity from memory
