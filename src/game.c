@@ -22,7 +22,11 @@
 #include "agumon.h"
 #include "player.h"
 #include "scene.h"
+
+#include "script_defs.h"
+
 extern int __DEBUG;
+extern Entity* player;
 
 int main(int argc,char *argv[])
 {
@@ -32,7 +36,6 @@ int main(int argc,char *argv[])
     Sprite *mouse = NULL;
     int mousex,mousey;
     float mouseFrame = 0;
-    Entity* player;
     Matrix4 skyMat;
     Model *sky;
 
@@ -58,12 +61,11 @@ int main(int argc,char *argv[])
     mouse = gf2d_sprite_load("images/pointer.png",32,32, 16);
     
     scene_load("config/main.scene");
-    agumon_new(vector3d(0, 0, 0));
 
     SDL_SetRelativeMouseMode(SDL_TRUE);
     slog_sync();
-    gf3d_camera_set_scale(vector3d(1,1,1));
-    player = player_new(vector3d(-50,0,0));
+    //gf3d_camera_set_scale(vector3d(1,1,1));
+    //player = player_new(vector3d(-50,0,0));
     
     sky = gf3d_model_load("models/sky.model");
     gfc_matrix_identity(skyMat);
@@ -72,14 +74,11 @@ int main(int argc,char *argv[])
 
 
     char mousepos[128];
-    int32_t max_x = 1;
-    int32_t max_y = 1;
     // main game loop
     slog("gf3d main loop begin");
     while(!done)
     {
         engine_time_renew();
-        printf(" %.6lf", engine_time_delta());
         gfc_input_update();
         gf2d_font_update();
         SDL_GetMouseState(&mousex,&mousey);
@@ -90,8 +89,8 @@ int main(int argc,char *argv[])
 
         entity_think_all();
         entity_update_all();
-        gf3d_camera_update_view();
-        gf3d_camera_get_view_mat4(gf3d_vgraphics_get_view_matrix());
+    //    gf3d_camera_update_view();
+    //    gf3d_camera_get_view_mat4(gf3d_vgraphics_get_view_matrix());
 
         gf3d_vgraphics_render_start();
 
@@ -102,18 +101,14 @@ int main(int argc,char *argv[])
         gf2d_draw_rect_filled(gfc_rect(10 ,10,1000,32),gfc_color8(128,128,128,255));
                 
         mousepos[0] = '\0';
-        if (max_x < mousex)
-            max_x = mousex;
-        if (max_y < mousey)
-            max_y = mousey;
-
-        sprintf_s(mousepos, sizeof(char) * 128, "Mouse: (%d, %d) Player (%.2f, %.2f, %.2f)", mousex, mousey, 
-            player->position.x, player->position.y, player->position.z);
+        sprintf_s(mousepos, sizeof(char) * 128, "Rotation: (%.2f, %.2f, %.2f) Player (%.2f, %.2f, %.2f)", 
+        player->rotation.x, player->rotation.y, player->rotation.z,
+        player->position.x, player->position.y, player->position.z);
         gf2d_font_draw_line_tag(mousepos,FT_H1,gfc_color(1,1,1,1), vector2d(10,10));
                 
         gf2d_draw_rect(gfc_rect(10 ,10,1000,32),gfc_color8(255,255,255,255));
                 
-        gf2d_sprite_draw(mouse,vector2d(mousex,mousey),vector2d(1+2*(float)mousex/max_x,1+2*(float)mousey/max_y),vector3d(8,8,0),gfc_color(0.3,.9,1,0.9),(Uint32)mouseFrame);
+        gf2d_sprite_draw(mouse,vector2d(mousex,mousey),vector2d(2, 2),vector3d(8,8,0),gfc_color(0.3,.9,1,0.9),(Uint32)mouseFrame);
         gf3d_vgraphics_render_end();
 
         if (gfc_input_command_down("exit"))

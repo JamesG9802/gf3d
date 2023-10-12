@@ -51,16 +51,20 @@ void scene_load(char *filename)
     }
     for (int i = 0; i < sj_array_get_count(scene); i++) {
         SJson* object = sj_array_get_nth(scene, i);
-        const char* model;
+        const char* model = NULL;
         Vector3D scale;
         Vector3D position;
         Vector3D rotation;
 
         SJson* scriptArray;
         List* scripts = NULL;
-        char arr[256];
-        if(!(model = sj_get_string_value(sj_object_get_value(object, "model"))))
-        { 
+
+        //  It is ok if not every object has a script.
+        if(!sj_object_get_value(object, "model")) {
+            slog("%dth object in %s scene has no model defined", i, filename);
+        }
+        else if (!(model = sj_get_string_value(sj_object_get_value(object, "model"))))
+        {
             slog("%dth object in %s scene failed to load model", i, filename);
             goto objectfail;
         }

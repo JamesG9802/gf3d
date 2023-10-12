@@ -139,7 +139,6 @@ void entity_draw_all()
 void entity_think(Entity *self)
 {
     if (!self)return;
-    if (self->think)self->think(self);
     if (self->scripts) {
         for (Uint32 i = 0; i < gfc_list_get_count(self->scripts); i++)
         {
@@ -179,7 +178,6 @@ void entity_update(Entity *self)
     gfc_matrix_rotate_by_vector(self->modelMat,self->modelMat,self->rotation);
     gfc_matrix_translate(self->modelMat,self->position);
     
-    if (self->update)self->update(self);
     if (self->scripts) {
         for (Uint32 i = 0; i < gfc_list_get_count(self->scripts); i++)
         {

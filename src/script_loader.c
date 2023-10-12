@@ -8,6 +8,10 @@
 Script* script_loader_getScript(char* string) {
 	if (strcmp(string, "debug") == 0)
 		return script_new_debug();
+	if (strcmp(string, "player") == 0)
+		return script_new_player();
+	if (strcmp(string, "camera") == 0)
+		return script_new_camera();
 	return NULL;
 }
 

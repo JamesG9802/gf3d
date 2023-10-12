@@ -7,6 +7,7 @@ void agumon_update(Entity *self);
 
 void agumon_think(Entity *self);
 
+/*
 Entity *agumon_new(Vector3D position)
 {
     Entity *ent = NULL;
@@ -56,5 +57,5 @@ void agumon_think(Entity *self)
             break;
     }
 }
-
+*/
 /*eol@eof*/

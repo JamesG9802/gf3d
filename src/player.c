@@ -4,9 +4,11 @@
 #include "gf3d_camera.h"
 #include "player.h"
 
+/*
 static int thirdPersonMode = 0;
 void player_think(Entity *self);
 void player_update(Entity *self);
+
 
 Entity *player_new(Vector3D position)
 {
@@ -28,7 +30,6 @@ Entity *player_new(Vector3D position)
     ent->hidden = 1;
     return ent;
 }
-
 
 void player_think(Entity *self)
 {
@@ -105,5 +106,5 @@ void player_update(Entity *self)
     gf3d_camera_set_position(position);
     gf3d_camera_set_rotation(rotation);
 }
-
+*/
 /*eol@eof*/

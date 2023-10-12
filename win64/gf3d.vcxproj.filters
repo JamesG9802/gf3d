@@ -225,6 +225,12 @@
     <ClCompile Include="..\src\engine_time.c">
       <Filter>Source Files\engine_retrofit</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\script_player.c">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\script_camera.c">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\agumon.h">

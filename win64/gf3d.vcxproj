@@ -72,8 +72,10 @@
     <ClCompile Include="..\src\player.c" />
     <ClCompile Include="..\src\scene.c" />
     <ClCompile Include="..\src\script.c" />
+    <ClCompile Include="..\src\script_camera.c" />
     <ClCompile Include="..\src\script_debug.c" />
     <ClCompile Include="..\src\script_loader.c" />
+    <ClCompile Include="..\src\script_player.c" />
     <ClCompile Include="..\src\world.c" />
   </ItemGroup>
   <ItemGroup>

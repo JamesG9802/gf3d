@@ -278,7 +278,7 @@ void gf2d_fonts_load(const char *filename)
     FILE *file;
     int count;
     int i;
-    file = fopen(filename,"r");
+    file = fopen(filename,"rb");
     if (!file)
     {
         slog("failed to open font config file %s",filename);

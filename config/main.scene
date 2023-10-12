@@ -5,11 +5,28 @@
 			"model":"models/dino.model",
 			"position":[700,-250,-500],
 			"scale":[500,500,500],
-			"rotation":[0,0.001,0],
+			"rotation":[0,0,0],
 			"scripts": [
 				"omg",
 				"debug",
 				"lmao"
+			]
+		},
+		{
+			"model":"models/dino.model",
+			"position":[-50,0,0],
+			"scale":[1,1,1],
+			"rotation":[-3.141592654,0,-1.570796327],
+			"scripts": [
+				"player"
+			]
+		},
+		{
+			"position":[0,0,0],
+			"scale":[0,0,0],
+			"rotation":[0,0,0],
+			"scripts": [
+				"camera"
 			]
 		},
 		{

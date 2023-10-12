@@ -82,7 +82,7 @@ ObjData *gf3d_obj_load_from_file(const char *filename)
 {
     FILE *file;
     ObjData *obj;
-    file = fopen(filename,"r");
+    file = fopen(filename,"rb");
     if (!file)
     {
         slog("failed to open obj file %s",filename);
