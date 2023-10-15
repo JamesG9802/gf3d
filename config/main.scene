@@ -2,19 +2,25 @@
 	"scene":
 	[
 		{
-			"model":"models/dino.model",
-			"position":[700,-250,-500],
-			"scale":[500,500,500],
+			"position":[0,0,0],
+			"scale":[0,0,0],
 			"rotation":[0,0,0],
 			"scripts": [
-				"omg",
-				"debug",
-				"lmao"
-			]
+				"debug"
+			]				
+		},
+		{
+			"model":"models/cube.model",
+			"position":[0,0,0],
+			"scale":[1000,1000,2],
+			"rotation":[0,0,0],
+			"scripts": [
+				"rigidbody"
+			]	
 		},
 		{
 			"model":"models/dino.model",
-			"position":[-50,0,0],
+			"position":[-50,0,10],
 			"scale":[1,1,1],
 			"rotation":[-3.141592654,0,-1.570796327],
 			"scripts": [
@@ -39,13 +45,19 @@
 			"model":"models/dice.model",
 			"position":[-100,0,0],
 			"scale":[10,10,10],
-			"rotation":[0,0,0]
+			"rotation":[0,0,0],
+			"scripts": [
+				"rigidbody"
+			]	
 		},
 		{
 			"model":"models/dice.model",
 			"position":[100,0,0],
 			"scale":[10,10,10],
-			"rotation":[45,0,0]
+			"rotation":[45,0,0],
+			"scripts": [
+				"rigidbody"
+			]	
 		},
 		{
 			"model":"models/dice.model",

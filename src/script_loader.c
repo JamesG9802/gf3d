@@ -12,6 +12,8 @@ Script* script_loader_getScript(char* string) {
 		return script_new_player();
 	if (strcmp(string, "camera") == 0)
 		return script_new_camera();
+	if (strcmp(string, "rigidbody") == 0)
+		return script_new_rigidbody();
 	return NULL;
 }
 

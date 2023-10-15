@@ -18,6 +18,8 @@ typedef struct
     
 }EntityManager;
 
+extern Bool commandModeFlag;
+
 static EntityManager entity_manager = {0};
 
 void entity_system_close()
@@ -113,7 +115,22 @@ void entity_draw(Entity *self)
 {
     if (!self)return;
     if (self->hidden)return;
-    gf3d_model_draw(self->model,self->modelMat,gfc_color_to_vector4f(self->color),vector4d(1,1,1,1));
+    if (!commandModeFlag)
+    {
+        gf3d_model_draw(self->model, self->modelMat, gfc_color_to_vector4f(self->color), vector4d(1, 1, 1, 1));
+    }
+    else {
+        Model* model = gf3d_model_load("models/cube.model");
+        Matrix4 bounds = {0};
+        Vector3D scale = vector3d(self->bounds.w, self->bounds.h, self->bounds.d);
+        gfc_matrix_identity(bounds);
+
+        gfc_matrix_scale(bounds, scale);
+        gfc_matrix_rotate_by_vector(bounds, bounds, self->rotation);
+        gfc_matrix_translate(bounds, self->position);
+        gf3d_model_draw(model, bounds, gfc_color_to_vector4f(self->color), vector4d(1, 1, 1, 1));
+        gf3d_model_free(model);
+    }
     if (self->selected)
     {
         gf3d_model_draw_highlight(

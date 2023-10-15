@@ -15,7 +15,6 @@
  * @brief Called when a script is created.
  */
 static void Start(Entity* self) {
-    printf("\n-------------------\nStarting\n");
     gf3d_camera_set_scale(vector3d(1, 1, 1));
 }
 /**
@@ -33,7 +32,6 @@ static void Update(Entity* self) {
  * @brief Called when a script is created.
  */
 static void Destroy(Entity* self) {
-    printf("\n-------------------\nDestroying\n");
 }
 
 Script* script_new_camera() {

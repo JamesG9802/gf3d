@@ -5,27 +5,26 @@
 
 #include "gf3d_camera.h"
 
+#include "engine_time.h"
 #include "entity.h"
 
 #include "script.h"
 #include "script_defs.h"
 
-extern Entity* player = NULL;
+Entity* player = NULL;
 static int thirdPersonMode = 0;
 
 /**
  * @brief Called when a script is created.
  */
 static void Start(Entity* self) {
-	printf("\n-------------------\nStarting\n");
     player = self;
-    self->hidden = false;
+    self->hidden = true;
 }
 /**
  * @brief Called when a script is created.
  */
 static void Think(Entity* self) {
-	//printf("\n-------------------\nThinking\n");
     Vector3D forward = { 0 };
     Vector3D right = { 0 };
     Vector2D w, mouse;
@@ -37,11 +36,11 @@ static void Think(Entity* self) {
     mouse.x = mx;
     mouse.y = my;
     w = vector2d_from_angle(self->rotation.z);
-    forward.x = w.x;
-    forward.y = w.y;
+    forward.x = w.x * engine_time_delta() * 500;
+    forward.y = w.y * engine_time_delta() * 500;
     w = vector2d_from_angle(self->rotation.z - GFC_HALF_PI);
-    right.x = w.x;
-    right.y = w.y;
+    right.x = w.x * engine_time_delta() * 500;
+    right.y = w.y * engine_time_delta() * 500;
     if (keys[SDL_SCANCODE_W])
     {
         vector3d_add(self->position, self->position, forward);
@@ -114,7 +113,6 @@ static void Update(Entity* self) {
  * @brief Called when a script is created.
  */
 static void Destroy(Entity* self) {
-	printf("\n-------------------\nDestroying\n");
 }
 
 Script* script_new_player() {
