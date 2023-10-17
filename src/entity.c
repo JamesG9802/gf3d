@@ -9,6 +9,9 @@
 #include "gf3d_model.h"
 
 #include "entity.h"
+#include "entity_bounds.h"
+
+#include "engine_time.h"
 #include "script.h"
 
 typedef struct
@@ -120,15 +123,11 @@ void entity_draw(Entity *self)
         gf3d_model_draw(self->model, self->modelMat, gfc_color_to_vector4f(self->color), vector4d(1, 1, 1, 1));
     }
     else {
-        Model* model = gf3d_model_load("models/cube.model");
-        Matrix4 bounds = {0};
-        Vector3D scale = vector3d(self->bounds.w, self->bounds.h, self->bounds.d);
-        gfc_matrix_identity(bounds);
-
-        gfc_matrix_scale(bounds, scale);
-        gfc_matrix_rotate_by_vector(bounds, bounds, self->rotation);
-        gfc_matrix_translate(bounds, self->position);
+        Model* model = NULL;
+        Matrix4 bounds;
+        entity_bounds_visualize(self, &model, &bounds);
         gf3d_model_draw(model, bounds, gfc_color_to_vector4f(self->color), vector4d(1, 1, 1, 1));
+        if(model)
         gf3d_model_free(model);
     }
     if (self->selected)
@@ -185,9 +184,21 @@ void entity_update(Entity *self)
 {
     if (!self)return;
     // HANDLE ALL COMMON UPDATE STUFF
+    double timeDelta = engine_time_delta();
     
-    vector3d_add(self->position,self->position,self->velocity);
-    vector3d_add(self->velocity,self->acceleration,self->velocity);
+    Vector3D acceleration = self->acceleration;
+    acceleration.x *= .5 * timeDelta;
+    acceleration.y *= .5 * timeDelta;
+    acceleration.z *= .5 * timeDelta;
+
+
+    vector3d_add(self->velocity, acceleration, self->velocity);
+    Vector3D velocity = self->velocity;
+    velocity.x *= timeDelta;
+    velocity.y *= timeDelta;
+    velocity.z *= timeDelta;
+    vector3d_add(self->position,self->position,velocity);
+    vector3d_add(self->velocity,acceleration,self->velocity);
     
     gfc_matrix_identity(self->modelMat);
     

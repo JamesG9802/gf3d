@@ -48,7 +48,7 @@ int main(int argc,char *argv[])
         }
     }
 
-    init_logger("gf3d.log",0);    
+    // init_logger("gf3d.log",0);    
     gfc_input_init("config/input.cfg");
     slog("gf3d begin");
     gf3d_vgraphics_init("config/setup.cfg");

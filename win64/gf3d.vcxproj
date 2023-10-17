@@ -46,6 +46,7 @@
     <ClCompile Include="..\src\agumon.c" />
     <ClCompile Include="..\src\engine_time.c" />
     <ClCompile Include="..\src\entity.c" />
+    <ClCompile Include="..\src\entity_bounds.c" />
     <ClCompile Include="..\src\game.c" />
     <ClCompile Include="..\src\gf2d_draw.c" />
     <ClCompile Include="..\src\gf2d_font.c" />
@@ -72,11 +73,13 @@
     <ClCompile Include="..\src\player.c" />
     <ClCompile Include="..\src\scene.c" />
     <ClCompile Include="..\src\script.c" />
+    <ClCompile Include="..\src\script_boxcollider.c" />
     <ClCompile Include="..\src\script_camera.c" />
     <ClCompile Include="..\src\script_debug.c" />
     <ClCompile Include="..\src\script_loader.c" />
     <ClCompile Include="..\src\script_player.c" />
     <ClCompile Include="..\src\script_rigidbody.c" />
+    <ClCompile Include="..\src\script_spherecollider.c" />
     <ClCompile Include="..\src\world.c" />
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +112,7 @@
     <ClInclude Include="..\include\agumon.h" />
     <ClInclude Include="..\include\engine_time.h" />
     <ClInclude Include="..\include\entity.h" />
+    <ClInclude Include="..\include\entity_bounds.h" />
     <ClInclude Include="..\include\gf2d_draw.h" />
     <ClInclude Include="..\include\gf2d_font.h" />
     <ClInclude Include="..\include\gf2d_sprite.h" />

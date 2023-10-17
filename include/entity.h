@@ -8,6 +8,8 @@
 
 #include "gf3d_model.h"
 
+typedef struct Entity_Bounds_s Entity_Bounds;
+
 typedef enum
 {
     ES_idle = 0,
@@ -27,7 +29,8 @@ typedef struct Entity_S
     Uint8       selected;
     Color       selectedColor;      /**<Color for highlighting*/
     
-    Box         bounds; // for collisions
+//    Box         bounds; // for collisions
+    Entity_Bounds* bounds; // for collisions
     int         team;  //same team dont clip
     int         clips;  // if false, skip collisions
 

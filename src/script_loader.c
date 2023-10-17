@@ -14,6 +14,10 @@ Script* script_loader_getScript(char* string) {
 		return script_new_camera();
 	if (strcmp(string, "rigidbody") == 0)
 		return script_new_rigidbody();
+	if (strcmp(string, "boxcollider") == 0)
+		return script_new_boxcollider();
+	if (strcmp(string, "spherecollider") == 0)
+		return script_new_spherecollider();
 	return NULL;
 }
 

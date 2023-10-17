@@ -234,6 +234,15 @@
     <ClCompile Include="..\src\script_rigidbody.c">
       <Filter>Source Files\script</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\entity_bounds.c">
+      <Filter>Source Files\engine_retrofit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\script_boxcollider.c">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\script_spherecollider.c">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\agumon.h">
@@ -405,6 +414,9 @@
       <Filter>Header Files\simple_logger</Filter>
     </ClInclude>
     <ClInclude Include="..\include\engine_time.h">
+      <Filter>Header Files\engine_retrofit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\entity_bounds.h">
       <Filter>Header Files\engine_retrofit</Filter>
     </ClInclude>
   </ItemGroup>

@@ -11,6 +11,8 @@
 
 #include "gf3d_model.h"
 
+#include "script_defs.h"
+
 typedef struct
 {
     Model               *   model_list;
@@ -20,6 +22,7 @@ typedef struct
     Pipeline            *   pipe;           /**<the pipeline associated with model rendering*/
 }ModelManager;
 
+extern Entity* player;
 static ModelManager gf3d_model = {0};
 
 void gf3d_model_delete(Model *model);
@@ -467,7 +470,8 @@ void gf3d_model_update_uniform_buffer(
     
     vector4d_copy(modelUBO.color,colorMod);
     vector4d_copy(modelUBO.ambient,ambient);
-
+    Vector4D lightPos = vector4d(player->position.x, player->position.y, player->position.z, 0);
+    modelUBO.lightPosition = lightPos;
     vkMapMemory(gf3d_model.device, ubo->uniformBufferMemory, 0, sizeof(MeshUBO), 0, &data);
     
         memcpy(data, &modelUBO, sizeof(MeshUBO));
