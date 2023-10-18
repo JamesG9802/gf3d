@@ -14,10 +14,14 @@ layout(location = 0) out vec4 outColor;
 
 void main()
 {
-    vec3 lightVector = vertPosition.xyz - lightPosition.xyz;
+    vec3 lightVector = lightPosition.xyz - vertPosition.xyz;
+    float lightDistance = length(lightVector);
     lightVector = normalize(lightVector);
-    float cosTheta = dot( fragNormal,lightVector );
+    float cosTheta = max(dot( normalize(fragNormal),lightVector ), 0);
     vec4 baseColor = texture(texSampler, fragTexCoord);
+
+    cosTheta = 50/lightDistance; 
+
     outColor = (baseColor * ambient) + baseColor * cosTheta;
     outColor.x = outColor.x * colorMod.x;
     outColor.y = outColor.y * colorMod.y;

@@ -26,8 +26,8 @@ layout(location = 4) out vec4 lightPosition;
 layout(location = 5) out vec4 vertPosition;
 void main()
 {
-    vec4 tempNormal;
-    tempNormal = ubo.model * vec4(inNormal,1.0);
+    vec3 tempNormal;
+    tempNormal = mat3(transpose(inverse(ubo.model))) * inNormal;
     fragNormal = normalize(tempNormal.xyz);
     gl_Position = ubo.proj * ubo.view * ubo.model * vec4(inPosition, 1.0);
     vertPosition = ubo.model * vec4(inPosition, 1.0);

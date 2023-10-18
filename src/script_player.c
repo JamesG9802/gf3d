@@ -36,11 +36,11 @@ static void Think(Entity* self) {
     mouse.x = mx;
     mouse.y = my;
     w = vector2d_from_angle(self->rotation.z);
-    forward.x = w.x * engine_time_delta() * 500;
-    forward.y = w.y * engine_time_delta() * 500;
+    forward.x = w.x * engine_time_delta() * 200;
+    forward.y = w.y * engine_time_delta() * 200;
     w = vector2d_from_angle(self->rotation.z - GFC_HALF_PI);
-    right.x = w.x * engine_time_delta() * 500;
-    right.y = w.y * engine_time_delta() * 500;
+    right.x = w.x * engine_time_delta() * 200;
+    right.y = w.y * engine_time_delta() * 200;
     if (keys[SDL_SCANCODE_W])
     {
         vector3d_add(self->position, self->position, forward);

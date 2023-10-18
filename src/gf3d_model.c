@@ -471,7 +471,7 @@ void gf3d_model_update_uniform_buffer(
     vector4d_copy(modelUBO.color,colorMod);
     vector4d_copy(modelUBO.ambient,ambient);
     Vector4D lightPos = vector4d(player->position.x, player->position.y, player->position.z, 0);
-    modelUBO.lightPosition = lightPos;
+    modelUBO.lightPosition = lightPos;//vector4d(-20,0,50,0);
     vkMapMemory(gf3d_model.device, ubo->uniformBufferMemory, 0, sizeof(MeshUBO), 0, &data);
     
         memcpy(data, &modelUBO, sizeof(MeshUBO));

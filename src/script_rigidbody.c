@@ -34,6 +34,16 @@ static void Update(Entity* self) {
 	self->rotation.x += GFC_HALF_PI * timeDelta / 16;
 	self->rotation.y += GFC_PI * timeDelta / 16;
 	self->rotation.z += GFC_PI_HALFPI * timeDelta / 16;
+	if (true) return;
+
+	self->position.x += 20 * timeDelta;
+	if (self->position.x > 50)
+		self->position.x = -50;
+
+	self->position.x += 40 * timeDelta;
+	if (self->position.x > 50)
+		self->position.x = -100;
+
 }
 /**
  * @brief Called when a script is created.
