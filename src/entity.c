@@ -14,7 +14,6 @@
 #include "engine_time.h"
 #include "script.h"
 
-extern Bool commandModeFlag;
 
 EntityManager entity_manager = {0};
 
@@ -111,18 +110,7 @@ void entity_draw(Entity *self)
 {
     if (!self)return;
     if (self->hidden)return;
-    if (!commandModeFlag)
-    {
-        gf3d_model_draw(self->model, self->modelMat, gfc_color_to_vector4f(self->color), vector4d(1, 1, 1, 1));
-    }
-    else {
-        Model* model = NULL;
-        Matrix4 bounds;
-        entity_bounds_visualize(self, &model, &bounds);
-        gf3d_model_draw(model, bounds, gfc_color_to_vector4f(self->color), vector4d(1, 1, 1, 1));
-        if(model)
-        gf3d_model_free(model);
-    }
+    gf3d_model_draw(self->model, self->modelMat, gfc_color_to_vector4f(self->color), vector4d(1, 1, 1, 1));
     if (self->selected)
     {
         gf3d_model_draw_highlight(

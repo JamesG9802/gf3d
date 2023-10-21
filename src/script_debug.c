@@ -10,11 +10,6 @@
 #include "script_defs.h"
 
 /**
- * @brief Set when the in-game command line should be visible.
- */
-Bool commandModeFlag = false;
-
-/**
  * @brief Called when a script is created.
  */
 static void Start(Entity* self) {
@@ -23,11 +18,6 @@ static void Start(Entity* self) {
  * @brief Called when a script is created.
  */
 static void Think(Entity* self) {
-	if (gfc_input_command_released("status")) {
-		commandModeFlag = !commandModeFlag;
-		slog("Command Line visibility: %d", commandModeFlag);
-		slog_sync();
-	}
 }
 /**
  * @brief Called when a script is created.
