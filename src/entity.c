@@ -14,16 +14,9 @@
 #include "engine_time.h"
 #include "script.h"
 
-typedef struct
-{
-    Entity *entity_list;
-    Uint32  entity_count;
-    
-}EntityManager;
-
 extern Bool commandModeFlag;
 
-static EntityManager entity_manager = {0};
+EntityManager entity_manager = {0};
 
 void entity_system_close()
 {

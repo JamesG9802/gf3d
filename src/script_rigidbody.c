@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
+
+#include "gfc_input.h"
 
 #include "simple_logger.h"
 
@@ -6,6 +9,7 @@
 #include "script.h"
 
 #include "engine_time.h"
+#include "engine_utility.h"
 
 #include "entity_bounds.h"
 #include "script_defs.h"
@@ -34,15 +38,12 @@ static void Update(Entity* self) {
 	self->rotation.x += GFC_HALF_PI * timeDelta / 16;
 	self->rotation.y += GFC_PI * timeDelta / 16;
 	self->rotation.z += GFC_PI_HALFPI * timeDelta / 16;
-	if (true) return;
 
-	self->position.x += 20 * timeDelta;
-	if (self->position.x > 50)
-		self->position.x = -50;
-
-	self->position.x += 40 * timeDelta;
-	if (self->position.x > 50)
-		self->position.x = -100;
+	//Vector3D output = IsMouseOverEntity(self);
+	//output.x *= 10.0;
+	//output.y *= 10.0;
+	//output.z *= 10.0;
+	// memcpy(&self->position, &output, sizeof(Vector3D));
 
 }
 /**

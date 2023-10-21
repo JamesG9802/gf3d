@@ -6,6 +6,8 @@
 #include "gf3d_camera.h"
 
 #include "engine_time.h"
+#include "engine_utility.h"
+
 #include "entity.h"
 
 #include "script.h"
@@ -79,6 +81,7 @@ static void Think(Entity* self) {
         thirdPersonMode = !thirdPersonMode;
         self->hidden = !self->hidden;
     }
+    // IsMouseOverEntity(self);
 }
 /**
  * @brief Called when a script is created.

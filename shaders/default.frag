@@ -20,7 +20,6 @@ void main()
     float cosTheta = max(dot( normalize(fragNormal),lightVector ), 0);
     vec4 baseColor = texture(texSampler, fragTexCoord);
 
-    cosTheta = 50/lightDistance; 
 
     outColor = (baseColor * ambient) + baseColor * cosTheta;
     outColor.x = outColor.x * colorMod.x;

@@ -18,6 +18,8 @@ Script* script_loader_getScript(char* string) {
 		return script_new_boxcollider();
 	if (strcmp(string, "spherecollider") == 0)
 		return script_new_spherecollider();
+	if (strcmp(string, "soil") == 0)
+		return script_new_soil();
 	return NULL;
 }
 

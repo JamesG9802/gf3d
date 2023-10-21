@@ -55,15 +55,15 @@
     <Filter Include="Header Files\simple_logger">
       <UniqueIdentifier>{56d7afa5-c7a1-44ca-8613-f2abcb4e9ea4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\game">
+      <UniqueIdentifier>{9329628e-5449-429e-b2a5-1e0486436a7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{ba64ec12-64f6-4709-b779-d0baf124fc9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\agumon.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\entity.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\game.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\player.c">
@@ -243,6 +243,21 @@
     <ClCompile Include="..\src\script_spherecollider.c">
       <Filter>Source Files\script</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\game.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\game_state.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\script_soil.c">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entity.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\engine_utility.c">
+      <Filter>Source Files\engine_retrofit</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\agumon.h">
@@ -417,6 +432,12 @@
       <Filter>Header Files\engine_retrofit</Filter>
     </ClInclude>
     <ClInclude Include="..\include\entity_bounds.h">
+      <Filter>Header Files\engine_retrofit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\game_state.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\engine_utility.h">
       <Filter>Header Files\engine_retrofit</Filter>
     </ClInclude>
   </ItemGroup>

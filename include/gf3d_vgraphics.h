@@ -107,4 +107,16 @@ SDL_Surface *gf3d_vgraphics_create_surface(Uint32 w,Uint32 h);
  */
 SDL_Surface *gf3d_vgraphics_screen_convert(SDL_Surface **surface);
 
+/// <summary>
+/// Populates width and height with the window's width and height.
+/// </summary>
+/// <param name="width"></param>
+/// <param name="height"></param>
+void gf3d_vgraphics_get_window_size(int* width, int* height);
+
+/// <summary>
+/// Populates projection with the projection matrix of the camera.
+/// </summary>
+/// <param name="projection"></param>
+void gf3d_vgraphics_get_projection_matrix(Matrix4* projection);
 #endif

@@ -10,16 +10,6 @@
 			]				
 		},
 		{
-			"model":"models/cube.model",
-			"position":[0,0,0],
-			"scale":[1000,1000,2],
-			"rotation":[0,0,0],
-			"scripts": [
-				"boxcollider",
-				"rigidbody"
-			]	
-		},
-		{
 			"model":"models/dino.model",
 			"position":[-50,0,10],
 			"scale":[1,1,1],
@@ -37,25 +27,6 @@
 			]
 		},
 		{
-			"model":"models/antioch.model",
-			"position":[70,-25,-50],
-			"scale":[25,25,25],
-			"rotation":[0,0.001,0],
-			"scripts": [
-				"spherecollider"
-			]
-		},
-		{
-			"model":"models/dice.model",
-			"position":[-100,0,0],
-			"scale":[10,10,10],
-			"rotation":[0,0,0],
-			"scripts": [
-				"rigidbody",
-				"boxcollider"
-			]	
-		},
-		{
 			"model":"models/dice.model",
 			"position":[100,0,0],
 			"scale":[10,10,10],
@@ -64,24 +35,6 @@
 				"rigidbody",
 				"spherecollider"
 			]	
-		},
-		{
-			"model":"models/dice.model",
-			"position":[200,50,0],
-			"scale":[10,10,10],
-			"rotation":[0,45,0]
-		},
-		{
-			"model":"models/dice.model",
-			"position":[300,-50,0],
-			"scale":[10,10,10],
-			"rotation":[0,0,45]
-		},
-		{
-			"model":"models/dice.model",
-			"position":[400,0,50],
-			"scale":[10,10,10],
-			"rotation":[45,45,45]
 		}
 	]
 }
