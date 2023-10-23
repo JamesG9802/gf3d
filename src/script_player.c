@@ -90,6 +90,7 @@ static void Think(Entity* self) {
     if (gfc_input_keycode_released(SDL_SCANCODE_DELETE))
     {
         self->rotation.z += GFC_PI / 4;
+        self->position = vector3d(0, 0, 0);
     }
     if (gfc_input_keycode_released(SDL_SCANCODE_HOME))
     {
