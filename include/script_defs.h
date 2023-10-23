@@ -31,4 +31,10 @@ Script* script_new_boxcollider();
  */
 Script* script_new_spherecollider();
 
+/// <summary>
+/// Script to make a soil entity.
+/// </summary>
+/// <returns></returns>
+Script* script_new_soil();
+
 /*eol@eof*/

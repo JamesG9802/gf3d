@@ -16,16 +16,6 @@
 
 #include "scene.h"
 
-/*
-typedef struct
-{
-
-    Model *worldModel;
-    List *spawnList;        //entities to spawn
-    List *entityList;       //entities that exist in the world
-}World;
-*/
-
 void scene_load(char *filename)
 {
     SJson *json,* scene;

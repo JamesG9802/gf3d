@@ -55,6 +55,13 @@ typedef struct Entity_S
     void *customData;   /**<IF an entity needs to keep track of extra data, we can do it here*/
 }Entity;
 
+typedef struct
+{
+    Entity* entity_list;
+    Uint32  entity_count;
+
+}EntityManager;
+
 /**
  * @brief initializes the entity subsystem
  * @param maxEntities the limit on number of entities that can exist at the same time
@@ -112,5 +119,7 @@ void entity_think_all();
  * @brief run the update functions for ALL active entities
  */
 void entity_update_all();
+
+Vector3D vector3d_get_from_angles(Vector3D angles);
 
 #endif

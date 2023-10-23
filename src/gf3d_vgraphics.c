@@ -628,5 +628,18 @@ VkImageView gf3d_vgraphics_create_image_view(VkImage image, VkFormat format)
     return imageView;
 }
 
+void gf3d_vgraphics_get_window_size(int* width, int* height) {
+    if (!gf3d_vgraphics.main_window)
+    {
+        slog("I don't know how, but the window doesn't exist.");
+        return;
+    }
+    SDL_GetWindowSize(gf3d_vgraphics.main_window, width, height);
+}
+
+void gf3d_vgraphics_get_projection_matrix(Matrix4* projection) {
+    memcpy(projection, &gf3d_vgraphics.ubo.proj, sizeof(Matrix4));
+}
+
 /*eol@eof*/
 

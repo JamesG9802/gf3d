@@ -27,7 +27,6 @@
 
 extern int __DEBUG;
 extern Entity* player;
-extern Bool commandModeFlag;
 
 int main(int argc,char *argv[])
 {
@@ -98,7 +97,7 @@ int main(int argc,char *argv[])
         //3D draws
         entity_draw_all();
 
-        if (commandModeFlag)
+        
         {
             //2D draws
             gf2d_draw_rect_filled(gfc_rect(10, 10, 1000, 32), gfc_color8(128, 128, 128, 255));

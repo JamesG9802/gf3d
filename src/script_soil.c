@@ -18,6 +18,7 @@ static void Start(Entity* self) {
  * @brief Called when a script is created.
  */
 static void Think(Entity* self) {
+
 }
 /**
  * @brief Called when a script is created.
@@ -30,7 +31,7 @@ static void Update(Entity* self) {
 static void Destroy(Entity* self) {
 }
 
-Script* script_new_debug() {
+Script* script_new_soil() {
 	return script_new(&Start, &Think, &Update, &Destroy);
 }
 

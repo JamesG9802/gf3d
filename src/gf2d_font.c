@@ -390,6 +390,8 @@ void gf2d_font_draw_line(char *text,Font *font,Color color, Vector2D position)
         return;
     }
     gf2d_sprite_draw(sprite,position,vector2d(1,1),vector3d(0,0,0),gfc_color(1,1,1,1),0);
+
+    //  Insane memory usage ?
     gf2d_font_image_new(sprite,text,color,font);
 }
 
