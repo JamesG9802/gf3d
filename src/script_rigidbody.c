@@ -39,11 +39,10 @@ static void Update(Entity* self) {
 	self->rotation.y += GFC_PI * timeDelta / 16;
 	self->rotation.z += GFC_PI_HALFPI * timeDelta / 16;
 
-	//Vector3D output = IsMouseOverEntity(self);
-	//output.x *= 10.0;
-	//output.y *= 10.0;
-	//output.z *= 10.0;
-	// memcpy(&self->position, &output, sizeof(Vector3D));
+	Vector3D output = IsMouseOverEntity(self);
+	self->position.x = output.x * 1.0;
+	self->position.y = output.y * 1.0;
+	self->position.z = output.z * 1.0;
 
 }
 /**

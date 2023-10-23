@@ -263,9 +263,6 @@
     <ClInclude Include="..\include\agumon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -439,6 +436,9 @@
     </ClInclude>
     <ClInclude Include="..\include\engine_utility.h">
       <Filter>Header Files\engine_retrofit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\entity.h">
+      <Filter>Header Files\game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

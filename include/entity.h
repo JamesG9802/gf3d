@@ -120,4 +120,6 @@ void entity_think_all();
  */
 void entity_update_all();
 
+Vector3D vector3d_get_from_angles(Vector3D angles);
+
 #endif

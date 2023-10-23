@@ -211,4 +211,12 @@ void entity_update_all()
     }
 }
 
+Vector3D vector3d_get_from_angles(Vector3D angles)
+{
+    Vector3D forward;
+    vector3d_set(forward, 0, 1, 0);
+    vector3d_rotate_about_x(&forward, angles.x);
+    vector3d_rotate_about_z(&forward, angles.z);
+    return forward;
+}
 /*eol@eof*/

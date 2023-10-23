@@ -59,5 +59,17 @@ void gf3d_camera_set_scale(Vector3D scale);
  */
 void gf3d_camera_set_rotation(Vector3D rotation);
 
+/// <summary>
+/// Populates position with the camera's current position.
+/// </summary>
+/// <param name="position"></param>
+void gf3d_camera_get_position(Vector3D* position);
 
+/// <summary>
+/// Populates position with the camera's current position.
+/// </summary>
+/// <param name="position"></param>
+void gf3d_camera_get_rotation(Vector3D* rotation);
+
+void gf3d_camera_get_reverse_view(Matrix4 view);
 #endif
