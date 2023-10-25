@@ -4,6 +4,7 @@
 
 #include "gfc_types.h"
 #include "gfc_matrix.h"
+#include "gfc_primitives.h"
 #include "gfc_input.h"
 
 #include "gf3d_vgraphics.h"
@@ -17,18 +18,16 @@
 #include "entity_bounds.h"
 
 static EntityManager entity_manager;
-static float timeDelta = 0;
-
-Vector3D IsMouseOverEntity(Entity* entity) {
+Bool engine_utility_ismouseover(Entity* entity, Edge3D* ray) {
 	int mouse_x, mouse_y;
 	int width, height;
 	SDL_GetMouseState(&mouse_x, &mouse_y);
 	gf3d_vgraphics_get_window_size(&width, &height);
 
 	float x = (2.0f * mouse_x) / width - 1.0f;
-	float y = (2.0f * mouse_y) / height - 1.0f;
+	float y = 1.0f - (2.0f * mouse_y) / height;
 	float z = -1;
-	timeDelta += engine_time_delta();
+
 	Matrix4 projection, view;
 	Matrix4 projection_inverse, view_inverse;
 	gf3d_camera_get_view_mat4(view);
@@ -52,13 +51,17 @@ Vector3D IsMouseOverEntity(Entity* entity) {
 
 	Vector3D ray_wor = vector3d(ray_wor_4D.x, ray_wor_4D.y, ray_wor_4D.z);
 	vector3d_normalize(&ray_wor);
-	vector3d_scale(ray_wor, ray_wor, 60);
-		
+	vector3d_scale(ray_wor, ray_wor, 100);
 	Vector3D position = {0};
 	Vector3D cameraPos = {0};
 	gf3d_camera_get_position(&cameraPos);
 	vector3d_add(position, position, ray_wor);
 	vector3d_add(position, position, cameraPos);
-	slog("%f %f %f", position.x, position.y, position.z);
-	return position;
+	Edge3D line;
+	memcpy(&line.a, &cameraPos, sizeof(Vector3D));
+	memcpy(&line.b, &position, sizeof(Vector3D));
+	if (ray)
+		memcpy(ray, &line, sizeof(Edge3D));
+	return entity_bounds_islineintersecting(entity->bounds, line);
+	//return line;
 }
