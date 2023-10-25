@@ -39,11 +39,15 @@ static void Update(Entity* self) {
 	self->rotation.y += GFC_PI * timeDelta / 16;
 	self->rotation.z += GFC_PI_HALFPI * timeDelta / 16;
 
-	Vector3D output = IsMouseOverEntity(self);
+	Edge3D ray;
+	engine_utility_ismouseover(self, &ray);
+	Vector3D output = ray.b;
 	self->position.x = output.x * 1.0;
 	self->position.y = output.y * 1.0;
 	self->position.z = output.z * 1.0;
 
+	//self->selected = engine_utility_ismouseover(self, NULL);
+	//slog("%d", self->selected);
 }
 /**
  * @brief Called when a script is created.

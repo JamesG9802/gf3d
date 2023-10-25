@@ -89,13 +89,38 @@ static void Think(Entity* self) {
     } 
     if (gfc_input_keycode_released(SDL_SCANCODE_DELETE))
     {
-        self->rotation.z += GFC_PI / 4;
-        self->position = vector3d(0, 0, 0);
+        Edge3D e;
+        engine_utility_ismouseover(self, &e);
+        {Entity* ent = NULL;
+
+        ent = entity_new();
+        if (!ent)
+        {
+            return NULL;
+        }
+        ent->selectedColor = gfc_color(0.1, 1, 0.1, 1);
+        ent->color = gfc_color(1, 1, 1, 1);
+        ent->model = gf3d_model_load("models/dino.model");
+        ent->position = e.a;
+        }
+        {Entity* ent = NULL;
+
+        ent = entity_new();
+        if (!ent)
+        {
+            return NULL;
+        }
+        ent->selectedColor = gfc_color(0.1, 1, 0.1, 1);
+        ent->color = gfc_color(1, 1, 1, 1);
+        ent->model = gf3d_model_load("models/dino.model");
+        ent->position = e.b;
+        }
     }
     if (gfc_input_keycode_released(SDL_SCANCODE_HOME))
     {
         thirdPersonMode = !thirdPersonMode;
     }
+    
     // IsMouseOverEntity(self);
 }
 /**
