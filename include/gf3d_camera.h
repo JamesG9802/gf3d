@@ -71,5 +71,4 @@ void gf3d_camera_get_position(Vector3D* position);
 /// <param name="position"></param>
 void gf3d_camera_get_rotation(Vector3D* rotation);
 
-void gf3d_camera_get_reverse_view(Matrix4 view);
 #endif

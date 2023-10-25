@@ -34,12 +34,12 @@ Vector3D IsMouseOverEntity(Entity* entity) {
 	gf3d_camera_get_view_mat4(view);
 	gf3d_vgraphics_get_projection_matrix(projection);
 
-	//	something about column major order vs row major order
-	gfc_matrix_transpose(view, view);
-	gfc_matrix_transpose(projection, projection);
-
 	gfc_matrix4_invert(projection_inverse, projection);
 	gfc_matrix4_invert(view_inverse, view);
+
+	//	something about column major order vs row major order
+	gfc_matrix_transpose(projection_inverse, projection_inverse);
+	gfc_matrix_transpose(view_inverse, view_inverse);
 
 	Vector4D ray_clip = vector4d(x, y, z, 1);
 	Vector4D ray_eye;
@@ -52,15 +52,12 @@ Vector3D IsMouseOverEntity(Entity* entity) {
 
 	Vector3D ray_wor = vector3d(ray_wor_4D.x, ray_wor_4D.y, ray_wor_4D.z);
 	vector3d_normalize(&ray_wor);
-	vector3d_scale(ray_wor, ray_wor, 60 + 30 * sin(2 * timeDelta));
-
-	Vector3D rotation;
+	vector3d_scale(ray_wor, ray_wor, 60);
+		
 	Vector3D position = {0};
 	Vector3D cameraPos = {0};
-	gf3d_camera_get_rotation(&rotation);
 	gf3d_camera_get_position(&cameraPos);
 	vector3d_add(position, position, ray_wor);
-
 	vector3d_add(position, position, cameraPos);
 	slog("%f %f %f", position.x, position.y, position.z);
 	return position;
