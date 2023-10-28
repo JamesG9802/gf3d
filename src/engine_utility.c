@@ -25,7 +25,7 @@ Bool engine_utility_ismouseover(Entity* entity, Edge3D* ray) {
 	gf3d_vgraphics_get_window_size(&width, &height);
 
 	float x = (2.0f * mouse_x) / width - 1.0f;
-	float y = 1.0f - (2.0f * mouse_y) / height;
+	float y = (2.0f * mouse_y) / height - 1.0f;
 	float z = -1;
 
 	Matrix4 projection, view;
@@ -51,7 +51,7 @@ Bool engine_utility_ismouseover(Entity* entity, Edge3D* ray) {
 
 	Vector3D ray_wor = vector3d(ray_wor_4D.x, ray_wor_4D.y, ray_wor_4D.z);
 	vector3d_normalize(&ray_wor);
-	vector3d_scale(ray_wor, ray_wor, 100);
+	vector3d_scale(ray_wor, ray_wor, 1000);
 	Vector3D position = {0};
 	Vector3D cameraPos = {0};
 	gf3d_camera_get_position(&cameraPos);
@@ -63,5 +63,4 @@ Bool engine_utility_ismouseover(Entity* entity, Edge3D* ray) {
 	if (ray)
 		memcpy(ray, &line, sizeof(Edge3D));
 	return entity_bounds_islineintersecting(entity->bounds, line);
-	//return line;
 }

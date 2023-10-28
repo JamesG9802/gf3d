@@ -18,9 +18,9 @@ static void Start(Entity* self) {
 		slog("Couldn't allocate entity sphere bounds.");
 		slog_sync();
 	}
-	Entity_Bounds enb = entity_bounds_new_sphere(self->position.x - self->scale.x / 2.0,
-		self->position.y - self->scale.x / 2.0,
-		self->position.z - self->scale.x / 2.0,
+	Entity_Bounds enb = entity_bounds_new_sphere(self->position.x,
+		self->position.y,
+		self->position.z,
 		self->scale.x);
 	memcpy(self->bounds, &enb, sizeof(Entity_Bounds));
 }
