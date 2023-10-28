@@ -45,7 +45,8 @@ Entity_Bounds entity_bounds_new_sphere(float x, float y, float z, float r);
  */
 Entity_Bounds entity_bounds_new_polygon();
 
-/**
- * @brief Sets the model representing the current entity_bounds and the model matrix.
- */
-void entity_bounds_visualize(Entity* entity, Model** model, Matrix4* modelMat);
+/// <summary>
+/// Returns true if some line intersects with the entity's bounding representation.
+/// </summary>
+/// <returns></returns>
+Bool entity_bounds_islineintersecting(Entity_Bounds* bounds, Edge3D line);
