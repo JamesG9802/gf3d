@@ -7,6 +7,8 @@
 #include "gfc_primitives.h"
 #include "gfc_input.h"
 
+#include "gf2d_font.h"
+
 #include "gf3d_vgraphics.h"
 #include "gf3d_camera.h"
 
@@ -17,7 +19,34 @@
 
 #include "entity_bounds.h"
 
+#define UNPRESSED 0
+#define DOWN 1
+#define RELEASED 2
+typedef struct {
+	Uint8 leftMouse;
+	Uint8 rightMouse;
+
+} MouseState;
+
 static EntityManager entity_manager;
+static MouseState mouse_state;
+
+void engine_utility_update() {
+	int state = SDL_GetMouseState(NULL, NULL);
+	if ((mouse_state.leftMouse & DOWN) && !(state & SDL_BUTTON_LMASK))
+		mouse_state.leftMouse = RELEASED;
+	else if (state & SDL_BUTTON_LMASK)
+		mouse_state.leftMouse = DOWN;
+	else
+		mouse_state.leftMouse = UNPRESSED;
+	if ((mouse_state.rightMouse & DOWN) && !(state & SDL_BUTTON_RMASK))
+		mouse_state.rightMouse = RELEASED;
+	else if (state & SDL_BUTTON_RMASK)
+		mouse_state.rightMouse = DOWN;
+	else
+		mouse_state.rightMouse = UNPRESSED;
+}
+
 Bool engine_utility_ismouseover(Entity* entity, Edge3D* ray) {
 	int mouse_x, mouse_y;
 	int width, height;
@@ -63,4 +92,61 @@ Bool engine_utility_ismouseover(Entity* entity, Edge3D* ray) {
 	if (ray)
 		memcpy(ray, &line, sizeof(Edge3D));
 	return entity_bounds_islineintersecting(entity->bounds, line);
+}
+
+
+
+Uint32 engine_utility_ismousedown() {
+	return mouse_state.leftMouse & DOWN || mouse_state.rightMouse & DOWN;
+}
+
+Bool engine_utility_isleftmousedown() {
+	return mouse_state.leftMouse & DOWN;
+}
+
+Bool engine_utility_isrightmousedown() {
+	return mouse_state.rightMouse & DOWN;
+}
+
+Bool engine_utility_isleftmousereleased() {
+	return mouse_state.leftMouse & RELEASED;
+}
+
+Bool engine_utility_isrightmousereleased() {
+	return mouse_state.rightMouse & RELEASED;
+}
+
+Model* engine_utility_createquadmodel(char* texture_filepath) {
+	Model* model = gf3d_model_new();
+	if (!model)return NULL;
+	gfc_line_cpy(model->filename, "Quad texture");
+	model->mesh = gf3d_mesh_load("meshes/quad.obj");
+	model->texture = gf3d_texture_load(texture_filepath);
+	if (!model->texture)
+		model->texture = gf3d_texture_load("images/default.png");
+	return model;
+}
+
+Entity* engine_utility_createquad(char* texture_filepath) {
+	Entity* entity = entity_new();
+	entity_setup(entity, 
+		engine_utility_createquadmodel(texture_filepath), 
+		vector3d(1, 1, 1), 
+		vector3d(0, 0, 0), 
+		vector3d(0, 0, 0), 
+		NULL);
+	return entity;
+}
+
+Texture* engine_utility_createtexturefromtext(Font* font, const char* text, Color color) {
+	SDL_Surface* surface = TTF_RenderUTF8_Blended(font->font, text, gfc_color_to_sdl(color));
+	TextLine name;
+	memcpy(name, text, sizeof(TextLine));
+	name[sizeof(TextLine) - 1] = '\0';
+	return gf3d_texture_from_surface(name, surface);
+}
+void engine_utility_settexture(Entity* entity, Texture* texture) {
+	if (!texture)	return;
+	gf3d_texture_free(entity->model->texture);
+	entity->model->texture = texture;
 }

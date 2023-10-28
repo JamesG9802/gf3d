@@ -33,6 +33,14 @@ void gf3d_texture_init(Uint32 max_textures);
 Texture *gf3d_texture_load(const char *filename);
 
 /**
+ * @brief creates a texture from an existing surface
+ * @param name the identifier for the surface in case it can be reused.
+ * @param surface the surface representing the image
+ * @return NULL on error or the texture loaded
+ */
+Texture* gf3d_texture_from_surface(const char* name, SDL_Surface* surface);
+
+/**
  * @brief create a texture based on the provided surface.
  * @note the filename is not populated by this
  * @param surface the SDL_Surface image data to convert

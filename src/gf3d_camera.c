@@ -133,8 +133,9 @@ void gf3d_camera_get_position(Vector3D* position) {
 }
 void gf3d_camera_get_rotation(Vector3D* rotation)
 {
-    rotation->x = -gf3d_camera.rotation.x;
-    rotation->y = -gf3d_camera.rotation.y;
+    //  I have no idea why this is like this.
+    rotation->x = -gf3d_camera.rotation.y;
+    rotation->y = -gf3d_camera.rotation.x;
     rotation->z = -gf3d_camera.rotation.z;
 }
 /*eol@eof*/

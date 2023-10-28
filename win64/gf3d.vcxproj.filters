@@ -61,6 +61,9 @@
     <Filter Include="Source Files\game">
       <UniqueIdentifier>{ba64ec12-64f6-4709-b779-d0baf124fc9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\dice">
+      <UniqueIdentifier>{a07f198d-4184-4db7-b0ef-5d3be75836f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\agumon.c">
@@ -258,6 +261,9 @@
     <ClCompile Include="..\src\engine_utility.c">
       <Filter>Source Files\engine_retrofit</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\script_billboard.c">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\agumon.h">
@@ -439,6 +445,15 @@
     </ClInclude>
     <ClInclude Include="..\include\entity.h">
       <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\script_player.h">
+      <Filter>Header Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\dice.h">
+      <Filter>Header Files\dice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\dicevalue.h">
+      <Filter>Header Files\dice</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

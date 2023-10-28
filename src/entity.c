@@ -165,27 +165,30 @@ void entity_update(Entity *self)
 {
     if (!self)return;
     // HANDLE ALL COMMON UPDATE STUFF
-    double timeDelta = engine_time_delta();
-    
-    Vector3D acceleration = self->acceleration;
-    acceleration.x *= .5 * timeDelta;
-    acceleration.y *= .5 * timeDelta;
-    acceleration.z *= .5 * timeDelta;
+    if (!self->skipCommonUpdate)
+    {
+        double timeDelta = engine_time_delta();
+
+        Vector3D acceleration = self->acceleration;
+        acceleration.x *= .5 * timeDelta;
+        acceleration.y *= .5 * timeDelta;
+        acceleration.z *= .5 * timeDelta;
 
 
-    vector3d_add(self->velocity, acceleration, self->velocity);
-    Vector3D velocity = self->velocity;
-    velocity.x *= timeDelta;
-    velocity.y *= timeDelta;
-    velocity.z *= timeDelta;
-    vector3d_add(self->position,self->position,velocity);
-    vector3d_add(self->velocity,acceleration,self->velocity);
-    
-    gfc_matrix_identity(self->modelMat);
-    
-    gfc_matrix_scale(self->modelMat,self->scale);
-    gfc_matrix_rotate_by_vector(self->modelMat,self->modelMat,self->rotation);
-    gfc_matrix_translate(self->modelMat,self->position);
+        vector3d_add(self->velocity, acceleration, self->velocity);
+        Vector3D velocity = self->velocity;
+        velocity.x *= timeDelta;
+        velocity.y *= timeDelta;
+        velocity.z *= timeDelta;
+        vector3d_add(self->position, self->position, velocity);
+        vector3d_add(self->velocity, acceleration, self->velocity);
+
+        gfc_matrix_identity(self->modelMat);
+
+        gfc_matrix_scale(self->modelMat, self->scale);
+        gfc_matrix_rotate_by_vector(self->modelMat, self->modelMat, self->rotation);
+        gfc_matrix_translate(self->modelMat, self->position);
+    }
     
     if (self->scripts) {
         for (Uint32 i = 0; i < gfc_list_get_count(self->scripts); i++)

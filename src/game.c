@@ -64,8 +64,6 @@ int main(int argc,char *argv[])
 
     SDL_SetRelativeMouseMode(SDL_TRUE);
     slog_sync();
-    //gf3d_camera_set_scale(vector3d(1,1,1));
-    //player = player_new(vector3d(-50,0,0));
     
     sky = gf3d_model_load("models/sky.model");
     gfc_matrix_identity(skyMat);
@@ -80,6 +78,7 @@ int main(int argc,char *argv[])
     {
         engine_time_renew();
         gfc_input_update();
+        engine_utility_update();
         gf2d_font_update();
         SDL_GetMouseState(&mousex,&mousey);
         
@@ -89,8 +88,6 @@ int main(int argc,char *argv[])
 
         entity_think_all();
         entity_update_all();
-    //    gf3d_camera_update_view();
-    //    gf3d_camera_get_view_mat4(gf3d_vgraphics_get_view_matrix());
 
         gf3d_vgraphics_render_start();
 

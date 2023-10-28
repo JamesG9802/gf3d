@@ -66,6 +66,11 @@ void gf2d_font_init(const char *configFile);
 void gf2d_font_update();
 
 /**
+ * @brief get a font from the font manager.
+ */
+Font* gf2d_font_get_by_tag(FontTypes tag);
+
+/**
  * @brief draw text to the screen overlay layer
  */
 void gf2d_font_draw_line_named(char *text,char *filename,Color color, Vector2D position);

@@ -315,5 +315,21 @@ Texture *gf3d_texture_load(const char *filename)
     tex->surface = surface;
     return tex;
 }
-
+Texture* gf3d_texture_from_surface(const char* name, SDL_Surface* surface) {
+    Texture* tex;
+    tex = gf3d_texture_get_by_filename(name);
+    if (tex)
+    {
+        tex->_refcount++;
+        return tex;
+    }
+    tex = gf3d_texture_convert_surface(surface);
+    if (!tex)
+    {
+        return NULL;
+    }
+    gfc_line_cpy(tex->filename, name);
+    tex->surface = surface;
+    return tex;
+}
 /*eol@eof*/

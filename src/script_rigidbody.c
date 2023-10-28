@@ -34,11 +34,6 @@ static void Update(Entity* self) {
 		self->bounds.x, self->bounds.y, self->bounds.z, self->bounds.w, self->bounds.h, self->bounds.d);
 	slog_sync();
 	*/
-	double timeDelta = engine_time_delta();
-	self->rotation.x += GFC_HALF_PI * timeDelta / 16;
-	self->rotation.y += GFC_PI * timeDelta / 16;
-	self->rotation.z += GFC_PI_HALFPI * timeDelta / 16;
-
 	engine_utility_ismouseover(self, NULL);
 	
 	self->selected = engine_utility_ismouseover(self, NULL);

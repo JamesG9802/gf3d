@@ -83,6 +83,7 @@
     <ClCompile Include="..\src\script_rigidbody.c" />
     <ClCompile Include="..\src\script_soil.c" />
     <ClCompile Include="..\src\script_spherecollider.c" />
+    <ClCompile Include="..\src\script_billboard.c" />
     <ClCompile Include="..\src\world.c" />
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +114,8 @@
     <ClInclude Include="..\gfc\simple_json\include\simple_json_value.h" />
     <ClInclude Include="..\gfc\simple_logger\include\simple_logger.h" />
     <ClInclude Include="..\include\agumon.h" />
+    <ClInclude Include="..\include\dice.h" />
+    <ClInclude Include="..\include\dicevalue.h" />
     <ClInclude Include="..\include\engine_time.h" />
     <ClInclude Include="..\include\engine_utility.h" />
     <ClInclude Include="..\include\entity.h" />
@@ -145,6 +148,7 @@
     <ClInclude Include="..\include\script.h" />
     <ClInclude Include="..\include\script_defs.h" />
     <ClInclude Include="..\include\script_loader.h" />
+    <ClInclude Include="..\include\script_player.h" />
     <ClInclude Include="..\include\world.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

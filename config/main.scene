@@ -63,10 +63,20 @@
 		{
 			"model":"models/sphere.model",
 			"position":[0,0,0],
-			"scale":[1,1,1],
-			"rotation":[0,0,20],
-			"scripts": [
-				"boxcollider"
+			"scale":[2,2,2],
+			"rotation":[0,0,0],
+			"scripts": [				
+				"soil",
+				"spherecollider"
+			]
+		},
+		{
+			"model":"models/quad.model",
+			"position":[10,0,0],
+			"scale":[10,10,10],
+			"rotation":[0,0,0],
+			"scripts": [				
+				"billboard"
 			]
 		}
 	]

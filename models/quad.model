@@ -1,0 +1,7 @@
+{
+    "model":
+    {
+        "model":"meshes/quad.obj",
+        "texture":"images/default.png"
+    }
+}

@@ -37,4 +37,10 @@ Script* script_new_spherecollider();
 /// <returns></returns>
 Script* script_new_soil();
 
+/// <summary>
+/// Script to make a billboard entity.
+/// </summary>
+/// <returns></returns>
+Script* script_new_billboard();
+
 /*eol@eof*/
