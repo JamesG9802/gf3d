@@ -72,11 +72,16 @@
 		},
 		{
 			"model":"models/quad.model",
-			"position":[10,0,0],
-			"scale":[10,10,10],
+			"position":[100,100,0],
+			"scale":[1,1,1],
 			"rotation":[0,0,0],
 			"scripts": [				
-				"billboard"
+				{
+					"name": "billboard",
+					"args": [
+						"Edit this string in config/main.scene"
+					]
+				}
 			]
 		}
 	]

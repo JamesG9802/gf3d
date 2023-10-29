@@ -97,6 +97,7 @@ void entity_free(Entity *self)
             if (!script) continue;
             if (script->Destroy)
                 script->Destroy(self, script);
+            free(script);
         }
         gfc_list_delete(self->scripts);
     }

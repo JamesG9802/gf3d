@@ -60,15 +60,16 @@ Model* engine_utility_createquadmodel(char* texture_filepath);
 Entity* engine_utility_createquad(char* texture_filepath);
 
 /// <summary>
-/// Creates and returns a texture with text drawn onto it.
+/// Creates and returns a texture with text drawn onto it. Populates width and height if not NULL.
 /// </summary>
 /// <param name="text"></param>
 /// <returns></returns>
-Texture* engine_utility_createtexturefromtext(Font* font, const char* text, Color color);
+Texture* engine_utility_createtexturefromtext(Font* font, const char* text, Color color, 
+	int* width, int* height);
 
 /// <summary>
-/// Sets the texture of an entity.
+/// Sets the texture of an entity and rescales it so text looks correct.
 /// </summary>
 /// <param name="entity"></param>
 /// <param name="texture"></param>
-void engine_utility_settexture(Entity* entity, Texture* texture);
+void engine_utility_settexture(Entity* entity, Texture* texture, int width, int height, int scaleFactor);

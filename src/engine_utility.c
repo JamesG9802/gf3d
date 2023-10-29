@@ -138,15 +138,25 @@ Entity* engine_utility_createquad(char* texture_filepath) {
 	return entity;
 }
 
-Texture* engine_utility_createtexturefromtext(Font* font, const char* text, Color color) {
-	SDL_Surface* surface = TTF_RenderUTF8_Blended(font->font, text, gfc_color_to_sdl(color));
+Texture* engine_utility_createtexturefromtext(Font* font, const char* text, Color color, 
+	int* width, int* height) {
+	TTF_SizeText(font->font, text, width, height);
+	SDL_Surface* surface =
+		TTF_RenderUTF8_Blended_Wrapped(font->font, text, gfc_color_to_sdl(color), 800);
 	TextLine name;
-	memcpy(name, text, sizeof(TextLine));
+	strcpy_s(name, strlen(text) + 1, text);
 	name[sizeof(TextLine) - 1] = '\0';
 	return gf3d_texture_from_surface(name, surface);
 }
-void engine_utility_settexture(Entity* entity, Texture* texture) {
+void engine_utility_settexture(Entity* entity, Texture* texture, int width, int height, int scaleFactor) {
 	if (!texture)	return;
 	gf3d_texture_free(entity->model->texture);
 	entity->model->texture = texture;
+	Vector2D scale = vector2d(width, height);
+	vector2d_normalize(&scale);
+	vector2d_scale(scale, scale, scaleFactor);
+
+	entity->scale.x = scale.x;
+	entity->scale.y = 1;
+	entity->scale.z = scale.y;
 }
