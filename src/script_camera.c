@@ -14,28 +14,29 @@
 /**
  * @brief Called when a script is created.
  */
-static void Start(Entity* self) {
+static void Start(Entity* self, Script* script) {
     gf3d_camera_set_scale(vector3d(1, 1, 1));
 }
 /**
  * @brief Called when a script is created.
  */
-static void Think(Entity* self) {}
+static void Think(Entity* self, Script* script) {}
 /**
  * @brief Called when a script is created.
  */
-static void Update(Entity* self) {
+static void Update(Entity* self, Script* script) {
     gf3d_camera_update_view();
     gf3d_camera_get_view_mat4(gf3d_vgraphics_get_view_matrix());
 }
 /**
  * @brief Called when a script is created.
  */
-static void Destroy(Entity* self) {
+static void Destroy(Entity* self, Script* script) {
 }
-
+static void Arguments(Entity* self, Script* script, const char** argv, int argc) {
+}
 Script* script_new_camera() {
-    return script_new(&Start, NULL, &Update, &Destroy);
+    return script_new(&Start, NULL, &Update, &Destroy, &Arguments);
 }
 
 

@@ -12,26 +12,27 @@
 /**
  * @brief Called when a script is created.
  */
-static void Start(Entity* self) {
+static void Start(Entity* self, Script* script) {
 }
 /**
  * @brief Called when a script is created.
  */
-static void Think(Entity* self) {
+static void Think(Entity* self, Script* script) {
 }
 /**
  * @brief Called when a script is created.
  */
-static void Update(Entity* self) {
+static void Update(Entity* self, Script* script) {
 }
 /**
  * @brief Called when a script is created.
  */
-static void Destroy(Entity* self) {
+static void Destroy(Entity* self, Script* script) {
 }
-
+static void Arguments(Entity* self, Script* script, const char** argv, int argc) {
+}
 Script* script_new_debug() {
-	return script_new(&Start, &Think, &Update, &Destroy);
+	return script_new(&Start, &Think, &Update, &Destroy, &Arguments);
 }
 
 

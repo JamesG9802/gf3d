@@ -80,7 +80,7 @@ void entity_setup(Entity* self, Model* model, Vector3D scale, Vector3D position,
             Script* script = (Script*)gfc_list_get_nth(self->scripts, i);
             if (!script) continue;
             if (script->Start)
-                script->Start(self);
+                script->Start(self, script);
         }
     }
 }
@@ -96,7 +96,7 @@ void entity_free(Entity *self)
             Script* script = (Script*)gfc_list_get_nth(self->scripts, i);
             if (!script) continue;
             if (script->Destroy)
-                script->Destroy(self);
+                script->Destroy(self, script);
         }
         gfc_list_delete(self->scripts);
     }
@@ -142,7 +142,7 @@ void entity_think(Entity *self)
             Script* script = (Script*)gfc_list_get_nth(self->scripts, i);
             if (!script) continue;
             if (script->Think)
-                script->Think(self);
+                script->Think(self, script);
         }
     }
 }
@@ -196,7 +196,7 @@ void entity_update(Entity *self)
             Script* script = (Script*)gfc_list_get_nth(self->scripts, i);
             if (!script) continue;
             if (script->Update)
-                script->Update(self);
+                script->Update(self, script);
         }
     }
 }

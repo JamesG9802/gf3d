@@ -19,14 +19,14 @@ static int thirdPersonMode = 0;
 /**
  * @brief Called when a script is created.
  */
-static void Start(Entity* self) {
+static void Start(Entity* self, Script* script) {
     player = self;
     self->hidden = true;
 }
 /**
  * @brief Called when a script is created.
  */
-static void Think(Entity* self) {
+static void Think(Entity* self, Script* script) {
     Vector3D forward, move = { 0 };
     Vector2D w, mouse;
     int mx, my;
@@ -126,7 +126,7 @@ static void Think(Entity* self) {
 /**
  * @brief Called when a script is created.
  */
-static void Update(Entity* self) {
+static void Update(Entity* self, Script* script) {
 	//printf("\n-------------------\nUpdating\n");
 
     if (!self)return;
@@ -139,11 +139,12 @@ static void Update(Entity* self) {
 /**
  * @brief Called when a script is created.
  */
-static void Destroy(Entity* self) {
+static void Destroy(Entity* self, Script* script) {
 }
-
+static void Arguments(Entity* self, Script* script, const char** argv, int argc) {
+}
 Script* script_new_player() {
-	return script_new(&Start, &Think, &Update, &Destroy);
+	return script_new(&Start, &Think, &Update, &Destroy, &Arguments);
 }
 
 

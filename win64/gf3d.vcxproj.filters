@@ -237,9 +237,6 @@
     <ClCompile Include="..\src\script_rigidbody.c">
       <Filter>Source Files\script</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\entity_bounds.c">
-      <Filter>Source Files\engine_retrofit</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\script_boxcollider.c">
       <Filter>Source Files\script</Filter>
     </ClCompile>
@@ -263,6 +260,9 @@
     </ClCompile>
     <ClCompile Include="..\src\script_billboard.c">
       <Filter>Source Files\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entity_bounds.c">
+      <Filter>Source Files\engine_retrofit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
