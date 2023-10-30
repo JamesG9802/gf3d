@@ -146,6 +146,7 @@
     <ClInclude Include="..\include\player.h" />
     <ClInclude Include="..\include\scene.h" />
     <ClInclude Include="..\include\script.h" />
+    <ClInclude Include="..\include\script_billboard.h" />
     <ClInclude Include="..\include\script_defs.h" />
     <ClInclude Include="..\include\script_loader.h" />
     <ClInclude Include="..\include\script_player.h" />

@@ -36,7 +36,7 @@ static void Destroy(Entity* self, Script* script) {
 static void Arguments(Entity* self, Script* script, const char** argv, int argc) {
 }
 Script* script_new_camera() {
-    return script_new(&Start, NULL, &Update, &Destroy, &Arguments);
+    return script_new("camera", &Start, NULL, &Update, &Destroy, &Arguments);
 }
 
 

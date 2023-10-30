@@ -8,6 +8,7 @@
 
 #include "gf3d_model.h"
 
+typedef struct Script_s Script;
 typedef struct Entity_Bounds_s Entity_Bounds;
 
 typedef enum Layer {
@@ -56,8 +57,8 @@ typedef struct Entity_S
     Vector3D    scale;
     Vector3D    rotation;
     
-    List*     scripts;    /**List of scripts, if any */
-
+    List*       scripts;    //  List of scripts, if any
+    List*       children;    //  List of children, if any
     void *customData;   /**<IF an entity needs to keep track of extra data, we can do it here*/
 }Entity;
 
@@ -128,4 +129,32 @@ void entity_update_all();
 
 Vector3D vector3d_get_from_angles(Vector3D angles);
 
+/// <summary>
+/// Gets a script by the name, if it exists.
+/// </summary>
+/// <param name="self"></param>
+/// <param name="name"></param>
+/// <returns></returns>
+Script* entity_get_script(Entity* self, TextLine name);
+
+/// <summary>
+/// Removes a script by the name, if it exists.
+/// </summary>
+/// <param name="self"></param>
+/// <param name="name"></param>
+void entity_remove_script(Entity* self, TextLine name);
+
+/// <summary>
+/// Loads an entity from a prefab file.
+/// </summary>
+/// <param name="file"></param>
+/// <returns></returns>
+Entity* entity_load_from_prefab(const char* filename);
+    
+/// <summary>
+/// Loads an entity from a json.
+/// </summary>
+/// <param name="json"></param>
+/// <returns></returns>
+Entity* entity_load_from_sjson(SJson* json, const char* filename);
 #endif

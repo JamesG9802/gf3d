@@ -5,6 +5,7 @@
 #include "script.h"
 
 Script* script_new(
+	TextLine name,
 	void(*Start)(Entity*, Script_s*),
 	void(*Think)(Entity*, Script_s*),
 	void(*Update)(Entity*, Script_s*),
@@ -14,6 +15,7 @@ Script* script_new(
 {
 	Script* script = calloc(1, sizeof(Script));
 	if (!script)	return NULL;
+	strcpy_s(script->name, sizeof(TextLine), name);
 	script->Start = Start;
 	script->Think = Think;
 	script->Update = Update;

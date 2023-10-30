@@ -455,5 +455,8 @@
     <ClInclude Include="..\include\dicevalue.h">
       <Filter>Header Files\dice</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\script_billboard.h">
+      <Filter>Header Files\script</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -15,22 +15,25 @@
 
 static float timeDelta = 0;
 
-/// <summary>
-/// Called when a script is created.
-/// <param name="Entity*">Attached entity</param>
-/// <param name="Script*">Caller script</param>
-/// </summary>
-static void Start(Entity* self, Script* script) {
-	if (script->data == NULL) {
-		char a[13] = "Default Text";
-		script->data = calloc(sizeof(char), 13);
-		if (!script->data)
-		{
-			slog("Coulnd't allocate data.");
-			return;
-		}
-		memcpy(script->data, a, sizeof(char) * 13);
+void script_billboard_settext(Entity* self, Script* script, const char* text) {
+	if (!self || !script || !text) {
+		return;
 	}
+	if (script->data)
+	{
+		free(script->data);
+	}
+	script->data = malloc(sizeof(char) * (strlen(text) + 1));
+
+	if (!script->data)
+	{
+		slog("Coulnd't allocate data.");
+		return;
+	}
+	strcpy(script->data, text);
+}
+
+void script_billboard_updatetexture(Entity* self, Script* script) {
 	int width, height;
 	engine_utility_settexture(
 		self,
@@ -45,6 +48,18 @@ static void Start(Entity* self, Script* script) {
 		height,
 		50
 	);
+}
+
+/// <summary>
+/// Called when a script is created.
+/// <param name="Entity*">Attached entity</param>
+/// <param name="Script*">Caller script</param>
+/// </summary>
+static void Start(Entity* self, Script* script) {
+	if (script->data == NULL) {
+		script_billboard_settext(self, script, "Default Text");
+	}
+	script_billboard_updatetexture(self, script);
 }
 
 /// <summary>
@@ -83,13 +98,13 @@ static void Destroy(Entity* self, Script* script) {
 /// </summary>
 static void Arguments(Entity* self, Script* script, const char** argv, int argc) {
 	if (argc >= 0) {
-		script->data = malloc(sizeof(char) * (strlen(argv[0]) + 1));
-		strcpy(script->data, argv[0]);
+		script_billboard_settext(self, script, argv[0]);
 	}
 }
 
 Script* script_new_billboard() {
-	return script_new(&Start, &Think, &Update, &Destroy, &Arguments);
+	return script_new("billboard", &Start, &Think, &Update, &Destroy, &Arguments);
 }
+
 
 /*eol@eof*/

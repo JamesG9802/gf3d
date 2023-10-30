@@ -144,7 +144,7 @@ static void Destroy(Entity* self, Script* script) {
 static void Arguments(Entity* self, Script* script, const char** argv, int argc) {
 }
 Script* script_new_player() {
-	return script_new(&Start, &Think, &Update, &Destroy, &Arguments);
+	return script_new("player", &Start, &Think, &Update, &Destroy, &Arguments);
 }
 
 

@@ -48,7 +48,7 @@ static void Destroy(Entity* self, Script* script) {
 static void Arguments(Entity* self, Script* script, const char** argv, int argc) {
 }
 Script* script_new_spherecollider() {
-	return script_new(&Start, &Think, &Update, &Destroy, &Arguments);
+	return script_new("spherecollider", &Start, &Think, &Update, &Destroy, &Arguments);
 }
 
 

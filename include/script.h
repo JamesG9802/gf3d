@@ -8,6 +8,10 @@ typedef struct Script_s Script_s;
 /// A script describes components that attach to entities.
 /// </summary>
 typedef struct Script_s {
+	/// <summary>
+	/// Name of the script
+	/// </summary>
+	TextLine name;
 
 	/// <summary>
 	/// Called when a script is created.
@@ -54,6 +58,7 @@ typedef struct Script_s {
  * @return a new generic script object.
  */
 Script* script_new(
+	TextLine name,
 	void(*Start)(Entity*, Script_s*),
 	void(*Think)(Entity*, Script_s*),
 	void(*Update)(Entity*, Script_s*),
