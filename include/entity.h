@@ -42,9 +42,10 @@ typedef struct Entity_S
 
 //    void       (*think)(struct Entity_S *self); /**<pointer to the think function*/
     Uint8       skipCommonUpdate;  //  true if entity wants to skip their common update function
+    Uint8       skipCommonDraw; //  true if entity wants to skip their common draw function
 //    void       (*update)(struct Entity_S *self); /**<pointer to the update function*/
     void        (*free)(struct Entity_S* self); /**pointer to the free function*/
-//    void       (*draw)(struct Entity_S *self); /**<pointer to an optional extra draw funciton*/
+    void        (*draw)(struct Entity_S *self); /**<pointer to an optional extra draw funciton*/
     void        (*damage)(struct Entity_S *self, float damage, struct Entity_S *inflictor); /**<pointer to the think function*/
     void        (*onDeath)(struct Entity_S *self); /**<pointer to an funciton to call when the entity dies*/
     

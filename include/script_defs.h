@@ -43,4 +43,9 @@ Script* script_new_soil();
 /// <returns></returns>
 Script* script_new_billboard();
 
+/// <summary>
+/// Script to make a UI entity.
+/// </summary>
+/// <returns></returns>
+Script* script_new_ui();
 /*eol@eof*/

@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#include "simple_logger.h"
+
 #include "gfc_types.h"
 #include "gfc_input.h"
 
@@ -87,51 +89,17 @@ static void Think(Entity* self, Script* script) {
         self->rotation.x = 0;
         self->rotation.z = 0;
     } 
-    if (gfc_input_keycode_released(SDL_SCANCODE_DELETE))
-    {
-        Edge3D e;
-        engine_utility_ismouseover(self, &e);
-        {Entity* ent = NULL;
-
-        ent = entity_new();
-        if (!ent)
-        {
-            return NULL;
-        }
-        ent->selectedColor = gfc_color(0.1, 1, 0.1, 1);
-        ent->color = gfc_color(1, 1, 1, 1);
-        ent->model = gf3d_model_load("models/dino.model");
-        ent->position = e.a;
-        }
-        {Entity* ent = NULL;
-
-        ent = entity_new();
-        if (!ent)
-        {
-            return NULL;
-        }
-        ent->selectedColor = gfc_color(0.1, 1, 0.1, 1);
-        ent->color = gfc_color(1, 1, 1, 1);
-        ent->model = gf3d_model_load("models/dino.model");
-        ent->position = e.b;
-        }
-    }
     if (gfc_input_keycode_released(SDL_SCANCODE_HOME))
     {
         thirdPersonMode = !thirdPersonMode;
     }
-    
-    // IsMouseOverEntity(self);
 }
 /**
  * @brief Called when a script is created.
  */
 static void Update(Entity* self, Script* script) {
-	//printf("\n-------------------\nUpdating\n");
 
     if (!self)return;
-
-
 
     gf3d_camera_set_position(self->position);
     gf3d_camera_set_rotation(self->rotation);

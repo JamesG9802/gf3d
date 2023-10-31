@@ -264,6 +264,9 @@
     <ClCompile Include="..\src\entity_bounds.c">
       <Filter>Source Files\engine_retrofit</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\script_ui.c">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\agumon.h">

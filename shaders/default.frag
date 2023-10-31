@@ -14,18 +14,9 @@ layout(location = 0) out vec4 outColor;
 
 void main()
 {
-    vec3 lightVector = lightPosition.xyz - vertPosition.xyz;
-    float lightDistance = length(lightVector);
-    lightVector = normalize(lightVector);
+    vec3 lightVector = normalize(lightPosition.xyz - vertPosition.xyz);
     float cosTheta = max(dot( normalize(fragNormal),lightVector ), 0);
     vec4 baseColor = texture(texSampler, fragTexCoord);
-
-    cosTheta = 50;
-    if(lightDistance > 1)
-    {
-        cosTheta = 50/lightDistance;
-    } 
- 
 
     outColor = (baseColor * ambient) + baseColor * cosTheta;
     outColor.x = outColor.x * colorMod.x;

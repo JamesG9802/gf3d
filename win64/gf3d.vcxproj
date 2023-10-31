@@ -84,6 +84,7 @@
     <ClCompile Include="..\src\script_soil.c" />
     <ClCompile Include="..\src\script_spherecollider.c" />
     <ClCompile Include="..\src\script_billboard.c" />
+    <ClCompile Include="..\src\script_ui.c" />
     <ClCompile Include="..\src\world.c" />
   </ItemGroup>
   <ItemGroup>

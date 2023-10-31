@@ -122,14 +122,18 @@ void entity_draw(Entity *self)
 {
     if (!self)return;
     if (self->hidden)return;
-    gf3d_model_draw(self->model, self->modelMat, gfc_color_to_vector4f(self->color), vector4d(1, 1, 1, 1));
-    if (self->selected)
+    if (!self->skipCommonDraw)
     {
-        gf3d_model_draw_highlight(
-            self->model,
-            self->modelMat,
-            gfc_color_to_vector4f(self->selectedColor));
+        gf3d_model_draw(self->model, self->modelMat, gfc_color_to_vector4f(self->color), vector4d(1, 1, 1, 1));
+        if (self->selected)
+        {
+            gf3d_model_draw_highlight(
+                self->model,
+                self->modelMat,
+                gfc_color_to_vector4f(self->selectedColor));
+        }
     }
+    if (self->draw) self->draw(self);
 }
 
 void entity_draw_all()
@@ -176,6 +180,17 @@ void entity_think_all()
 void entity_update(Entity *self)
 {
     if (!self)return;
+
+    if (self->scripts) {
+        for (Uint32 i = 0; i < gfc_list_get_count(self->scripts); i++)
+        {
+            Script* script = (Script*)gfc_list_get_nth(self->scripts, i);
+            if (!script) continue;
+            if (script->Update)
+                script->Update(self, script);
+        }
+    }
+
     // HANDLE ALL COMMON UPDATE STUFF
     if (!self->skipCommonUpdate)
     {
@@ -200,16 +215,6 @@ void entity_update(Entity *self)
         gfc_matrix_scale(self->modelMat, self->scale);
         gfc_matrix_rotate_by_vector(self->modelMat, self->modelMat, self->rotation);
         gfc_matrix_translate(self->modelMat, self->position);
-    }
-    
-    if (self->scripts) {
-        for (Uint32 i = 0; i < gfc_list_get_count(self->scripts); i++)
-        {
-            Script* script = (Script*)gfc_list_get_nth(self->scripts, i);
-            if (!script) continue;
-            if (script->Update)
-                script->Update(self, script);
-        }
     }
 }
 

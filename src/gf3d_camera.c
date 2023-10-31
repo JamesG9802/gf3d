@@ -138,4 +138,18 @@ void gf3d_camera_get_rotation(Vector3D* rotation)
     rotation->y = -gf3d_camera.rotation.x;
     rotation->z = -gf3d_camera.rotation.z;
 }
+
+void gf3d_camera_get_forward(Vector3D* forward) {
+    Vector3D eye, target = { 0,1,0 }, up = { 0,0,1 };
+    Vector3D output;
+    vector3d_copy(eye, gf3d_camera.position);
+    vector3d_rotate_about_x(&target, -gf3d_camera.rotation.x);
+    vector3d_rotate_about_z(&target, -gf3d_camera.rotation.z);
+    vector3d_add(target, target, eye);
+
+    // The "forward" vector.
+    vector3d_sub(output, eye, target);
+    vector3d_normalize(&output);
+    memcpy_s(forward, sizeof(Vector3D), &output, sizeof(Vector3D));
+}
 /*eol@eof*/

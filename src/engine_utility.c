@@ -47,6 +47,18 @@ void engine_utility_update() {
 		mouse_state.rightMouse = UNPRESSED;
 }
 
+Vector2D engine_utility_screentondc(Vector2D screen) {
+	int width, height;
+	gf3d_vgraphics_get_window_size(&width, &height);
+	return vector2d((2.0f * screen.x) / width - 1.0f, (2.0f * screen.y) / height - 1.0f);
+}
+
+Vector2D engine_utility_ndctoscreen(Vector2D ndc) {
+	int width, height;
+	gf3d_vgraphics_get_window_size(&width, &height);
+	return vector2d((ndc.x + 1) * width / 2.0, (ndc.y + 1) * height / 2.0);
+}
+
 Bool engine_utility_ismouseover(Entity* entity, Edge3D* ray) {
 	int mouse_x, mouse_y;
 	int width, height;

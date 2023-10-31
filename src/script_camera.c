@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#include "simple_logger.h"
+
 #include "gfc_types.h"
 #include "gfc_input.h"
 

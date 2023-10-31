@@ -63,6 +63,8 @@ static void Think(Entity* self, Script* script) {
 	}
 	else if (state == CLICKED && !self->selected && engine_utility_isleftmousereleased()) {
 		state = IDLE;
+		entity_free(gfc_list_get_nth(self->children, 0));
+		gfc_list_delete_nth(self->children, 0);
 		self->color = gfc_color(1, 1, 1, 1);
 	}
 	else if (state == CLICKED && self->selected && engine_utility_isleftmousereleased()) {

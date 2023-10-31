@@ -22,6 +22,8 @@ Script* script_loader_getScript(char* string) {
 		return script_new_soil();
 	if (strcmp(string, "billboard") == 0)
 		return script_new_billboard();
+	if (strcmp(string, "ui") == 0)
+		return script_new_ui();
 	return NULL;
 }
 

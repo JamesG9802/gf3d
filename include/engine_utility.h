@@ -10,6 +10,20 @@
 void engine_utility_update();
 
 /// <summary>
+/// Returns a vector transforming the screen coordinates to normalized device coordinates.
+/// </summary>
+/// <param name="screen"></param>
+/// <returns></returns>
+Vector2D engine_utility_screentondc(Vector2D screen);
+
+/// <summary>
+/// Returns a vector transforming the normalized device coordinates to screen coordinates/
+/// </summary>
+/// <param name="ndc"></param>
+/// <returns></returns>
+Vector2D engine_utility_ndctoscreen(Vector2D ndc);
+
+/// <summary>
 /// Returns true if the mouse is over the entity in world space.
 /// </summary>
 /// <param name="entity"></param>

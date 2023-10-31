@@ -66,9 +66,16 @@ void gf3d_camera_set_rotation(Vector3D rotation);
 void gf3d_camera_get_position(Vector3D* position);
 
 /// <summary>
-/// Populates position with the camera's current position.
+/// Populates rotation with the camera's current rotation.
 /// </summary>
 /// <param name="position"></param>
 void gf3d_camera_get_rotation(Vector3D* rotation);
+
+/// <summary>
+/// Populates forward with the camera's forward direction normalized.
+/// However, remember that the camera is always facing backwards so.
+/// </summary>
+/// <param name="forward"></param>
+void gf3d_camera_get_forward(Vector3D* forward);
 
 #endif
