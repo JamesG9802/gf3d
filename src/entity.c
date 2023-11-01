@@ -353,7 +353,7 @@ Entity* entity_load_from_sjson(SJson* json, const char* filename) {
                 }
                 else {
                     SJson* arguments = sj_object_get_value(scriptObject, "args");
-                    char** argvalues = calloc(sizeof(char), sj_array_get_count(arguments));
+                    char** argvalues = calloc(sizeof(char*), sj_array_get_count(arguments));
                     for (int k = 0; k < sj_array_get_count(arguments); k++) {
                         if (!sj_is_string(sj_array_get_nth(arguments, k))) {
                             slog("%dth script %s %dth argument in %s prefab is not a string",

@@ -1,4 +1,4 @@
-﻿#include <stdio.h>
+#include <stdio.h>
 
 #include "simple_logger.h"
 
@@ -11,41 +11,17 @@
 #include "entity.h"
 #include "script.h"
 
+#include "game_state.h"
+
 #include "script_defs.h"
 
-void script_billboard_settext(Entity* self, Script* script, const char* text) {
-	if (!self || !script || !text) {
-		return;
-	}
-	if (script->data)
-	{
-		free(script->data);
-	}
-	script->data = malloc(sizeof(char) * (strlen(text) + 1));
+/// <summary>
+/// There can only be a single script_manager.
+/// </summary>
+static Script* script_manager = NULL;
 
-	if (!script->data)
-	{
-		slog("Coulnd't allocate data.");
-		return;
-	}
-	strcpy(script->data, text);
-}
-
-void script_billboard_updatetexture(Entity* self, Script* script) {
-	int width, height;
-	engine_utility_settexture(
-		self,
-		engine_utility_createtexturefromtext(
-			gf2d_font_get_by_tag(FT_H1),
-			script->data,
-			self->color,
-			&width,
-			&height
-		),
-		width,
-		height,
-		50
-	);
+Script* script_manager_get() {
+	return script_manager;
 }
 
 /// <summary>
@@ -54,10 +30,17 @@ void script_billboard_updatetexture(Entity* self, Script* script) {
 /// <param name="Script*">Caller script</param>
 /// </summary>
 static void Start(Entity* self, Script* script) {
-	if (script->data == NULL) {
-		script_billboard_settext(self, script, "Default Text");
+	if (script_manager)
+	{
+		slog("Trying to create a script_manager when it already exists");
 	}
-	script_billboard_updatetexture(self, script);
+	script->data = malloc(sizeof(GameState));
+	if (!script->data)
+	{
+		slog("could not allocate memory for game data");
+		slog_sync();
+	}
+	script_manager = script;
 }
 
 /// <summary>
@@ -66,7 +49,6 @@ static void Start(Entity* self, Script* script) {
 /// <param name="Script*">Caller script</param>
 /// </summary>
 static void Think(Entity* self, Script* script) {
-	//self->selected = engine_utility_ismouseover(self, NULL);
 }
 
 /// <summary>
@@ -75,7 +57,6 @@ static void Think(Entity* self, Script* script) {
 /// <param name="Script*">Caller script</param>
 /// </summary>
 static void Update(Entity* self, Script* script) {
-	gf3d_camera_get_rotation(&self->rotation);
 }
 
 /// <summary>
@@ -84,7 +65,7 @@ static void Update(Entity* self, Script* script) {
 /// <param name="Script*">Caller script</param>
 /// </summary>
 static void Destroy(Entity* self, Script* script) {
-	free(script->data);
+	
 }
 
 /// <summary>
@@ -95,13 +76,10 @@ static void Destroy(Entity* self, Script* script) {
 /// <param name="int">Number of arguments</param>
 /// </summary>
 static void Arguments(Entity* self, Script* script, const char** argv, int argc) {
-	if (argc > 0) {
-		script_billboard_settext(self, script, argv[0]);
-	}
 }
 
-Script* script_new_billboard() {
-	return script_new("billboard", &Start, &Think, &Update, &Destroy, &Arguments);
+Script* script_new_manager() {
+	return script_new("manager", &Start, &Think, &Update, &Destroy, &Arguments);
 }
 
 

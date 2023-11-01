@@ -267,6 +267,9 @@
     <ClCompile Include="..\src\script_ui.c">
       <Filter>Source Files\script</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\script_manager.c">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\agumon.h">
@@ -459,6 +462,12 @@
       <Filter>Header Files\dice</Filter>
     </ClInclude>
     <ClInclude Include="..\include\script_billboard.h">
+      <Filter>Header Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\script_ui.h">
+      <Filter>Header Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\script_manager.h">
       <Filter>Header Files\script</Filter>
     </ClInclude>
   </ItemGroup>

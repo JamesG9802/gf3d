@@ -79,6 +79,7 @@
     <ClCompile Include="..\src\script_camera.c" />
     <ClCompile Include="..\src\script_debug.c" />
     <ClCompile Include="..\src\script_loader.c" />
+    <ClCompile Include="..\src\script_manager.c" />
     <ClCompile Include="..\src\script_player.c" />
     <ClCompile Include="..\src\script_rigidbody.c" />
     <ClCompile Include="..\src\script_soil.c" />
@@ -150,7 +151,9 @@
     <ClInclude Include="..\include\script_billboard.h" />
     <ClInclude Include="..\include\script_defs.h" />
     <ClInclude Include="..\include\script_loader.h" />
+    <ClInclude Include="..\include\script_manager.h" />
     <ClInclude Include="..\include\script_player.h" />
+    <ClInclude Include="..\include\script_ui.h" />
     <ClInclude Include="..\include\world.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

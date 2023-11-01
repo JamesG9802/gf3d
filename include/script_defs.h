@@ -48,4 +48,11 @@ Script* script_new_billboard();
 /// </summary>
 /// <returns></returns>
 Script* script_new_ui();
+
+/// <summary>
+/// Script to make a manager entity.
+/// </summary>
+/// <returns></returns>
+Script* script_new_manager();
+
 /*eol@eof*/
