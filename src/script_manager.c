@@ -75,7 +75,7 @@ static void Destroy(Entity* self, Script* script) {
 /// <param name="const char*">Array of string arguments</param>
 /// <param name="int">Number of arguments</param>
 /// </summary>
-static void Arguments(Entity* self, Script* script, const char** argv, int argc) {
+static void Arguments(Entity* self, Script* script, SJson* json) {
 }
 
 Script* script_new_manager() {

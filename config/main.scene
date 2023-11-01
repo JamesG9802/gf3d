@@ -52,11 +52,10 @@
 			"rotation":[0,0,0],
 			"scripts": [				
 				{
-					"name": "ui",
-					"args": [
-						"images/sun.png",
-						"topmiddle"
-					]
+					"name":		"ui",
+					"image":	"images/sun.png",
+					"anchor":	"topmiddle"
+					"interactable":	true
 				}
 			]
 		}

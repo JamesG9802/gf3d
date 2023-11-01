@@ -45,10 +45,9 @@ typedef struct Script_s {
 	/// Called before Start when a script has initialization arguments to read in.
 	/// <param name="Entity*">Attached entity</param>
 	/// <param name="Script_s*">Caller script</param>
-	/// <param name="const char*">Array of string arguments</param>
-	/// <param name="int">Number of arguments</param>
+	/// <param name="SJson*">SJson object. Note that 'name' is a reserved field.</param>
 	/// </summary>
-	void (*Arguments)(Entity*, Script_s*, const char**, int);
+	void (*Arguments)(Entity*, Script_s*, SJson*);
 	void* data;
 } Script;
 
@@ -63,7 +62,7 @@ Script* script_new(
 	void(*Think)(Entity*, Script_s*),
 	void(*Update)(Entity*, Script_s*),
 	void(*Destroy)(Entity*, Script_s*),
-	void(*Arguments)(Entity*, Script_s*, const char**, int)
+	void(*Arguments)(Entity*, Script_s*, SJson*)
 );
 
 /*eol@eof*/

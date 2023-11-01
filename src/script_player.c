@@ -109,7 +109,7 @@ static void Update(Entity* self, Script* script) {
  */
 static void Destroy(Entity* self, Script* script) {
 }
-static void Arguments(Entity* self, Script* script, const char** argv, int argc) {
+static void Arguments(Entity* self, Script* script, SJson* json) {
 }
 Script* script_new_player() {
 	return script_new("player", &Start, &Think, &Update, &Destroy, &Arguments);

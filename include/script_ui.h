@@ -11,6 +11,7 @@ typedef struct UIData {
 	Sprite* sprite;
 	Color color;
 	AnchorMode mode;
+	Bool isInteractable;
 } UIData;
 
 

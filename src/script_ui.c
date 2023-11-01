@@ -79,7 +79,7 @@ void script_ui_setanchormode(Entity* self, Script* script, AnchorMode mode) {
 
 //	Uses the 2D render pipeline instead of the 3D one.
 static void EntityUIDraw(Entity* self) {
-	if (self->customData && ((UIData*)self->customData)->sprite)
+	if (self->customData && ((UIData*)self->customData)->sprite && !self->hidden)
 	{
 		Vector2D position = getRenderPosition(self);
 		gf2d_sprite_draw(((UIData*)self->customData)->sprite,
@@ -91,9 +91,11 @@ static void EntityUIDraw(Entity* self) {
 	}
 }
 
-/**
- * @brief Called when a script is created.
- */
+/// <summary>
+/// Called when a script is created.
+/// <param name="Entity*">Attached entity</param>
+/// <param name="Script_s*">Caller script</param>
+/// </summary>
 static void Start(Entity* self, Script* script) {
 	self->skipCommonDraw = true;
 	self->skipCommonUpdate = true;
@@ -103,29 +105,45 @@ static void Start(Entity* self, Script* script) {
 	self->position.x = pos.x;
 	self->position.y = pos.y;
 }
-/**
- * @brief Called when a script is created.
- */
+
+/// <summary>
+/// Called every think frame.
+/// <param name="Entity*">Attached entity</param>
+/// <param name="Script_s*">Caller script</param>
+/// </summary>
 static void Think(Entity* self, Script* script) {
 
 }
-/**
- * @brief Called when a script is created.
- */
+
+/// <summary>
+/// Called every update frame.
+/// <param name="Entity*">Attached entity</param>
+/// <param name="Script_s*">Caller script</param>
+/// </summary>
 static void Update(Entity* self, Script* script) {
-	if (script_ui_ismouseover(self, script))
+	if (!self->customData)
 	{
-		((UIData*)self->customData)->color = gfc_color(0, 1, 1, 1);
+		slog("No data for ui");
+		return;
+	}
+	if (((UIData*)self->customData)->isInteractable && script_ui_ismouseover(self, script))
+	{
+		if(engine_utility_isleftmousedown())
+			((UIData*)self->customData)->color = gfc_color(0.5, 0.5, 1, 1);
+		else
+			((UIData*)self->customData)->color = gfc_color(0.75, 0.75, 0.75, 1);
 	}
 	else
 	{
 		((UIData*)self->customData)->color = gfc_color(1, 1, 1, 1);
 	}
-
 }
-/**
- * @brief Called when a script is created.
- */
+
+/// <summary>
+/// Called when a script is destroyed.
+/// <param name="Entity*">Attached entity</param>
+/// <param name="Script_s*">Caller script</param>
+/// </summary>
 static void Destroy(Entity* self, Script* script) {
 	if (self->customData) {
 		if (((UIData*)self->customData)->sprite)
@@ -135,8 +153,17 @@ static void Destroy(Entity* self, Script* script) {
 		free(self->customData);
 	}
 }
-static void Arguments(Entity* self, Script* script, const char** argv, int argc) {
-	if (argc > 0) {
+
+/// <summary>
+/// Called before Start when a script has initialization arguments to read in.
+/// <param name="Entity*">Attached entity</param>
+/// <param name="Script_s*">Caller script</param>
+/// <param name="SJson*">SJson object. Note that 'name' is a reserved field.</param>
+/// </summary>
+static void Arguments(Entity* self, Script* script, SJson* json) {
+	if (!json) return;
+	if(sj_get_string_value(sj_object_get_value(json, "image"))) {
+		char* imagePath = sj_get_string_value(sj_object_get_value(json, "image"));
 		self->customData = malloc(sizeof(UIData));
 		if (!self->customData)
 		{
@@ -144,18 +171,24 @@ static void Arguments(Entity* self, Script* script, const char** argv, int argc)
 			slog_sync();
 			return;
 		}
-		((UIData*)self->customData)->sprite = gf2d_sprite_load(argv[0], 0, 0, 1);
+		((UIData*)self->customData)->sprite = gf2d_sprite_load(imagePath, 0, 0, 1);
 		((UIData*)self->customData)->color = gfc_color(1, 1, 1, 1);
 	}
-	if (argc > 1) {
+	if (sj_get_string_value(sj_object_get_value(json, "anchor"))) {
 		if (!self->customData)
 			return;
-		if(strcmp(argv[1], "topleft") == 0)
+		char* anchorMode = sj_get_string_value(sj_object_get_value(json, "anchor"));
+		if(strcmp(anchorMode, "topleft") == 0)
 			((UIData*)self->customData)->mode = TOPLEFT;
-		else if (strcmp(argv[1], "topmiddle") == 0)
+		else if (strcmp(anchorMode, "topmiddle") == 0)
 			((UIData*)self->customData)->mode = TOPMIDDLE;
-		else if(strcmp(argv[1], "center") == 0)
+		else if(strcmp(anchorMode, "center") == 0)
 			((UIData*)self->customData)->mode = CENTER;
+	}
+	if (sj_get_bool_value(sj_object_get_value(json, "interactable"), NULL)) {
+		Bool isInteractable;
+		sj_get_bool_value(sj_object_get_value(json, "interactable"), &isInteractable);
+		((UIData*)self->customData)->isInteractable = isInteractable;
 	}
 }
 Script* script_new_ui() {

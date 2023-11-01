@@ -1,6 +1,5 @@
 #pragma once
 #include "script.h"
-
 /**
  * @brief Script to test out the scripting system.
  */
@@ -44,7 +43,7 @@ Script* script_new_soil();
 Script* script_new_billboard();
 
 /// <summary>
-/// Script to make a UI entity.
+/// Script to make a UI entity. Uses entity->customData.
 /// </summary>
 /// <returns></returns>
 Script* script_new_ui();

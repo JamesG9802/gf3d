@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "simple_logger.h"
+
 #include "entity.h"
 #include "script.h"
 
@@ -10,7 +12,7 @@ Script* script_new(
 	void(*Think)(Entity*, Script_s*),
 	void(*Update)(Entity*, Script_s*),
 	void(*Destroy)(Entity*, Script_s*),
-	void(*Arguments)(Entity*, Script_s*, const char**, int)
+	void(*Arguments)(Entity*, Script_s*, SJson*)
 )
 {
 	Script* script = calloc(1, sizeof(Script));

@@ -121,8 +121,7 @@ void entity_free(Entity *self)
 void entity_draw(Entity *self)
 {
     if (!self)return;
-    if (self->hidden)return;
-    if (!self->skipCommonDraw)
+    if (!self->skipCommonDraw && !self->hidden)
     {
         gf3d_model_draw(self->model, self->modelMat, gfc_color_to_vector4f(self->color), vector4d(1, 1, 1, 1));
         if (self->selected)
@@ -346,31 +345,9 @@ Entity* entity_load_from_sjson(SJson* json, const char* filename) {
                     slog("%dth script %s in %s prefab could not be found", j, scriptName, filename);
                     continue;
                 }
-                if (!(sj_object_get_value(scriptObject, "args")))
-                {
-                    slog("%dth script %s in %s prefab has no arguments; consider restructuring",
-                        j, scriptName, filename);
-                }
-                else {
-                    SJson* arguments = sj_object_get_value(scriptObject, "args");
-                    char** argvalues = calloc(sizeof(char*), sj_array_get_count(arguments));
-                    for (int k = 0; k < sj_array_get_count(arguments); k++) {
-                        if (!sj_is_string(sj_array_get_nth(arguments, k))) {
-                            slog("%dth script %s %dth argument in %s prefab is not a string",
-                                j, scriptName, k, filename);
-                            continue;
-                        }
-                        argvalues[k] = malloc(sizeof(char) *
-                            (1 + strlen(sj_get_string_value(sj_array_get_nth(arguments, k)))));
-                        strcpy(argvalues[k], sj_get_string_value(sj_array_get_nth(arguments, k)));
-                    }
-                    script->Arguments(entity, script, argvalues, sj_array_get_count(arguments));
-                    for (int k = 0; k < sj_array_get_count(arguments); k++) {
-                        free(argvalues[k]);
-                    }
-                    free(argvalues);
-                }
-
+                    
+                script->Arguments(entity, script, scriptObject);
+                
                 gfc_list_append(scripts, script);
 
             }

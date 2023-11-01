@@ -47,7 +47,7 @@ static void Update(Entity* self, Script* script) {
 static void Destroy(Entity* self, Script* script) {
 	free(self->bounds);
 }
-static void Arguments(Entity* self, Script* script, const char** argv, int argc) {
+static void Arguments(Entity* self, Script* script, SJson* json) {
 }
 Script* script_new_boxcollider() {
 	return script_new("boxcollider", &Start, &Think, &Update, &Destroy, &Arguments);

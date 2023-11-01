@@ -87,7 +87,8 @@ static void Update(Entity* self, Script* script) {
 static void Destroy(Entity* self, Script* script) {
 	free(script->data);
 }
-static void Arguments(Entity* self, Script* script, const char** argv, int argc) {
+
+static void Arguments(Entity* self, Script* script, SJson* json) {
 }
 Script* script_new_soil() {
 	return script_new("soil", &Start, &Think, &Update, &Destroy, &Arguments);

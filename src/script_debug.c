@@ -29,7 +29,7 @@ static void Update(Entity* self, Script* script) {
  */
 static void Destroy(Entity* self, Script* script) {
 }
-static void Arguments(Entity* self, Script* script, const char** argv, int argc) {
+static void Arguments(Entity* self, Script* script, SJson* json) {
 }
 Script* script_new_debug() {
 	return script_new("debug", &Start, &Think, &Update, &Destroy, &Arguments);

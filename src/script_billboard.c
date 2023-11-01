@@ -88,15 +88,14 @@ static void Destroy(Entity* self, Script* script) {
 }
 
 /// <summary>
-/// Called when a script has initialization arguments to read in.
+/// Called before Start when a script has initialization arguments to read in.
 /// <param name="Entity*">Attached entity</param>
 /// <param name="Script_s*">Caller script</param>
-/// <param name="const char*">Array of string arguments</param>
-/// <param name="int">Number of arguments</param>
+/// <param name="SJson*">SJson object. Note that 'name' is a reserved field.</param>
 /// </summary>
-static void Arguments(Entity* self, Script* script, const char** argv, int argc) {
-	if (argc > 0) {
-		script_billboard_settext(self, script, argv[0]);
+static void Arguments(Entity* self, Script* script, SJson* json) {
+	if (json && sj_get_string_value(sj_object_get_value(json, "text"))) {
+		script_billboard_settext(self, script, sj_get_string_value(sj_object_get_value(json, "text")));
 	}
 }
 
