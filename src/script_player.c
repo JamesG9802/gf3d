@@ -10,10 +10,10 @@
 #include "engine_time.h"
 #include "engine_utility.h"
 
-#include "entity.h"
-
 #include "script.h"
 #include "script_defs.h"
+
+#include "entity.h"
 
 Entity* player = NULL;
 static int thirdPersonMode = 0;
@@ -25,6 +25,7 @@ static void Start(Entity* self, Script* script) {
     player = self;
     self->hidden = true;
 }
+
 /**
  * @brief Called when a script is created.
  */
@@ -94,6 +95,7 @@ static void Think(Entity* self, Script* script) {
         thirdPersonMode = !thirdPersonMode;
     }
 }
+
 /**
  * @brief Called when a script is created.
  */
@@ -104,6 +106,7 @@ static void Update(Entity* self, Script* script) {
     gf3d_camera_set_position(self->position);
     gf3d_camera_set_rotation(self->rotation);
 }
+
 /**
  * @brief Called when a script is created.
  */

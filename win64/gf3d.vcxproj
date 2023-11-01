@@ -48,6 +48,7 @@
     <ClCompile Include="..\src\engine_utility.c" />
     <ClCompile Include="..\src\entity.c" />
     <ClCompile Include="..\src\entity_bounds.c" />
+    <ClCompile Include="..\src\event_manager.c" />
     <ClCompile Include="..\src\game.c" />
     <ClCompile Include="..\src\game_state.c" />
     <ClCompile Include="..\src\gf2d_draw.c" />
@@ -78,6 +79,7 @@
     <ClCompile Include="..\src\script_boxcollider.c" />
     <ClCompile Include="..\src\script_camera.c" />
     <ClCompile Include="..\src\script_debug.c" />
+    <ClCompile Include="..\src\script_eventhandler.c" />
     <ClCompile Include="..\src\script_loader.c" />
     <ClCompile Include="..\src\script_manager.c" />
     <ClCompile Include="..\src\script_player.c" />
@@ -122,6 +124,7 @@
     <ClInclude Include="..\include\engine_utility.h" />
     <ClInclude Include="..\include\entity.h" />
     <ClInclude Include="..\include\entity_bounds.h" />
+    <ClInclude Include="..\include\event_manager.h" />
     <ClInclude Include="..\include\game_state.h" />
     <ClInclude Include="..\include\gf2d_draw.h" />
     <ClInclude Include="..\include\gf2d_font.h" />

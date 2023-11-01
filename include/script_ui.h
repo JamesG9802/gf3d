@@ -4,14 +4,29 @@
 typedef enum AnchorMode {
 	TOPLEFT,
 	TOPMIDDLE,
-	CENTER
+	CENTER,
+	MIDDLERIGHT
 } AnchorMode;
 
 typedef struct UIData {
 	Sprite* sprite;
 	Color color;
+
+	/// <summary>
+	/// The anchor mode of the ui element.
+	/// </summary>
 	AnchorMode mode;
+	
+	/// <summary>
+	/// Controls whether the ui element is interactable
+	/// </summary>
 	Bool isInteractable;
+
+	/// <summary>
+	/// Event to be fired when an interactable ui element is clicked.
+	/// </summary>
+	TextLine associatedEvent;
+	
 } UIData;
 
 

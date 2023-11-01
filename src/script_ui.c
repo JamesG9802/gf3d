@@ -11,6 +11,7 @@
 #include "entity.h"
 #include "script.h"
 
+#include "event_manager.h"
 #include "engine_utility.h"
 #include "engine_time.h"
 
@@ -39,6 +40,9 @@ Vector2D getRenderPosition(Entity* self) {
 			position.x -= ((UIData*)self->customData)->sprite->frameWidth * self->scale.x / 4.0;
 			position.y -= ((UIData*)self->customData)->sprite->frameHeight * self->scale.y / 4.0;
 			break;
+		case MIDDLERIGHT:
+			position.x -= ((UIData*)self->customData)->sprite->frameWidth * self->scale.x / 2.0;
+			position.y -= ((UIData*)self->customData)->sprite->frameHeight * self->scale.y / 4.0;
 		}	
 		return position;
 	}
@@ -129,9 +133,11 @@ static void Update(Entity* self, Script* script) {
 	if (((UIData*)self->customData)->isInteractable && script_ui_ismouseover(self, script))
 	{
 		if(engine_utility_isleftmousedown())
-			((UIData*)self->customData)->color = gfc_color(0.5, 0.5, 1, 1);
+			((UIData*)self->customData)->color = gfc_color(0.5, 0.5, 0.5, 1);
 		else
 			((UIData*)self->customData)->color = gfc_color(0.75, 0.75, 0.75, 1);
+		if(engine_utility_isleftmousereleased() && ((UIData*)self->customData)->associatedEvent)
+			event_manager_fire_event(((UIData*)self->customData)->associatedEvent);
 	}
 	else
 	{
@@ -184,11 +190,21 @@ static void Arguments(Entity* self, Script* script, SJson* json) {
 			((UIData*)self->customData)->mode = TOPMIDDLE;
 		else if(strcmp(anchorMode, "center") == 0)
 			((UIData*)self->customData)->mode = CENTER;
+		else if(strcmp(anchorMode, "middleright") == 0)
+			((UIData*)self->customData)->mode = MIDDLERIGHT;
 	}
 	if (sj_get_bool_value(sj_object_get_value(json, "interactable"), NULL)) {
+		if (!self->customData)
+			return;
 		Bool isInteractable;
 		sj_get_bool_value(sj_object_get_value(json, "interactable"), &isInteractable);
 		((UIData*)self->customData)->isInteractable = isInteractable;
+	}
+	if (sj_get_string_value(sj_object_get_value(json, "event"))) {
+		if (!self->customData)
+			return;
+		gfc_line_cpy(((UIData*)self->customData)->associatedEvent, 
+			sj_get_string_value(sj_object_get_value(json, "event")));
 	}
 }
 Script* script_new_ui() {

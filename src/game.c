@@ -18,6 +18,8 @@
 #include "gf2d_draw.h"
 
 #include "engine_time.h"
+#include "event_manager.h"
+
 #include "entity.h"
 #include "agumon.h"
 #include "player.h"
@@ -54,6 +56,8 @@ int main(int argc,char *argv[])
     gf2d_font_init("config/font.cfg");
     gf2d_draw_manager_init(1000);
     engine_time_init();
+    event_manager_init();
+
     slog_sync();
     
     entity_system_init(1024);

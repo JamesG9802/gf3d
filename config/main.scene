@@ -54,10 +54,25 @@
 				{
 					"name":		"ui",
 					"image":	"images/sun.png",
-					"anchor":	"topmiddle"
-					"interactable":	true
+					"anchor":	"topmiddle",
+					"interactable":	false
+				}
+			]
+		},
+		{
+			"position":[1,0,0],
+			"scale":[1,1,0],
+			"rotation":[0,0,0],
+			"scripts": [				
+				{
+					"name":		"ui",
+					"image":	"images/transition_night.png",
+					"anchor":	"middleright"
+					"interactable":	true,
+					"event":	"day_to_night"	
 				}
 			]
 		}
+
 	]
 }
