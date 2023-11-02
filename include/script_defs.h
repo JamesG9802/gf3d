@@ -54,4 +54,10 @@ Script* script_new_ui();
 /// <returns></returns>
 Script* script_new_manager();
 
+/// <summary>
+/// Script to make a new manager flag which registers an entity to the manager.
+/// </summary>
+/// <returns></returns>
+Script* script_new_manager_flag();
+
 /*eol@eof*/

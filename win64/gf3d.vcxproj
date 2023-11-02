@@ -79,7 +79,7 @@
     <ClCompile Include="..\src\script_boxcollider.c" />
     <ClCompile Include="..\src\script_camera.c" />
     <ClCompile Include="..\src\script_debug.c" />
-    <ClCompile Include="..\src\script_eventhandler.c" />
+    <ClCompile Include="..\src\script_manager_flag.c" />
     <ClCompile Include="..\src\script_loader.c" />
     <ClCompile Include="..\src\script_manager.c" />
     <ClCompile Include="..\src\script_player.c" />

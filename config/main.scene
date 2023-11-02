@@ -53,9 +53,14 @@
 			"scripts": [				
 				{
 					"name":		"ui",
-					"image":	"images/sun.png",
+					"images":	"images/time.png",
+					"spriteInfo":	[256, 256, 2],
 					"anchor":	"topmiddle",
-					"interactable":	false
+					"interactable":	"false"
+				},
+				{
+					"name":		"manager_flag",
+					"id":		"indicator_time"
 				}
 			]
 		},
@@ -68,8 +73,12 @@
 					"name":		"ui",
 					"image":	"images/transition_night.png",
 					"anchor":	"middleright"
-					"interactable":	true,
+					"interactable":	"true",
 					"event":	"day_to_night"	
+				},
+				{
+					"name":	"manager_flag",
+					"id":	"button_timetransition"
 				}
 			]
 		}

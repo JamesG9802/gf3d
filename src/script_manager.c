@@ -2,9 +2,12 @@
 
 #include "simple_logger.h"
 
+#include "gfc_hashmap.h"
+
 #include "gf2d_font.h"
 #include "gf3d_camera.h"
 
+#include "event_manager.h"
 #include "engine_utility.h"
 #include "engine_time.h"
 
@@ -14,14 +17,55 @@
 #include "game_state.h"
 
 #include "script_defs.h"
+#include "script_manager.h"
+#include "script_ui.h"
+
+typedef struct ManagerData {
+	/// <summary>
+	/// A map<char*, Entity> of string names to entities.
+	/// </summary>
+	HashMap* entities;
+
+	/// <summary>
+	/// The gamestate of the game;
+	/// </summary>
+	GameState gamestate;
+} ManagerData;
 
 /// <summary>
 /// There can only be a single script_manager.
 /// </summary>
 static Script* script_manager = NULL;
 
+void try_day_to_night(Entity* entity, Script* script) {
+	script_ui_sethidden(
+		script_manager_getentity("button_timetransition"),
+		true
+	);
+	script_ui_setframenum(
+		script_manager_getentity("indicator_time"),
+		1
+	);
+}
+
+/// <summary>
+/// Register all callbacks for events.
+/// </summary>
+void script_manager_registerCallbacks(Entity* self) {
+	event_manager_register_callback("day_to_night", &try_day_to_night, self, script_manager);
+}
+
 Script* script_manager_get() {
 	return script_manager;
+}
+
+void script_manager_flagentity(char* name, Entity* entity) {
+	if (!script_manager || !name || !entity) return;
+	gfc_hashmap_insert(((ManagerData*)script_manager->data)->entities, name, entity);
+}
+
+Entity* script_manager_getentity(char* name) {
+	return gfc_hashmap_get(((ManagerData*)script_manager->data)->entities, name);
 }
 
 /// <summary>
@@ -34,12 +78,15 @@ static void Start(Entity* self, Script* script) {
 	{
 		slog("Trying to create a script_manager when it already exists");
 	}
-	script->data = malloc(sizeof(GameState));
+	script->data = malloc(sizeof(ManagerData));
 	if (!script->data)
 	{
 		slog("could not allocate memory for game data");
 		slog_sync();
+		return;
 	}
+	((ManagerData*)script->data)->entities = gfc_hashmap_new();
+	script_manager_registerCallbacks(self);
 	script_manager = script;
 }
 
@@ -65,7 +112,9 @@ static void Update(Entity* self, Script* script) {
 /// <param name="Script*">Caller script</param>
 /// </summary>
 static void Destroy(Entity* self, Script* script) {
-	
+	if (!script->data) return;
+	gfc_hashmap_free(((ManagerData*)script->data)->entities);
+	free(script->data);
 }
 
 /// <summary>

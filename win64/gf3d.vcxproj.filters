@@ -267,14 +267,14 @@
     <ClCompile Include="..\src\script_ui.c">
       <Filter>Source Files\script</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\script_manager.c">
-      <Filter>Source Files\script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\script_eventhandler.c">
+    <ClCompile Include="..\src\script_manager_flag.c">
       <Filter>Source Files\script</Filter>
     </ClCompile>
     <ClCompile Include="..\src\event_manager.c">
       <Filter>Source Files\engine_retrofit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\script_manager.c">
+      <Filter>Source Files\script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -473,11 +473,11 @@
     <ClInclude Include="..\include\script_ui.h">
       <Filter>Header Files\script</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\script_manager.h">
-      <Filter>Header Files\script</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\event_manager.h">
       <Filter>Header Files\engine_retrofit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\script_manager.h">
+      <Filter>Header Files\script</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

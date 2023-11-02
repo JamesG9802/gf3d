@@ -263,7 +263,6 @@ void entity_remove_script(Entity* self, TextLine name) {
     return;
 }
 
-
 Entity* entity_load_from_prefab(const char* filename) {
     SJson* json;
     json = sj_load(filename);

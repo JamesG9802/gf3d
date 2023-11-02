@@ -17,3 +17,10 @@ typedef enum {
 	/// </summary>
 	BATTLE
 } GameState;
+
+/// <summary>
+/// Handles the transition of the game state.
+/// </summary>
+/// <param name="current"></param>
+/// <param name="next"></param>
+void game_state_handletransition(GameState current, GameState next);

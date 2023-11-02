@@ -2,11 +2,14 @@
 #include <math.h>
 
 #include "simple_logger.h"
+#include "simple_json.h"
+
+#include "gfc_config.h"
 
 #include "gf3d_vgraphics.h"
 #include "gf3d_camera.h"
 
-#include <gf2d_sprite.h>
+#include "gf2d_sprite.h"
 
 #include "entity.h"
 #include "script.h"
@@ -15,7 +18,6 @@
 #include "engine_utility.h"
 #include "engine_time.h"
 
-#include "entity_bounds.h"
 #include "script_defs.h"
 
 #include "script_ui.h"
@@ -49,7 +51,17 @@ Vector2D getRenderPosition(Entity* self) {
 	return vector2d(0, 0);
 }
 
-Bool script_ui_ismouseover(Entity* self, Script* script) {
+UIData script_ui_newuidata() {
+	UIData data = {0};
+	data.sprite = NULL;
+	data.color = gfc_color(1, 1, 1, 1);
+	data.mode = TOPLEFT;
+	data.isInteractable = false;
+	data.associatedEvent[0] = '\0';
+	data.currentFrame = 0;
+}
+
+Bool script_ui_ismouseover(Entity* self) {
 	if (!self || !self->customData)
 		return false;
 	int x, y;
@@ -63,35 +75,43 @@ Bool script_ui_ismouseover(Entity* self, Script* script) {
 		y < position.y || y > position.y + height);
 }
 
-void script_ui_setcolor(Entity* self, Script* script, Color color) {
-	if (!self)
-		return false;
+void script_ui_setcolor(Entity* self, Color color) {
+	if (!self) return false;
 	((UIData*)self->customData)->color = color;
 }
 
-void script_ui_setpositionndc(Entity* self, Script* script, Vector2D position) {
-	if (!self || !self->customData)
-		return false;
+void script_ui_setpositionndc(Entity* self, Vector2D position) {
+	if (!self || !self->customData) return;
 	position = engine_utility_ndctoscreen(position);
 }
 
-void script_ui_setanchormode(Entity* self, Script* script, AnchorMode mode) {
-	if (!self || !self->customData)
-		return false;
+void script_ui_setanchormode(Entity* self, AnchorMode mode) {
+	if (!self || !self->customData) return;
 	((UIData*)self->customData)->mode = mode;
+}
+
+void script_ui_sethidden(Entity* self, Bool hidden) {
+	if (!self) return;
+	self->hidden = true;
+}
+
+void script_ui_setframenum(Entity* self, Uint32 frameNum) {
+	if (!self || !self->customData) return;
+	((UIData*)self->customData)->currentFrame = frameNum;
 }
 
 //	Uses the 2D render pipeline instead of the 3D one.
 static void EntityUIDraw(Entity* self) {
 	if (self->customData && ((UIData*)self->customData)->sprite && !self->hidden)
 	{
+		UIData* data = (UIData*)self->customData;
 		Vector2D position = getRenderPosition(self);
-		gf2d_sprite_draw(((UIData*)self->customData)->sprite,
+		gf2d_sprite_draw(data->sprite,
 			vector2d(position.x, position.y),
 			vector2d(self->scale.x, self->scale.y),
 			vector3d(0, 0, 0),
-			((UIData*)self->customData)->color,
-			0);
+			data->color,
+			data->currentFrame);
 	}
 }
 
@@ -170,6 +190,7 @@ static void Arguments(Entity* self, Script* script, SJson* json) {
 	if (!json) return;
 	if(sj_get_string_value(sj_object_get_value(json, "image"))) {
 		char* imagePath = sj_get_string_value(sj_object_get_value(json, "image"));
+		UIData data = script_ui_newuidata();
 		self->customData = malloc(sizeof(UIData));
 		if (!self->customData)
 		{
@@ -177,8 +198,28 @@ static void Arguments(Entity* self, Script* script, SJson* json) {
 			slog_sync();
 			return;
 		}
+		memcpy(self->customData, &data, sizeof(UIData));
 		((UIData*)self->customData)->sprite = gf2d_sprite_load(imagePath, 0, 0, 1);
-		((UIData*)self->customData)->color = gfc_color(1, 1, 1, 1);
+	}
+	else if (sj_get_string_value(sj_object_get_value(json, "images")) && 
+		sj_value_as_vector2d(sj_object_get_value(json, "spriteInfo"),NULL)) {
+		char* imagePath = sj_get_string_value(sj_object_get_value(json, "images"));
+		UIData data = script_ui_newuidata();
+		self->customData = malloc(sizeof(UIData));
+		if (!self->customData)
+		{
+			slog("Couldn't allocate memory for ui data");
+			slog_sync();
+			return;
+		}
+		memcpy(self->customData, &data, sizeof(UIData));
+		//	Formatted in config with frame width, frame height, and frames per line
+		Vector3D spriteInfo;
+		sj_value_as_vector2d(sj_object_get_value(json, "spriteInfo"), &spriteInfo);
+		((UIData*)self->customData)->sprite = gf2d_sprite_load(imagePath, 
+			(int)spriteInfo.x, 
+			(int)spriteInfo.y, 
+			(int)spriteInfo.z);
 	}
 	if (sj_get_string_value(sj_object_get_value(json, "anchor"))) {
 		if (!self->customData)
