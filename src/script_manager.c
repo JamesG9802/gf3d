@@ -20,18 +20,6 @@
 #include "script_manager.h"
 #include "script_ui.h"
 
-typedef struct ManagerData {
-	/// <summary>
-	/// A map<char*, Entity> of string names to entities.
-	/// </summary>
-	HashMap* entities;
-
-	/// <summary>
-	/// The gamestate of the game;
-	/// </summary>
-	GameState gamestate;
-} ManagerData;
-
 /// <summary>
 /// There can only be a single script_manager.
 /// </summary>
@@ -52,9 +40,11 @@ void try_day_to_night(Entity* entity, Script* script) {
 /// Register all callbacks for events.
 /// </summary>
 void script_manager_registerCallbacks(Entity* self) {
-	event_manager_register_callback("day_to_night", &try_day_to_night, self, script_manager);
+	event_manager_register_callback("try_transition_daytonight", &try_day_to_night, self, script_manager);
 }
-
+void script_manager_unregisterCallbacks() {
+	event_manager_unregister_callback("try_transition_daytonight", &try_day_to_night);
+}
 Script* script_manager_get() {
 	return script_manager;
 }
@@ -85,6 +75,7 @@ static void Start(Entity* self, Script* script) {
 		slog_sync();
 		return;
 	}
+	((ManagerData*)script->data)->gamestate = GROW;
 	((ManagerData*)script->data)->entities = gfc_hashmap_new();
 	script_manager_registerCallbacks(self);
 	script_manager = script;
@@ -113,6 +104,7 @@ static void Update(Entity* self, Script* script) {
 /// </summary>
 static void Destroy(Entity* self, Script* script) {
 	if (!script->data) return;
+	script_manager_unregisterCallbacks();
 	gfc_hashmap_free(((ManagerData*)script->data)->entities);
 	free(script->data);
 }

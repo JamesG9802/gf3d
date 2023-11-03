@@ -5,6 +5,10 @@
 /// </summary>
 typedef enum {
 	/// <summary>
+	/// Used when the game is in an invalid state.
+	/// </summary>
+	INVALID,
+	/// <summary>
 	/// Used when the game is in the growing phase when plants can be managed
 	/// </summary>
 	GROW,
@@ -24,3 +28,9 @@ typedef enum {
 /// <param name="current"></param>
 /// <param name="next"></param>
 void game_state_handletransition(GameState current, GameState next);
+
+/// <summary>
+/// Gets the current state of the game.
+/// </summary>
+/// <returns></returns>
+GameState game_state_getstate();

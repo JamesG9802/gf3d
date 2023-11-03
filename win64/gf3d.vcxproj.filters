@@ -276,6 +276,9 @@
     <ClCompile Include="..\src\script_manager.c">
       <Filter>Source Files\script</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\inventory.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\agumon.h">
@@ -478,6 +481,9 @@
     </ClInclude>
     <ClInclude Include="..\include\script_manager.h">
       <Filter>Header Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\inventory.h">
+      <Filter>Header Files\game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

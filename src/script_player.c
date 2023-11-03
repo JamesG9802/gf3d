@@ -10,20 +10,49 @@
 #include "engine_time.h"
 #include "engine_utility.h"
 
+#include "entity.h"
 #include "script.h"
 #include "script_defs.h"
 
-#include "entity.h"
+#include "inventory.h"
+
+#include "script_player.h"
 
 Entity* player = NULL;
 static int thirdPersonMode = 0;
+
+
+PlayerData script_player_newplayerdata() {
+    PlayerData playerData = {0};
+    playerData.inventory = inventory_new();
+    return playerData;
+}
+
+Entity* script_player_getplayer() {
+    return player;
+}
 
 /**
  * @brief Called when a script is created.
  */
 static void Start(Entity* self, Script* script) {
-    player = self;
+    if (!player)
+    {
+        player = self;
+    }
+    else
+    {
+        slog("A player already exists.");
+        return;
+    }
     self->hidden = true;
+    script->data = malloc(sizeof(PlayerData));
+    if (!script->data) {
+        slog("Couldn't allocate memory for player data.");
+        return;
+    }
+    PlayerData playerData = script_player_newplayerdata();
+    memcpy(script->data, &playerData, sizeof(PlayerData));
 }
 
 /**
@@ -111,6 +140,11 @@ static void Update(Entity* self, Script* script) {
  * @brief Called when a script is created.
  */
 static void Destroy(Entity* self, Script* script) {
+    if (script && script->data)
+    {
+        inventory_free(((PlayerData*)(script->data))->inventory);
+        free(script->data);
+    }
 }
 static void Arguments(Entity* self, Script* script, SJson* json) {
 }

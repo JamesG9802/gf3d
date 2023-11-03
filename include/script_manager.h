@@ -1,7 +1,22 @@
 #pragma once
+#include "gfc_hashmap.h"
 
 #include "entity.h"
 #include "script.h"
+
+#include "game_state.h"
+
+typedef struct ManagerData {
+	/// <summary>
+	/// A map<char*, Entity> of string names to entities.
+	/// </summary>
+	HashMap* entities;
+
+	/// <summary>
+	/// The gamestate of the game;
+	/// </summary>
+	GameState gamestate;
+} ManagerData;
 
 /// <summary>
 /// Gets the currrent script manager.
