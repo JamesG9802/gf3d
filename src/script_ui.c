@@ -59,6 +59,7 @@ UIData script_ui_newuidata() {
 	data.isInteractable = false;
 	data.associatedEvent[0] = '\0';
 	data.currentFrame = 0;
+	return data;
 }
 
 Bool script_ui_ismouseover(Entity* self) {
@@ -215,7 +216,7 @@ static void Arguments(Entity* self, Script* script, SJson* json) {
 		memcpy(self->customData, &data, sizeof(UIData));
 		//	Formatted in config with frame width, frame height, and frames per line
 		Vector3D spriteInfo;
-		sj_value_as_vector2d(sj_object_get_value(json, "spriteInfo"), &spriteInfo);
+		sj_value_as_vector3d(sj_object_get_value(json, "spriteInfo"), &spriteInfo);
 		((UIData*)self->customData)->sprite = gf2d_sprite_load(imagePath, 
 			(int)spriteInfo.x, 
 			(int)spriteInfo.y, 
