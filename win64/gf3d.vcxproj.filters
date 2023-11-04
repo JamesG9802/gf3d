@@ -64,6 +64,9 @@
     <Filter Include="Header Files\dice">
       <UniqueIdentifier>{a07f198d-4184-4db7-b0ef-5d3be75836f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\dice">
+      <UniqueIdentifier>{e6299176-4e6b-455d-9b95-cfe89925bea2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\agumon.c">
@@ -278,6 +281,9 @@
     </ClCompile>
     <ClCompile Include="..\src\inventory.c">
       <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\dice.c">
+      <Filter>Source Files\dice</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

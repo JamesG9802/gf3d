@@ -7,9 +7,9 @@
 #include "gf2d_font.h"
 #include "gf3d_camera.h"
 
-#include "event_manager.h"
 #include "engine_utility.h"
 #include "engine_time.h"
+#include "event_manager.h"
 
 #include "entity.h"
 #include "script.h"
@@ -25,7 +25,7 @@
 /// </summary>
 static Script* script_manager = NULL;
 
-void try_day_to_night(Entity* entity, Script* script) {
+void input_day_to_night(Entity* entity, Script* script) {
 	script_ui_sethidden(
 		script_manager_getentity("button_timetransition"),
 		true
@@ -35,15 +35,20 @@ void try_day_to_night(Entity* entity, Script* script) {
 		1
 	);
 }
-
+void handle_inventory_toggle(Entity* entity, Script* script) {
+	Entity* inventory = script_manager_getentity("indicator_inventory");
+	script_ui_sethidden(inventory, !script_ui_gethidden(inventory));
+}
 /// <summary>
 /// Register all callbacks for events.
 /// </summary>
 void script_manager_registerCallbacks(Entity* self) {
-	event_manager_register_callback("try_transition_daytonight", &try_day_to_night, self, script_manager);
+	event_manager_register_callback("input_transition_daytonight", &input_day_to_night, self, script_manager);
+	event_manager_register_callback("inventoryToggle", &handle_inventory_toggle, self, script_manager);
 }
 void script_manager_unregisterCallbacks() {
-	event_manager_unregister_callback("try_transition_daytonight", &try_day_to_night);
+	event_manager_unregister_callback("input_transition_daytonight", &input_day_to_night);
+	event_manager_unregister_callback("inventoryToggle", &handle_inventory_toggle);
 }
 Script* script_manager_get() {
 	return script_manager;

@@ -87,3 +87,10 @@ Texture* engine_utility_createtexturefromtext(Font* font, const char* text, Colo
 /// <param name="entity"></param>
 /// <param name="texture"></param>
 void engine_utility_settexture(Entity* entity, Texture* texture, int width, int height, int scaleFactor);
+
+/// <summary>
+/// Sets the surface of an entity's texture by duplicating the input surface. You can free your SDL_Surface at any time.
+/// </summary>
+/// <param name="entity"></param>
+/// <param name="surface"></param>
+void engine_utility_settexturebysurface(Entity* entity, SDL_Surface* surface);

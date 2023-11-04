@@ -3,12 +3,14 @@
 #include "simple_logger.h"
 
 #include "gfc_types.h"
+#include "gfc_list.h"
 #include "gfc_input.h"
 
 #include "gf3d_camera.h"
 
 #include "engine_time.h"
 #include "engine_utility.h"
+#include "event_manager.h"
 
 #include "entity.h"
 #include "script.h"
@@ -17,7 +19,6 @@
 #include "inventory.h"
 
 #include "script_player.h"
-
 Entity* player = NULL;
 static int thirdPersonMode = 0;
 
@@ -25,6 +26,8 @@ static int thirdPersonMode = 0;
 PlayerData script_player_newplayerdata() {
     PlayerData playerData = {0};
     playerData.inventory = inventory_new();
+
+    gfc_list_append(playerData.inventory->diceSeeds, NULL);
     return playerData;
 }
 
@@ -122,6 +125,10 @@ static void Think(Entity* self, Script* script) {
     if (gfc_input_keycode_released(SDL_SCANCODE_HOME))
     {
         thirdPersonMode = !thirdPersonMode;
+    }
+    if (gfc_input_keycode_released(SDL_SCANCODE_ESCAPE))
+    {
+        event_manager_fire_event("inventoryToggle");
     }
 }
 

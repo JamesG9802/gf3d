@@ -84,3 +84,11 @@ void script_ui_sethidden(Entity* self, Bool hidden);
 /// <param name="self"></param>
 /// <param name="frameNum"></param>
 void script_ui_setframenum(Entity* self, Uint32 frameNum);
+
+/// <summary>
+/// Get the visiiblity of the sprite
+/// </summary>
+/// <param name="self"></param>
+/// <param name="hidden"></param>
+/// <returns></returns>
+Bool script_ui_gethidden(Entity* self);

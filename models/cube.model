@@ -2,6 +2,6 @@
     "model":
     {
         "model":"models/cube/cube.obj",
-        "texture":"images/default.png"
+        "texture":"images/cube.png"
     }
 }

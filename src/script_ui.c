@@ -93,12 +93,17 @@ void script_ui_setanchormode(Entity* self, AnchorMode mode) {
 
 void script_ui_sethidden(Entity* self, Bool hidden) {
 	if (!self) return;
-	self->hidden = true;
+	self->hidden = hidden;
 }
 
 void script_ui_setframenum(Entity* self, Uint32 frameNum) {
 	if (!self || !self->customData) return;
 	((UIData*)self->customData)->currentFrame = frameNum;
+}
+
+Bool script_ui_gethidden(Entity* self) {
+	if (!self) return false;
+	return self->hidden;
 }
 
 //	Uses the 2D render pipeline instead of the 3D one.
@@ -188,7 +193,7 @@ static void Destroy(Entity* self, Script* script) {
 /// <param name="SJson*">SJson object. Note that 'name' is a reserved field.</param>
 /// </summary>
 static void Arguments(Entity* self, Script* script, SJson* json) {
-	if (!json) return;
+	if (!self || !json) return;
 	if(sj_get_string_value(sj_object_get_value(json, "image"))) {
 		char* imagePath = sj_get_string_value(sj_object_get_value(json, "image"));
 		UIData data = script_ui_newuidata();
@@ -247,6 +252,13 @@ static void Arguments(Entity* self, Script* script, SJson* json) {
 			return;
 		gfc_line_cpy(((UIData*)self->customData)->associatedEvent, 
 			sj_get_string_value(sj_object_get_value(json, "event")));
+	}
+	if (sj_get_bool_value(sj_object_get_value(json, "hidden"), NULL)) {
+		if (!self->customData)
+			return;
+		Bool isHidden;
+		sj_get_bool_value(sj_object_get_value(json, "interactable"), &isHidden);
+		self->hidden = isHidden;
 	}
 }
 Script* script_new_ui() {

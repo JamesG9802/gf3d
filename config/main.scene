@@ -55,8 +55,7 @@
 					"name":		"ui",
 					"images":	"images/time.png",
 					"spriteInfo":	[256, 256, 2],
-					"anchor":	"topmiddle",
-					"interactable":	"false"
+					"anchor":	"topmiddle"
 				},
 				{
 					"name":		"manager_flag",
@@ -74,12 +73,38 @@
 					"image":	"images/transition_night.png",
 					"anchor":	"middleright"
 					"interactable":	"true",
-					"event":	"try_transition_daytonight"	
+					"event":	"input_transition_daytonight"	
 				},
 				{
 					"name":	"manager_flag",
 					"id":	"button_timetransition"
 				}
+			]
+		},
+		{
+			"position":[0,0,0],
+			"scale":[2,2,0],
+			"rotation":[0,0,0],
+			"scripts": [				
+				{
+					"name":		"ui",
+					"image":	"images/panel.png",
+					"anchor":	"center",
+					"hidden":	"true"	
+				},
+				{
+					"name":	"manager_flag",
+					"id":	"indicator_inventory"
+				}
+			]
+		},
+		{
+			"model":"models/dice.model",
+			"position":[0,0,0],
+			"scale":[1,1,1],
+			"rotation":[0,0,0],
+			"scripts": [	
+				"debug"
 			]
 		}
 
