@@ -172,9 +172,9 @@ void engine_utility_settexture(Entity* entity, Texture* texture, int width, int 
 	entity->scale.y = 1;
 	entity->scale.z = scale.y;
 }
-void engine_utility_settexturebysurface(Entity* entity, SDL_Surface* surface) {
-	if (!surface) return;
-	SDL_Surface* surface = SDL_DuplicateSurface(surface);
+void engine_utility_settexturebysurface(Entity* entity, SDL_Surface* src) {
+	if (!src) return;
+	SDL_Surface* surface = SDL_DuplicateSurface(src);
 	gf3d_texture_free(entity->model->texture);
 	entity->model->texture = gf3d_texture_convert_surface(surface);
 	entity->model->texture->surface = surface;

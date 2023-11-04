@@ -45,6 +45,7 @@
     <ClCompile Include="..\gfc\src\miniz.c" />
     <ClCompile Include="..\src\agumon.c" />
     <ClCompile Include="..\src\dice.c" />
+    <ClCompile Include="..\src\dicevalue.c" />
     <ClCompile Include="..\src\engine_time.c" />
     <ClCompile Include="..\src\engine_utility.c" />
     <ClCompile Include="..\src\entity.c" />

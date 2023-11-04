@@ -27,7 +27,6 @@ PlayerData script_player_newplayerdata() {
     PlayerData playerData = {0};
     playerData.inventory = inventory_new();
 
-    gfc_list_append(playerData.inventory->diceSeeds, NULL);
     return playerData;
 }
 

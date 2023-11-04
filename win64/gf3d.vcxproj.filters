@@ -285,6 +285,9 @@
     <ClCompile Include="..\src\dice.c">
       <Filter>Source Files\dice</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\dicevalue.c">
+      <Filter>Source Files\dice</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\agumon.h">
