@@ -82,6 +82,7 @@
     <ClCompile Include="..\src\script_boxcollider.c" />
     <ClCompile Include="..\src\script_camera.c" />
     <ClCompile Include="..\src\script_debug.c" />
+    <ClCompile Include="..\src\script_inventoryui.c" />
     <ClCompile Include="..\src\script_manager_flag.c" />
     <ClCompile Include="..\src\script_loader.c" />
     <ClCompile Include="..\src\script_manager.c" />
@@ -152,11 +153,13 @@
     <ClInclude Include="..\include\gf3d_vgraphics.h" />
     <ClInclude Include="..\include\gf3d_vqueues.h" />
     <ClInclude Include="..\include\inventory.h" />
+    <ClInclude Include="..\include\meta_state.h" />
     <ClInclude Include="..\include\player.h" />
     <ClInclude Include="..\include\scene.h" />
     <ClInclude Include="..\include\script.h" />
     <ClInclude Include="..\include\script_billboard.h" />
     <ClInclude Include="..\include\script_defs.h" />
+    <ClInclude Include="..\include\script_inventoryui.h" />
     <ClInclude Include="..\include\script_loader.h" />
     <ClInclude Include="..\include\script_manager.h" />
     <ClInclude Include="..\include\script_player.h" />

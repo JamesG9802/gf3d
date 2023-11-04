@@ -257,7 +257,7 @@ static void Arguments(Entity* self, Script* script, SJson* json) {
 		if (!self->customData)
 			return;
 		Bool isHidden;
-		sj_get_bool_value(sj_object_get_value(json, "interactable"), &isHidden);
+		sj_get_bool_value(sj_object_get_value(json, "hidden"), &isHidden);
 		self->hidden = isHidden;
 	}
 }

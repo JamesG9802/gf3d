@@ -21,7 +21,6 @@
 /// </summary>
 static void Arguments(Entity* self, Script* script, SJson* json) {
 	if (!json) return;
-	slog(sj_get_string_value(sj_object_get_value(json, "id")));
 	if (sj_get_string_value(sj_object_get_value(json, "id"))) {
 		char* id = sj_get_string_value(sj_object_get_value(json, "id"));
 		script_manager_flagentity(id, self);

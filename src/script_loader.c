@@ -28,6 +28,8 @@ Script* script_loader_getScript(char* string) {
 		return script_new_manager();
 	if (strcmp(string, "manager_flag") == 0)
 		return script_new_manager_flag();
+	if (strcmp(string, "inventoryui") == 0)
+		return script_new_inventoryui();
 	return NULL;
 }
 

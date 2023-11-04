@@ -16,9 +16,13 @@
 #include "script.h"
 #include "script_defs.h"
 
+#include "dice.h"
+#include "dicevalue.h"
+
 #include "inventory.h"
 
 #include "script_player.h"
+
 Entity* player = NULL;
 static int thirdPersonMode = 0;
 
@@ -26,14 +30,42 @@ static int thirdPersonMode = 0;
 PlayerData script_player_newplayerdata() {
     PlayerData playerData = {0};
     playerData.inventory = inventory_new();
-
+    Dice* dice;
+    DiceValue* diceValues = malloc(sizeof(DiceValue) * 6);
+    diceValues[0] = dicevalue_new(Mana, 1);
+    diceValues[1] = dicevalue_new(Mana, 2);
+    diceValues[2] = dicevalue_new(Mana, 3);
+    diceValues[3] = dicevalue_new(Fire, 1);
+    diceValues[4] = dicevalue_new(Fire, 2);
+    diceValues[5] = dicevalue_new(Fire, 3);
+    double* sideWeights = malloc(sizeof(double) * 6);
+    sideWeights[0] = 1;
+    sideWeights[1] = 2;
+    sideWeights[2] = 3;
+    sideWeights[3] = 4;
+    sideWeights[4] = 5;
+    sideWeights[5] = 6;
+    dice = dice_new(false, 0, 6, diceValues, sideWeights, 30, 10);
+    gfc_list_append(playerData.inventory->diceInventory, dice);
     return playerData;
+}
+
+void script_player_freeplayerdata(Script* script) {
+    if (script && script->data)
+    {
+        inventory_free(((PlayerData*)(script->data))->inventory);
+        free(script->data);
+    }
 }
 
 Entity* script_player_getplayer() {
     return player;
 }
-
+PlayerData* script_player_getplayerdata() {
+    if(entity_get_script(player, "player"))
+        return entity_get_script(player, "player")->data;
+    return NULL;
+}
 /**
  * @brief Called when a script is created.
  */
@@ -146,11 +178,7 @@ static void Update(Entity* self, Script* script) {
  * @brief Called when a script is created.
  */
 static void Destroy(Entity* self, Script* script) {
-    if (script && script->data)
-    {
-        inventory_free(((PlayerData*)(script->data))->inventory);
-        free(script->data);
-    }
+    script_player_freeplayerdata(script);
 }
 static void Arguments(Entity* self, Script* script, SJson* json) {
 }

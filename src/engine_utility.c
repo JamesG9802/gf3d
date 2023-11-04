@@ -18,6 +18,7 @@
 #include "engine_time.h"
 
 #include "entity_bounds.h"
+#include "script_manager.h"
 
 #define UNPRESSED 0
 #define DOWN 1
@@ -60,6 +61,7 @@ Vector2D engine_utility_ndctoscreen(Vector2D ndc) {
 }
 
 Bool engine_utility_ismouseover(Entity* entity, Edge3D* ray) {
+	if (script_manager_getmetastate() == INMENU)	return false;
 	int mouse_x, mouse_y;
 	int width, height;
 	SDL_GetMouseState(&mouse_x, &mouse_y);

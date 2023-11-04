@@ -288,6 +288,9 @@
     <ClCompile Include="..\src\dicevalue.c">
       <Filter>Source Files\dice</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\script_inventoryui.c">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\agumon.h">
@@ -492,6 +495,12 @@
       <Filter>Header Files\script</Filter>
     </ClInclude>
     <ClInclude Include="..\include\inventory.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\script_inventoryui.h">
+      <Filter>Header Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\meta_state.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
   </ItemGroup>

@@ -92,21 +92,12 @@
 					"anchor":	"center",
 					"hidden":	"true"	
 				},
+				"inventoryui",
 				{
 					"name":	"manager_flag",
 					"id":	"indicator_inventory"
 				}
 			]
-		},
-		{
-			"model":"models/dice.model",
-			"position":[0,0,0],
-			"scale":[1,1,1],
-			"rotation":[0,0,0],
-			"scripts": [	
-				"debug"
-			]
 		}
-
 	]
 }

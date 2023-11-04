@@ -60,4 +60,10 @@ Script* script_new_manager();
 /// <returns></returns>
 Script* script_new_manager_flag();
 
+/// <summary>
+/// Script to control the dice inventory UI.
+/// </summary>
+/// <returns></returns>
+Script* script_new_inventoryui();
+
 /*eol@eof*/
