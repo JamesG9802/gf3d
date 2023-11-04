@@ -55,6 +55,7 @@ UIData script_ui_newuidata() {
 	UIData data = {0};
 	data.sprite = NULL;
 	data.color = gfc_color(1, 1, 1, 1);
+	data.positionNDC = vector2d(0, 0);
 	data.mode = TOPLEFT;
 	data.isInteractable = false;
 	data.associatedEvent[0] = '\0';
@@ -76,6 +77,27 @@ Bool script_ui_ismouseover(Entity* self) {
 		y < position.y || y > position.y + height);
 }
 
+void script_ui_updateposition(Entity* self) {
+	if (!self || !self->customData) return;
+	Vector2D positionNDC = ((UIData*)self->customData)->positionNDC;
+	Vector2D position;
+	//	If don't have a parent that is a UI, assume that the entire screen is the parent
+	if (!self->parent || !entity_get_script(self->parent, "ui") || !self->parent->customData)
+	{
+		position = engine_utility_ndctoscreen(positionNDC);
+	}
+	else
+	{
+		Vector2D parentPosition = getRenderPosition(self->parent);
+		int width, height;
+		width = ((UIData*)self->parent->customData)->sprite->frameWidth * self->parent->scale.x / 2.0;
+		height = ((UIData*)self->parent->customData)->sprite->frameHeight * self->parent->scale.x / 2.0;
+		position = vector2d(parentPosition.x + (positionNDC.x + 1) * width / 2.0, 
+			parentPosition.y + (positionNDC.y + 1) * height / 2.0);
+	}
+	self->position.x = position.x;
+	self->position.y = position.y;
+}
 void script_ui_setcolor(Entity* self, Color color) {
 	if (!self) return false;
 	((UIData*)self->customData)->color = color;
@@ -83,7 +105,11 @@ void script_ui_setcolor(Entity* self, Color color) {
 
 void script_ui_setpositionndc(Entity* self, Vector2D position) {
 	if (!self || !self->customData) return;
-	position = engine_utility_ndctoscreen(position);
+
+	((UIData*)self->customData)->positionNDC.x = position.x;
+	((UIData*)self->customData)->positionNDC.y = position.y;
+
+	script_ui_updateposition(self);
 }
 
 void script_ui_setanchormode(Entity* self, AnchorMode mode) {
@@ -111,9 +137,8 @@ static void EntityUIDraw(Entity* self) {
 	if (self->customData && ((UIData*)self->customData)->sprite && !self->hidden)
 	{
 		UIData* data = (UIData*)self->customData;
-		Vector2D position = getRenderPosition(self);
 		gf2d_sprite_draw(data->sprite,
-			vector2d(position.x, position.y),
+			getRenderPosition(self),
 			vector2d(self->scale.x, self->scale.y),
 			vector3d(0, 0, 0),
 			data->color,
@@ -131,9 +156,7 @@ static void Start(Entity* self, Script* script) {
 	self->skipCommonUpdate = true;
 	self->draw = &EntityUIDraw;
 	Vector2D pos = vector2d(self->position.x, self->position.y);
-	pos = engine_utility_ndctoscreen(pos);
-	self->position.x = pos.x;
-	self->position.y = pos.y;
+	script_ui_setpositionndc(self, pos);
 }
 
 /// <summary>
@@ -141,9 +164,7 @@ static void Start(Entity* self, Script* script) {
 /// <param name="Entity*">Attached entity</param>
 /// <param name="Script_s*">Caller script</param>
 /// </summary>
-static void Think(Entity* self, Script* script) {
-
-}
+static void Think(Entity* self, Script* script) {}
 
 /// <summary>
 /// Called every update frame.

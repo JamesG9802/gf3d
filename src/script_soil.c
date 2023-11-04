@@ -58,7 +58,7 @@ static void Think(Entity* self, Script* script) {
 			child->position.z = self->position.z + 30;
 			script_billboard_settext(child, billboard, "PLANT DICE?");
 			script_billboard_updatetexture(child, billboard);
-			gfc_list_append(self->children, child);
+			entity_add_child(self, child);
 		}
 	}
 	else if (state == CLICKED && !self->selected && engine_utility_isleftmousereleased()) {

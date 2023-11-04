@@ -215,14 +215,20 @@ void entity_update(Entity *self)
         gfc_matrix_rotate_by_vector(self->modelMat, self->modelMat, self->rotation);
         gfc_matrix_translate(self->modelMat, self->position);
     }
+
+    //  Update children
+    for (int i = 0; i < gfc_list_get_count(self->children); i++) {
+        entity_update(gfc_list_get_nth(self->children, i));
+    }
 }
 
 void entity_update_all()
 {
-    int i;
+    int i, j, k;
     for (i = 0; i < entity_manager.entity_count; i++)
     {
-        if (!entity_manager.entity_list[i]._inuse)// not used yet
+        if (!entity_manager.entity_list[i]._inuse || // not used yet
+            entity_manager.entity_list[i].parent)//  only the root parent can update;
         {
             continue;// skip this iteration of the loop
         }
@@ -373,5 +379,13 @@ Entity* entity_load_from_sjson(SJson* json, const char* filename) {
 fail:
     entity_free(entity);
     return NULL;
+}
+
+void entity_add_child(Entity* parent, Entity* child) {
+    if (parent && child)
+    {
+        gfc_list_append(parent->children, child);
+        child->parent = parent;
+    }
 }
 /*eol@eof*/

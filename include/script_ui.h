@@ -15,6 +15,11 @@ typedef struct UIData {
 	Color color;
 
 	/// <summary>
+	/// THe position of the sprite in NDC coordinates;
+	/// </summary>
+	Vector2D positionNDC;
+
+	/// <summary>
 	/// The anchor mode of the ui element.
 	/// </summary>
 	AnchorMode mode;
@@ -46,6 +51,12 @@ UIData script_ui_newuidata();
 /// </summary>
 /// <returns></returns>
 Bool script_ui_ismouseover(Entity* self);
+
+/// <summary>
+/// Tells the entity to update its position. Useful if the parent changed.
+/// </summary>
+/// <param name="self"></param>
+void script_ui_updateposition(Entity* self);
 
 /// <summary>
 /// Sets the color of the sprite.

@@ -24,7 +24,6 @@ typedef enum
     ES_attack
 }EntityState;
 
-
 typedef struct Entity_S
 {
     Uint8       _inuse;     /**<keeps track of memory usage*/
@@ -60,6 +59,8 @@ typedef struct Entity_S
     
     List*       scripts;    //  List of scripts, if any
     List*       children;    //  List of children, if any
+
+    struct Entity_S*     parent; // parent, if any
     void *customData;   /**<IF an entity needs to keep track of extra data, we can do it here*/
 }Entity;
 
@@ -149,6 +150,7 @@ void entity_remove_script(Entity* self, TextLine name);
 /// Loads an entity from a prefab file.
 /// </summary>
 /// <param name="file"></param>
+/// <param name="parent>Optional parent</param>
 /// <returns></returns>
 Entity* entity_load_from_prefab(const char* filename);
     
@@ -158,4 +160,6 @@ Entity* entity_load_from_prefab(const char* filename);
 /// <param name="json"></param>
 /// <returns></returns>
 Entity* entity_load_from_sjson(SJson* json, const char* filename);
+
+void entity_add_child(Entity* parent, Entity* child);
 #endif

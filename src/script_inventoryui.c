@@ -90,7 +90,8 @@ static void Start(Entity* self, Script* script) {
 */
     script->data = script_inventoryui_newdata();
     Entity* childWindow = entity_load_from_prefab("prefabs/diceinventoryui.prefab");
-    gfc_list_append(self->children, childWindow);
+    entity_add_child(self, childWindow);
+    script_ui_updateposition(childWindow);
 }
 /**
  * @brief Called when a script is created.
