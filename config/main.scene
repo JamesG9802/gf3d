@@ -47,7 +47,7 @@
 			]
 		},
 		{
-			"position":[0,-1,0],
+			"position":[0,1,0],
 			"scale":[1,1,0],
 			"rotation":[0,0,0],
 			"scripts": [				
@@ -100,7 +100,7 @@
 			],
 			"children": [
 				{
-					"position":[0,0,0],
+					"position":[0,-.1,0],
 					"scale":[0.75,0.75,0],
 					"rotation":[0,0,0],
 					"scripts": [				
@@ -109,6 +109,93 @@
 							"image":	"images/panel.png",
 							"anchor":	"center",
 							"hidden":	"true"	
+						},
+						{
+							"name":		"manager_flag",
+							"id":		"ui_diceinformation"
+						}
+					]
+				},
+				{
+					"position":[-.9,.9,0],
+					"scale":[0.5,0.5,0],
+					"rotation":[0,0,0],
+					"scripts": [				
+						{
+							"name":		"ui",
+							"image":	"images/ui_seed.png",
+							"anchor":	"topleft",
+							"hidden":	"true",
+							"interactable":	"true",
+							"event":	"button_ui_show_seeds"
+						}
+					]
+				},
+				{
+					"position":[0,.9,0],
+					"scale":[0.5,0.5,0],
+					"rotation":[0,0,0],
+					"scripts": [				
+						{
+							"name":		"ui",
+							"image":	"images/ui_inventory.png",
+							"anchor":	"topmiddle",
+							"hidden":	"true",
+							"interactable":	"true",
+							"event":	"button_ui_show_inventory"
+						}
+					]
+				},
+				{
+					"position":[.9,.9,0],
+					"scale":[0.5,0.5,0],
+					"rotation":[0,0,0],
+					"scripts": [				
+						{
+							"name":		"ui",
+							"image":	"images/ui_dice.png",
+							"anchor":	"topright",
+							"hidden":	"true",
+							"interactable":	"true",
+							"event":	"button_ui_show_loadout"
+						}
+					]
+				},
+				{
+					"position":[-.9,-.9,0],
+					"scale":[0.5,0.5,0],
+					"rotation":[0,0,0],
+					"scripts": [				
+						{
+							"name":		"ui",
+							"image":	"images/leftarrow.png",
+							"anchor":	"bottomleft",
+							"hidden":	"true",
+							"interactable":	"true",
+							"event":	"button_ui_left_arrow"
+						},
+						{
+							"name":		"manager_flag",
+							"id":		"button_ui_leftarrow"
+						}
+					]
+				},
+				{
+					"position":[.9,-.9,0],
+					"scale":[0.5,0.5,0],
+					"rotation":[0,0,0],
+					"scripts": [				
+						{
+							"name":		"ui",
+							"image":	"images/rightarrow.png",
+							"anchor":	"bottomright",
+							"hidden":	"true",
+							"interactable":	"true",
+							"event":	"button_ui_right_arrow"
+						},
+						{
+							"name":		"manager_flag",
+							"id":		"button_ui_rightarrow"
 						}
 					]
 				}

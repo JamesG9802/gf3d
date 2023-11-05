@@ -6,8 +6,23 @@ typedef enum InventoryUIState {
 	VIEWDICE,
 } InventoryUIState;
 
+typedef enum DiceInventoryType {
+	SEEDS,
+	INVENTORY,
+	LOADOUT
+} DiceInventoryType;
+
 typedef struct InventoryUIData {
 	InventoryUIState state;
+
+	/// <summary>
+	/// The current dice inventory from the player we are looking at.
+	/// </summary>
+	DiceInventoryType currentType;
+	
+	/// <summary>
+	/// The current index in the dice inventory that we are looking at.
+	/// </summary>
 	int diceIndex;
 } InventoryUIData;
 

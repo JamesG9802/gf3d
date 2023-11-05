@@ -6,8 +6,11 @@
 typedef enum AnchorMode {
 	TOPLEFT,
 	TOPMIDDLE,
+	TOPRIGHT,
 	CENTER,
-	MIDDLERIGHT
+	MIDDLERIGHT, 
+	BOTTOMLEFT,
+	BOTTOMRIGHT
 } AnchorMode;
 
 typedef struct UIData {

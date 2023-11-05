@@ -38,6 +38,9 @@ Vector2D getRenderPosition(Entity* self) {
 		case TOPMIDDLE:
 			position.x -= ((UIData*)self->customData)->sprite->frameWidth * self->scale.x / 4.0;
 			break;
+		case TOPRIGHT:
+			position.x -= ((UIData*)self->customData)->sprite->frameWidth * self->scale.x / 2.0;
+			break;
 		case CENTER:
 			position.x -= ((UIData*)self->customData)->sprite->frameWidth * self->scale.x / 4.0;
 			position.y -= ((UIData*)self->customData)->sprite->frameHeight * self->scale.y / 4.0;
@@ -45,6 +48,14 @@ Vector2D getRenderPosition(Entity* self) {
 		case MIDDLERIGHT:
 			position.x -= ((UIData*)self->customData)->sprite->frameWidth * self->scale.x / 2.0;
 			position.y -= ((UIData*)self->customData)->sprite->frameHeight * self->scale.y / 4.0;
+			break;
+		case BOTTOMLEFT:
+			position.y -= ((UIData*)self->customData)->sprite->frameHeight * self->scale.y / 2.0;
+			break;
+		case BOTTOMRIGHT:
+			position.x -= ((UIData*)self->customData)->sprite->frameWidth * self->scale.x / 2.0;
+			position.y -= ((UIData*)self->customData)->sprite->frameHeight * self->scale.y / 2.0;
+
 		}	
 		return position;
 	}
@@ -93,7 +104,7 @@ void script_ui_updateposition(Entity* self) {
 		width = ((UIData*)self->parent->customData)->sprite->frameWidth * self->parent->scale.x / 2.0;
 		height = ((UIData*)self->parent->customData)->sprite->frameHeight * self->parent->scale.x / 2.0;
 		position = vector2d(parentPosition.x + (positionNDC.x + 1) * width / 2.0, 
-			parentPosition.y + (positionNDC.y + 1) * height / 2.0);
+			parentPosition.y + (positionNDC.y - 1) * height / -2.0);
 	}
 	self->position.x = position.x;
 	self->position.y = position.y;
@@ -256,10 +267,16 @@ static void Arguments(Entity* self, Script* script, SJson* json) {
 			((UIData*)self->customData)->mode = TOPLEFT;
 		else if (strcmp(anchorMode, "topmiddle") == 0)
 			((UIData*)self->customData)->mode = TOPMIDDLE;
+		else if (strcmp(anchorMode, "topright") == 0)
+			((UIData*)self->customData)->mode = TOPRIGHT;
 		else if(strcmp(anchorMode, "center") == 0)
 			((UIData*)self->customData)->mode = CENTER;
 		else if(strcmp(anchorMode, "middleright") == 0)
 			((UIData*)self->customData)->mode = MIDDLERIGHT;
+		else if (strcmp(anchorMode, "bottomleft") == 0)
+			((UIData*)self->customData)->mode = BOTTOMLEFT;
+		else if(strcmp(anchorMode, "bottomright") == 0)
+			((UIData*)self->customData)->mode = BOTTOMRIGHT;
 	}
 	if (sj_get_bool_value(sj_object_get_value(json, "interactable"), NULL)) {
 		if (!self->customData)

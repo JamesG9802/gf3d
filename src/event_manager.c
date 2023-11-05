@@ -84,6 +84,8 @@ void event_manager_fire_event(char* event) {
 		int length = gfc_list_get_count(gfc_hashmap_get(eventManager.events, event));
 		for (int i = 0; i < length; i++) {
 			EventMapObject* object = gfc_list_get_nth(gfc_hashmap_get(eventManager.events, event), i);
+			if (!object->function)
+				continue;
 			void (*function)(Entity*, Script*) = object->function;
 			function(object->entity, object->script);
 		}
