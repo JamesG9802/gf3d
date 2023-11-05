@@ -83,16 +83,17 @@ void entity_system_init(Uint32 maxEntities);
  */
 Entity *entity_new();
 
-/**
- * @brief Takes a new entity and sets it up based on parameters
- * @param self the entity in question
- * @param model model of the entity
- * @param scale scale of the entity
- * @param position position of the entity
- * @param rotation rotation of the entity
- * @param scripts a list of scripts that the entity has. Can be NULL
- */
-void entity_setup(Entity* self, Model* model, Vector3D scale, Vector3D position, Vector3D rotation, List* scripts);
+/// <summary>
+/// Takes a new entity and sets it up based on parameters
+/// </summary>
+/// <param name="self">the entity in question</param>
+/// <param name="model">model of the entity</param>
+/// <param name="scale">scale of the entity</param>
+/// <param name="position">position of the entity</param>
+/// <param name="rotation">rotation of the entity</param>
+/// <param name="scripts">a list of scripts that the entity has. Can be NULL</param>
+/// <param name="parent">the parent of the entity. Can be NULL</param>
+void entity_setup(Entity* self, Model* model, Vector3D scale, Vector3D position, Vector3D rotation, List* scripts, Entity* parent);
 
 
 /**
@@ -152,14 +153,15 @@ void entity_remove_script(Entity* self, TextLine name);
 /// <param name="file"></param>
 /// <param name="parent>Optional parent</param>
 /// <returns></returns>
-Entity* entity_load_from_prefab(const char* filename);
+Entity* entity_load_from_prefab(const char* filename, Entity* parent);
     
 /// <summary>
 /// Loads an entity from a json.
 /// </summary>
 /// <param name="json"></param>
+/// <param name="parent>Optional parent</param>
 /// <returns></returns>
-Entity* entity_load_from_sjson(SJson* json, const char* filename);
+Entity* entity_load_from_sjson(SJson* json, const char* filename, Entity* parent);
 
 void entity_add_child(Entity* parent, Entity* child);
 #endif

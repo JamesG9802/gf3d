@@ -148,6 +148,7 @@ Entity* engine_utility_createquad(char* texture_filepath) {
 		vector3d(1, 1, 1), 
 		vector3d(0, 0, 0), 
 		vector3d(0, 0, 0), 
+		NULL,
 		NULL);
 	return entity;
 }

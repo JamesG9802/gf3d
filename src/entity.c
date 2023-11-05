@@ -69,7 +69,7 @@ Entity *entity_new()
 }
 
 
-void entity_setup(Entity* self, Model* model, Vector3D scale, Vector3D position, Vector3D rotation, List* scripts) {
+void entity_setup(Entity* self, Model* model, Vector3D scale, Vector3D position, Vector3D rotation, List* scripts, Entity* parent) {
     if (!self)   return;
     self->model = model;
     self->scale = scale;
@@ -77,6 +77,7 @@ void entity_setup(Entity* self, Model* model, Vector3D scale, Vector3D position,
     self->rotation = rotation;
     self->scripts = scripts;
     self->children = gfc_list_new();
+    entity_add_child(parent, self);
     if (scripts)
     {
         for (Uint32 i = 0; i < gfc_list_get_count(self->scripts); i++)
@@ -269,13 +270,13 @@ void entity_remove_script(Entity* self, TextLine name) {
     return;
 }
 
-Entity* entity_load_from_prefab(const char* filename) {
+Entity* entity_load_from_prefab(const char* filename, Entity* parent) {
     SJson* json;
     json = sj_load(filename);
-    return entity_load_from_sjson(json, filename);
+    return entity_load_from_sjson(json, filename, parent);
 }
 
-Entity* entity_load_from_sjson(SJson* json, const char* filename) {
+Entity* entity_load_from_sjson(SJson* json, const char* filename, Entity* parent) {
 
     //  Memory allocation error
     if (!json) {
@@ -374,7 +375,17 @@ Entity* entity_load_from_sjson(SJson* json, const char* filename) {
             }
         }
     }
-    entity_setup(entity, gf3d_model_load(model), scale, position, rotation, scripts);
+
+    entity_setup(entity, gf3d_model_load(model), scale, position, rotation, scripts, parent);
+    
+    //  Load children 
+    if (sj_object_get_value(json, "children") && sj_is_array(sj_object_get_value(json, "children"))) {
+        SJson* children = sj_object_get_value(json, "children");
+        for (int i = 0; i < sj_array_get_count(children); i++) {
+            entity_load_from_sjson(sj_array_get_nth(children, i), filename, entity);
+        }
+    }
+    //  It is ok if not every entity has children
     return entity;
 fail:
     entity_free(entity);

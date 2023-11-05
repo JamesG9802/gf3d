@@ -46,7 +46,7 @@ static void Think(Entity* self, Script* script) {
 		self->color = gfc_color(0, 1, 1, 1);
 		Script* billboard = NULL;
 		if (gfc_list_get_count(self->children) == 0) {
-			Entity* child = entity_load_from_prefab("prefabs/text.prefab");
+			Entity* child = entity_load_from_prefab("prefabs/text.prefab", self);
 			billboard = entity_get_script(child, "billboard");
 			if (!billboard) {
 				slog("For soil, couldn't create billboard");
@@ -58,7 +58,6 @@ static void Think(Entity* self, Script* script) {
 			child->position.z = self->position.z + 30;
 			script_billboard_settext(child, billboard, "PLANT DICE?");
 			script_billboard_updatetexture(child, billboard);
-			entity_add_child(self, child);
 		}
 	}
 	else if (state == CLICKED && !self->selected && engine_utility_isleftmousereleased()) {

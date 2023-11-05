@@ -41,7 +41,7 @@ void scene_load(char *filename)
     }
     for (int i = 0; i < sj_array_get_count(scene); i++) {
         slog("Loading %dth entity", i);
-        entity_load_from_sjson(sj_array_get_nth(scene, i), filename);
+        entity_load_from_sjson(sj_array_get_nth(scene, i), filename, NULL);
     }
 
     fail:
