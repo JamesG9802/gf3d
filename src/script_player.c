@@ -36,37 +36,18 @@ PlayerData script_player_newplayerdata() {
         diceValues[0] = dicevalue_new(Mana, 1);
         diceValues[1] = dicevalue_new(Mana, 2);
         diceValues[2] = dicevalue_new(Mana, 3);
-        diceValues[3] = dicevalue_new(Fire, 1);
-        diceValues[4] = dicevalue_new(Fire, 2);
-        diceValues[5] = dicevalue_new(Fire, 3);
+        diceValues[3] = dicevalue_new(Mana, 4);
+        diceValues[4] = dicevalue_new(Mana, 5);
+        diceValues[5] = dicevalue_new(Mana, 6);
         double* sideWeights = malloc(sizeof(double) * 6);
         sideWeights[0] = 1;
-        sideWeights[1] = 2;
-        sideWeights[2] = 3;
-        sideWeights[3] = 4;
-        sideWeights[4] = 5;
-        sideWeights[5] = 6;
-        dice = dice_new(false, 0, 6, diceValues, sideWeights, 30, 10);
-        gfc_list_append(playerData.inventory->diceInventory, dice);
-    }
-    {
-        Dice* dice;
-        DiceValue* diceValues = malloc(sizeof(DiceValue) * 6);
-        diceValues[0] = dicevalue_new(Mana, 10);
-        diceValues[1] = dicevalue_new(Mana, 20);
-        diceValues[2] = dicevalue_new(Mana, 30);
-        diceValues[3] = dicevalue_new(Mana, 10);
-        diceValues[4] = dicevalue_new(Mana, 20);
-        diceValues[5] = dicevalue_new(Mana, 30);
-        double* sideWeights = malloc(sizeof(double) * 6);
-        sideWeights[0] = 11;
-        sideWeights[1] = 2;
-        sideWeights[2] = 3;
-        sideWeights[3] = 4;
-        sideWeights[4] = 5;
-        sideWeights[5] = 6;
-        dice = dice_new(false, 0, 6, diceValues, sideWeights, 30, 10);
-        gfc_list_append(playerData.inventory->diceInventory, dice);
+        sideWeights[1] = 1;
+        sideWeights[2] = 1;
+        sideWeights[3] = 1;
+        sideWeights[4] = 1;
+        sideWeights[5] = 1;
+        dice = dice_new(true, 0, 6, diceValues, sideWeights, 10, 0);
+        gfc_list_append(playerData.inventory->diceSeeds, dice);
     }
     {
         Dice* dice;
@@ -74,18 +55,37 @@ PlayerData script_player_newplayerdata() {
         diceValues[0] = dicevalue_new(Fire, 10);
         diceValues[1] = dicevalue_new(Fire, 20);
         diceValues[2] = dicevalue_new(Fire, 30);
-        diceValues[3] = dicevalue_new(Fire, 10);
-        diceValues[4] = dicevalue_new(Fire, 20);
-        diceValues[5] = dicevalue_new(Fire, 30);
+        diceValues[3] = dicevalue_new(Mana, 10);
+        diceValues[4] = dicevalue_new(Mana, 20);
+        diceValues[5] = dicevalue_new(Mana, 30);
         double* sideWeights = malloc(sizeof(double) * 6);
-        sideWeights[0] = 11;
-        sideWeights[1] = 2;
-        sideWeights[2] = 3;
-        sideWeights[3] = 4;
-        sideWeights[4] = 5;
-        sideWeights[5] = 6;
-        dice = dice_new(false, 0, 6, diceValues, sideWeights, 30, 10);
+        sideWeights[0] = 1;
+        sideWeights[1] = 1;
+        sideWeights[2] = 1;
+        sideWeights[3] = 1;
+        sideWeights[4] = 1;
+        sideWeights[5] = 1;
+        dice = dice_new(true, 0, 6, diceValues, sideWeights, 10, 5);
         gfc_list_append(playerData.inventory->diceSeeds, dice);
+    }
+    {
+        Dice* dice;
+        DiceValue* diceValues = malloc(sizeof(DiceValue) * 6);
+        diceValues[0] = dicevalue_new(Mana, 10);
+        diceValues[1] = dicevalue_new(Fire, 20);
+        diceValues[2] = dicevalue_new(Mana, 30);
+        diceValues[3] = dicevalue_new(Mana, 10);
+        diceValues[4] = dicevalue_new(Mana, 20);
+        diceValues[5] = dicevalue_new(Mana, 30);
+        double* sideWeights = malloc(sizeof(double) * 6);
+        sideWeights[0] = 1;
+        sideWeights[1] = 1;
+        sideWeights[2] = 1;
+        sideWeights[3] = 1;
+        sideWeights[4] = 1;
+        sideWeights[5] = 1;
+        dice = dice_new(false, 0, 6, diceValues, sideWeights, 10, 5);
+        gfc_list_append(playerData.inventory->diceInventory, dice);
     }
     return playerData;
 }

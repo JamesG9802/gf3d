@@ -102,7 +102,7 @@ void script_ui_updateposition(Entity* self) {
 		Vector2D parentPosition = getRenderPosition(self->parent);
 		int width, height;
 		width = ((UIData*)self->parent->customData)->sprite->frameWidth * self->parent->scale.x / 2.0;
-		height = ((UIData*)self->parent->customData)->sprite->frameHeight * self->parent->scale.x / 2.0;
+		height = ((UIData*)self->parent->customData)->sprite->frameHeight * self->parent->scale.y / 2.0;
 		position = vector2d(parentPosition.x + (positionNDC.x + 1) * width / 2.0, 
 			parentPosition.y + (positionNDC.y - 1) * height / -2.0);
 	}

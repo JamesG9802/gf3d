@@ -47,17 +47,16 @@ List* get_current_dice_inventory(Script* script) {
 /// <param name="script"></param>
 static void set_dice_sprite(Script* script) {
     Entity* diceWindow = script_manager_getentity("ui_diceinformation");
-
-    if (script && script->data && ((InventoryUIData*)script->data)->diceIndex == 0) {
+    if (script && script->data && gfc_list_get_count(get_current_dice_inventory(script)) == 0) {
         gf2d_sprite_free(((UIData*)diceWindow->customData)->sprite);
         ((UIData*)diceWindow->customData)->sprite = gf2d_sprite_load("images/panel.png", 0, 0, 0);
+        return;
     }
 
     if (!script_player_getplayerdata() || !script_player_getplayerdata()->inventory 
         || !diceWindow || !script || !script->data)  return;
 
     int diceIndex = ((InventoryUIData*)script->data)->diceIndex;
-    slog("%d", diceIndex);
     List* dices = get_current_dice_inventory(script);
     if (!dices || diceIndex < 0 || diceIndex >= gfc_list_get_count(dices))
     {
@@ -65,7 +64,15 @@ static void set_dice_sprite(Script* script) {
         ((UIData*)diceWindow->customData)->sprite = gf2d_sprite_load("images/default.png", 0, 0, 0);
         return;
     }
-    dice_to_ui(gfc_list_get_nth(dices, diceIndex), diceWindow);
+    //  Shows up to four dice at once.
+    if (((InventoryUIData*)script->data)->state == START)
+    {
+        dice_to_ui_simplified(dices, diceIndex, diceWindow);
+    }
+    //  Shows the dice information for a specific dice
+    else if (((InventoryUIData*)script->data)->state == VIEWDICE) {
+        dice_to_ui(gfc_list_get_nth(dices, diceIndex), diceWindow);
+    }
 }
 
 static void button_ui_show_seeds(Entity* entity, Script* script) {
@@ -98,9 +105,18 @@ static void button_ui_left_arrow(Entity* entity, Script* script) {
     if (!entity || !script || !script->data) return;
     List* dices = get_current_dice_inventory(script);
     if (!dices) return;
-    ((InventoryUIData*)script->data)->diceIndex = ((InventoryUIData*)script->data)->diceIndex - 1;
+    ((InventoryUIData*)script->data)->diceIndex = ((InventoryUIData*)script->data)->diceIndex -= 4;
     if (((InventoryUIData*)script->data)->diceIndex < 0)
-        ((InventoryUIData*)script->data)->diceIndex = gfc_list_get_count(dices) - 1;
+    {
+        if ((Sint32)gfc_list_get_count(dices) - 4 < 0)
+        {
+            ((InventoryUIData*)script->data)->diceIndex = 0;
+        }
+        else
+        {
+            ((InventoryUIData*)script->data)->diceIndex = gfc_list_get_count(dices) - 4;
+        }
+    }
     set_dice_sprite(script);
 }
 
@@ -113,7 +129,7 @@ static void button_ui_right_arrow(Entity* entity, Script* script) {
     if (!entity || !script || !script->data) return;
     List* dices = get_current_dice_inventory(script);
     if (!dices) return;
-    ((InventoryUIData*)script->data)->diceIndex = ((InventoryUIData*)script->data)->diceIndex + 1;
+    ((InventoryUIData*)script->data)->diceIndex = ((InventoryUIData*)script->data)->diceIndex += 4;
     if (((InventoryUIData*)script->data)->diceIndex >= gfc_list_get_count(dices))
         ((InventoryUIData*)script->data)->diceIndex = 0;
     set_dice_sprite(script);

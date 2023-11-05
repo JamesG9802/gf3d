@@ -47,3 +47,8 @@ void dice_to_texture(Dice* dice, Entity* entity);
 /// <param name="dice"></param>
 /// <param name="entity"></param>
 void dice_to_ui(Dice* dice, Entity* entity);
+
+/// <summary>
+/// Sets up to four dice's information as the sprite for the entity.
+/// </summary>
+void dice_to_ui_simplified(List* dices, int diceIndex, Entity* entity);

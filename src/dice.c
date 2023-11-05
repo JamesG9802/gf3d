@@ -1,6 +1,10 @@
 #include <SDL_image.h>
 
+#include "simple_logger.h"
+
 #include "gfc_list.h"
+
+#include "gf3d_vgraphics.h"
 
 #include "dice.h"
 #include "dicevalue.h"
@@ -120,6 +124,84 @@ void dice_to_ui(Dice* dice, Entity* entity) {
 	}
 	if (!surface) return;
 	Sprite* sprite = gf2d_sprite_from_surface(surface, 0, 0, 0);
+	if (entity->customData)
+	{
+		gf2d_sprite_free(((UIData*)entity->customData)->sprite);
+		((UIData*)entity->customData)->sprite = sprite;
+	}
+}
+
+
+void dice_to_ui_simplified(List* dices, int diceIndex, Entity* entity) {
+	if (!dices) return;
+	int tileWidth = 640;
+	int tileHeight = 256;
+
+	//	creating a bigger surface to store both icon and text four times, two on each row.
+	SDL_Surface* combined = gf3d_vgraphics_create_surface(tileWidth * 2 + 40, tileHeight * 2 + 40);
+	int count = 0;
+	for (int i = diceIndex; i < gfc_list_get_count(dices); i++)
+	{
+		Dice* dice = gfc_list_get_nth(dices, i);
+		SDL_Surface* information = NULL;
+		SDL_Surface* surface = NULL;
+		switch (dice->sideCount) {
+		default:
+			continue;
+		case 6:
+			surface = IMG_Load("images/dice6_icon.png");
+			break;
+		}
+		if (!surface) continue;;
+		char text[512];
+		text[0] = '\0';
+		if (dice->isSeed)
+			sprintf(text, "%d Sided Dice\nLifespan: %d\nMana Cost: %d", dice->sideCount, dice->maxLifespan, dice->manaCost);
+		else
+			sprintf(text, "%d Sided Dice\nAge: %d/%d\nMana Cost: %d", dice->sideCount, dice->age, dice->maxLifespan, dice->manaCost);
+		TTF_SetFontSize(gf2d_font_get_by_tag(FT_H2)->font, 64);
+		information = TTF_RenderText_Blended_Wrapped(
+			gf2d_font_get_by_tag(FT_H2)->font,
+			text,
+			gfc_color_to_sdl(gfc_color(0, 0, 0, 1)),
+			384
+		);
+
+		if (!information) {
+			SDL_FreeSurface(surface);
+			continue;
+		}
+		int xOffset, yOffset;
+		switch (count) {
+		default:
+		case 0: //	first one top left corner
+			xOffset = 0;
+			yOffset = 0;
+			break;
+		case 1: //	second one top right corner
+			xOffset = tileWidth + 40;
+			yOffset = 0;
+			break;
+		case 2: //	third one bottom left corner
+			xOffset = 0;
+			yOffset = tileHeight + 40;
+			break;
+		case 3: //	fourth one bottom right corner
+			xOffset = tileWidth + 40;
+			yOffset = tileHeight + 40;
+			break;
+
+		}
+
+		SDL_Rect iconDestination = gfc_sdl_rect(xOffset, yOffset, 256, 256);
+		SDL_Rect informationDestination = gfc_sdl_rect(xOffset + 256, yOffset, 256, 256);
+		SDL_BlitSurface(surface, NULL, combined, &iconDestination);
+		SDL_BlitSurface(information, NULL, combined, &informationDestination);
+		SDL_FreeSurface(surface);
+		SDL_FreeSurface(information);
+		count++;
+	}
+	Sprite* sprite = gf2d_sprite_from_surface(combined, 0, 0, 0);
 	if (entity->customData)
 	{
 		gf2d_sprite_free(((UIData*)entity->customData)->sprite);
