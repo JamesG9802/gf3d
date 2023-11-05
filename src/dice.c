@@ -40,11 +40,60 @@ void dice_free(Dice* dice) {
 	}
 }
 
-//	Dice to texture helper functions
+void dice_harvest(Dice* dice) {
+	if (!dice) return;
+	dice->isSeed = false;
+	
+}
 
+//	Dice to texture helper functions
+SDL_Surface* dice_to_texture_four(Dice* dice, Entity* entity) {
+	SDL_Surface* surface = IMG_Load("images/dice4.png");
+	if (!surface || !dice->sideValues) return NULL;
+	SDL_Rect rect = gfc_sdl_rect(0, 0, 0, 0);
+
+	for (int i = 0; i < dice->sideCount; i++) {
+		//	Render Symbol
+		SDL_Rect rect;
+		int x = 0, y = 0;
+		SDL_Surface* side = dicevalue_getsurface(dice->sideValues[i]);
+		if (!side) {
+			SDL_FreeSurface(surface);
+			return NULL;
+		}
+		switch (i) {
+		case 0: x = 128; y = 256; break;		case 1: x = 387; y = 0; break;		case 2: x = 518; y = 512; break;
+		case 3: x = 777; y = 256; break;
+		}
+		rect = gfc_sdl_rect(x, y, 256, 256);
+		SDL_BlitSurface(side, NULL, surface, &rect);
+		SDL_free(side);
+		side = NULL;
+		//	Render Text
+		char text[16];
+		text[0] = '\0';
+		sprintf_s(text, sizeof(char) * 16, "%d", dice->sideValues[i].value);
+		Font* font = gf2d_font_get_by_tag(FT_H2)->font;
+
+		TTF_SetFontSize(font, 64);
+		side = TTF_RenderText_Blended(
+			font,
+			text,
+			gfc_color_to_sdl(gfc_color(1, 1, 1, 1))
+		);
+		if (!side) continue;
+		//	Center value
+		x += (256 - side->w) / 2;
+		y += (256 - side->h) / 2;
+		rect = gfc_sdl_rect(x, y, 256, 256);
+		SDL_BlitSurface(side, NULL, surface, &rect);
+		SDL_free(side);
+	}
+	return surface;
+}
 SDL_Surface* dice_to_texture_six(Dice* dice, Entity* entity) {
 	SDL_Surface* surface = IMG_Load("images/dice6.png");
-	if (!surface || !dice->sideValues) return;
+	if (!surface || !dice->sideValues) return NULL;
 
 	SDL_Rect rect = gfc_sdl_rect(0, 0, 0, 0);
 
@@ -60,7 +109,7 @@ SDL_Surface* dice_to_texture_six(Dice* dice, Entity* entity) {
 		SDL_Surface* side = dicevalue_getsurface(dice->sideValues[i]);
 		if (!side) {
 			SDL_FreeSurface(surface);
-			return;
+			return NULL;
 		}
 		switch (i) {
 		case 0: x = 256; y = 0; break;		case 1: x = 0; y = 256; break;		case 2: x = 256; y = 256; break;
@@ -101,6 +150,9 @@ void dice_to_texture(Dice* dice, Entity* entity) {
 	switch (dice->sideCount) {
 	default: 
 		return;
+	case 4:
+		surface = dice_to_texture_four(dice, entity);
+		break;
 	case 6:
 		surface = dice_to_texture_six(dice, entity);
 		break;
@@ -118,6 +170,9 @@ void dice_to_ui(Dice* dice, Entity* entity) {
 	switch (dice->sideCount) {
 	default:
 		return;
+	case 4:
+		surface = dice_to_texture_four(dice, entity);
+		break;
 	case 6:
 		surface = dice_to_texture_six(dice, entity);
 		break;
@@ -148,6 +203,9 @@ void dice_to_ui_simplified(List* dices, int diceIndex, int selectedDiceIndex, En
 		switch (dice->sideCount) {
 		default:
 			continue;
+		case 4:
+			surface = IMG_Load("images/dice4_icon.png");
+			break;
 		case 6:
 			surface = IMG_Load("images/dice6_icon.png");
 			break;

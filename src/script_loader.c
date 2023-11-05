@@ -30,6 +30,8 @@ Script* script_loader_getScript(char* string) {
 		return script_new_manager_flag();
 	if (strcmp(string, "inventoryui") == 0)
 		return script_new_inventoryui();
+	if (strcmp(string, "dice") == 0)
+		return script_new_dice();
 	return NULL;
 }
 

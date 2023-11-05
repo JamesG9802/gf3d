@@ -4,11 +4,13 @@
 typedef enum SoilState {
 	IDLE,
 	CLICKED,
-	GROWING
+	GROWING,
+	READY
 } SoilState;
 
 typedef struct SoilData {
 	SoilState state;
+	int daysRemaining;	//	days remaining before plant can be harvested
 	Dice* dice;
 } SoilData;
 

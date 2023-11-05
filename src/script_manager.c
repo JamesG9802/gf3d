@@ -26,15 +26,27 @@
 /// </summary>
 static Script* script_manager = NULL;
 
-void input_day_to_night(Entity* entity, Script* script) {
-	script_ui_sethidden(
-		script_manager_getentity("button_timetransition"),
-		true
-	);
-	script_ui_setframenum(
-		script_manager_getentity("indicator_time"),
-		1
-	);
+void day_to_night(Entity* entity, Script* script) {
+	slog("check");
+	if (script_manager_getdata()->currentDay > 3) {
+		script_ui_sethidden(
+			script_manager_getentity("button_timetransition"),
+			true
+		);
+		script_ui_setframenum(
+			script_manager_getentity("indicator_time"),
+			1
+		);
+	}
+	//	First three days have no fight
+	else {
+		event_manager_fire_event("transition_nighttoday");
+	}
+	
+}
+void night_to_day(Entity* entity, Script* script) {
+	slog("New Day");
+	script_manager_getdata()->currentDay = script_manager_getdata()->currentDay + 1;
 }
 void handle_inventory_toggle(Entity* entity, Script* script) {
 	Entity* inventory = script_manager_getentity("indicator_inventory");
@@ -52,7 +64,8 @@ void handle_seed_prompt(Entity* entity, Script* script) {
 /// Register all callbacks for events.
 /// </summary>
 void script_manager_registerCallbacks(Entity* self) {
-	event_manager_register_callback("input_transition_daytonight", &input_day_to_night, self, script_manager);
+	event_manager_register_callback("transition_daytonight", &day_to_night, self, script_manager);
+	event_manager_register_callback("transition_nighttoday", &night_to_day, self, script_manager);
 	event_manager_register_callback("inventoryToggle", &handle_inventory_toggle, self, script_manager);
 	event_manager_register_callback("seedPrompt", &handle_seed_prompt, self, script_manager);
 }
@@ -61,7 +74,8 @@ void script_manager_registerCallbacks(Entity* self) {
 /// Unregister all callbacks for events
 /// </summary>
 void script_manager_unregisterCallbacks() {
-	event_manager_unregister_callback("input_transition_daytonight", &input_day_to_night);
+	event_manager_unregister_callback("transition_daytonight", &day_to_night);
+	event_manager_unregister_callback("transition_nighttoday", &night_to_day);
 	event_manager_unregister_callback("inventoryToggle", &handle_inventory_toggle);
 	event_manager_unregister_callback("seedPrompt", &handle_seed_prompt);
 }
@@ -74,6 +88,7 @@ ManagerData* script_manager_newdata() {
 		slog_sync();
 		return NULL;
 	}
+	data->currentDay = 1;
 	data->gamestate = GROW;
 	data->entities = gfc_hashmap_new();
 
@@ -89,6 +104,10 @@ void script_manager_freedata(Script* script) {
 
 Script* script_manager_get() {
 	return script_manager;
+}
+
+ManagerData* script_manager_getdata() {
+	return ((ManagerData*)(script_manager->data));
 }
 
 GameState script_manager_getgamestate() {

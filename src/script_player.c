@@ -22,6 +22,7 @@
 #include "inventory.h"
 
 #include "script_player.h"
+#include "script_manager.h"
 
 Entity* player = NULL;
 static int thirdPersonMode = 0;
@@ -68,6 +69,21 @@ PlayerData script_player_newplayerdata() {
         dice = dice_new(true, 0, 6, diceValues, sideWeights, 10, 0);
         gfc_list_append(playerData.inventory->diceSeeds, dice);
     }
+    {
+        Dice* dice;
+        DiceValue* diceValues = malloc(sizeof(DiceValue) * 4);
+        diceValues[0] = dicevalue_new(Fire, 4);
+        diceValues[1] = dicevalue_new(Fire, 4);
+        diceValues[2] = dicevalue_new(Fire, 3);
+        diceValues[3] = dicevalue_new(Fire, 3);
+        double* sideWeights = malloc(sizeof(double) * 4);
+        sideWeights[0] = 1;
+        sideWeights[1] = 1;
+        sideWeights[2] = 1;
+        sideWeights[3] = 1;
+        dice = dice_new(true, 0, 4, diceValues, sideWeights, 10, 0);
+        gfc_list_append(playerData.inventory->diceSeeds, dice);
+    }
     return playerData;
 }
 
@@ -108,79 +124,85 @@ static void Start(Entity* self, Script* script) {
     }
     PlayerData playerData = script_player_newplayerdata();
     memcpy(script->data, &playerData, sizeof(PlayerData));
+    gf3d_camera_set_position(self->position);
+    gf3d_camera_set_rotation(self->rotation);
 }
 
 /**
  * @brief Called when a script is created.
  */
 static void Think(Entity* self, Script* script) {
-    Vector3D forward, move = { 0 };
-    Vector2D w, mouse;
-    int mx, my;
-    SDL_GetRelativeMouseState(&mx, &my);
-    const Uint8* keys;
-    keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
-
-    mouse.x = mx;
-    mouse.y = my;
-
-    move = vector3d_get_from_angles(self->rotation);
-
-    if (keys[SDL_SCANCODE_W])
-    {
-        vector3d_add(self->position, self->position, move);
+    if (script_manager_getgamestate() == GROW) {
+        if (gfc_input_keycode_released(SDL_SCANCODE_ESCAPE))
+        {
+            event_manager_fire_event("inventoryToggle");
+        }
     }
-    if (keys[SDL_SCANCODE_S])
-    {
-        vector3d_add(self->position, self->position, -move);
-    }
-    move = vector3d_get_from_angles(self->rotation);
-    move.z = 0;
-    vector3d_rotate_about_z(&move, -GFC_HALF_PI);
-    vector3d_normalize(&move);
-    if (keys[SDL_SCANCODE_D])
-    {
-        vector3d_add(self->position, self->position, move);
-    }
-    if (keys[SDL_SCANCODE_A])
-    {
-        vector3d_add(self->position, self->position, -move);
-    }
-    if (keys[SDL_SCANCODE_SPACE])self->position.z += 1;
-    if (keys[SDL_SCANCODE_Z])self->position.z -= 1;
+    if(script_manager_getgamestate() == BATTLE) {
+        Vector3D forward, move = { 0 };
+        Vector2D w, mouse;
+        int mx, my;
+        SDL_GetRelativeMouseState(&mx, &my);
+        const Uint8* keys;
+        keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
 
-    if (keys[SDL_SCANCODE_UP])self->rotation.x += 0.00750;
-    if (keys[SDL_SCANCODE_DOWN])self->rotation.x -= 0.00750;
-    if (keys[SDL_SCANCODE_RIGHT])self->rotation.z -= 0.00750;
-    if (keys[SDL_SCANCODE_LEFT])self->rotation.z += 0.00750;
-    if (keys[SDL_SCANCODE_KP_RIGHTBRACE])self->rotation.y -= 0.00750;
-    if (keys[SDL_SCANCODE_KP_LEFTBRACE])self->rotation.y += 0.00750;
+        mouse.x = mx;
+        mouse.y = my;
 
-    if (self->rotation.x >= (GFC_HALF_PI * .9f)) self->rotation.x = GFC_HALF_PI * .9f;
-    if (self->rotation.x <= -(GFC_HALF_PI * .9f))self->rotation.x = -GFC_HALF_PI * .9f;
+        move = vector3d_get_from_angles(self->rotation);
 
-    if (thirdPersonMode)
-    {
-        if (mouse.x != 0)self->rotation.z -= (mouse.x * 0.001);
-        if (mouse.y != 0)self->rotation.x += (mouse.y * 0.001);
-    }
+        if (keys[SDL_SCANCODE_W])
+        {
+            vector3d_add(self->position, self->position, move);
+        }
+        if (keys[SDL_SCANCODE_S])
+        {
+            vector3d_add(self->position, self->position, -move);
+        }
+        move = vector3d_get_from_angles(self->rotation);
+        move.z = 0;
+        vector3d_rotate_about_z(&move, -GFC_HALF_PI);
+        vector3d_normalize(&move);
+        if (keys[SDL_SCANCODE_D])
+        {
+            vector3d_add(self->position, self->position, move);
+        }
+        if (keys[SDL_SCANCODE_A])
+        {
+            vector3d_add(self->position, self->position, -move);
+        }
+        if (keys[SDL_SCANCODE_SPACE])self->position.z += 1;
+        if (keys[SDL_SCANCODE_Z])self->position.z -= 1;
 
-    if (keys[SDL_SCANCODE_F3])
-    {
-        self->hidden = !self->hidden;
-    }
-    if (gfc_input_keycode_released(SDL_SCANCODE_BACKSPACE))
-    {
-        self->rotation.x = 0;
-        self->rotation.z = 0;
-    } 
-    if (gfc_input_keycode_released(SDL_SCANCODE_HOME))
-    {
-        thirdPersonMode = !thirdPersonMode;
-    }
-    if (gfc_input_keycode_released(SDL_SCANCODE_ESCAPE))
-    {
-        event_manager_fire_event("inventoryToggle");
+        if (keys[SDL_SCANCODE_UP])self->rotation.x += 0.00750;
+        if (keys[SDL_SCANCODE_DOWN])self->rotation.x -= 0.00750;
+        if (keys[SDL_SCANCODE_RIGHT])self->rotation.z -= 0.00750;
+        if (keys[SDL_SCANCODE_LEFT])self->rotation.z += 0.00750;
+        if (keys[SDL_SCANCODE_KP_RIGHTBRACE])self->rotation.y -= 0.00750;
+        if (keys[SDL_SCANCODE_KP_LEFTBRACE])self->rotation.y += 0.00750;
+
+        if (self->rotation.x >= (GFC_HALF_PI * .9f)) self->rotation.x = GFC_HALF_PI * .9f;
+        if (self->rotation.x <= -(GFC_HALF_PI * .9f))self->rotation.x = -GFC_HALF_PI * .9f;
+
+        if (thirdPersonMode)
+        {
+            if (mouse.x != 0)self->rotation.z -= (mouse.x * 0.001);
+            if (mouse.y != 0)self->rotation.x += (mouse.y * 0.001);
+        }
+
+        if (keys[SDL_SCANCODE_F3])
+        {
+            self->hidden = !self->hidden;
+        }
+        if (gfc_input_keycode_released(SDL_SCANCODE_BACKSPACE))
+        {
+            self->rotation.x = 0;
+            self->rotation.z = 0;
+        }
+        if (gfc_input_keycode_released(SDL_SCANCODE_HOME))
+        {
+            thirdPersonMode = !thirdPersonMode;
+        }
     }
 }
 
@@ -188,11 +210,13 @@ static void Think(Entity* self, Script* script) {
  * @brief Called when a script is created.
  */
 static void Update(Entity* self, Script* script) {
-
     if (!self)return;
 
-    gf3d_camera_set_position(self->position);
-    gf3d_camera_set_rotation(self->rotation);
+    if (script_manager_getgamestate() == BATTLE)
+    {
+        gf3d_camera_set_position(self->position);
+        gf3d_camera_set_rotation(self->rotation);
+    }
 }
 
 /**

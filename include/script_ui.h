@@ -19,6 +19,21 @@ typedef struct UIData {
 	Color color;
 
 	/// <summary>
+	/// For text UI, this stores the text that is rendered to the screen
+	/// </summary>
+	char* currentText;
+
+	/// <summary>
+	/// For text UI, this stores their format string.
+	/// </summary>
+	char* text;
+	
+	/// <summary>
+	/// For text UI, this stores a variable that will appended to the text.
+	/// </summary>
+	char* wildcard;
+
+	/// <summary>
 	/// THe position of the sprite in NDC coordinates;
 	/// </summary>
 	Vector2D positionNDC;

@@ -21,6 +21,7 @@
 #include "script_defs.h"
 
 #include "script_ui.h"
+#include "script_manager.h"
 
 /// <summary>
 /// Using the anchormode, compute the actual x and y position of the sprite.
@@ -70,6 +71,9 @@ UIData script_ui_newuidata() {
 	UIData data = {0};
 	data.sprite = NULL;
 	data.color = gfc_color(1, 1, 1, 1);
+	data.currentText = NULL;
+	data.text = NULL;
+	data.wildcard = NULL;
 	data.positionNDC = vector2d(0, 0);
 	data.mode = TOPLEFT;
 	data.isInteractable = false;
@@ -167,6 +171,19 @@ static void EntityUIDraw(Entity* self) {
 /// <param name="Script_s*">Caller script</param>
 /// </summary>
 static void Start(Entity* self, Script* script) {
+	if (((UIData*)self->customData)->text) {
+		//	Text and image are exclusive, text takes priority
+		if (((UIData*)self->customData)->sprite) {
+			gf2d_sprite_free(((UIData*)self->customData)->sprite);
+		}
+		((UIData*)self->customData)->sprite = gf2d_sprite_from_surface(
+			TTF_RenderText_Blended(
+				gf2d_font_get_by_tag(FT_H1)->font,
+				((UIData*)self->customData)->text,
+				gfc_color_to_sdl(((UIData*)self->customData)->color)
+			),
+			0, 0, 0);
+	}
 	self->skipCommonDraw = true;
 	self->skipCommonUpdate = true;
 	self->draw = &EntityUIDraw;
@@ -179,7 +196,8 @@ static void Start(Entity* self, Script* script) {
 /// <param name="Entity*">Attached entity</param>
 /// <param name="Script_s*">Caller script</param>
 /// </summary>
-static void Think(Entity* self, Script* script) {}
+static void Think(Entity* self, Script* script) {
+}
 
 /// <summary>
 /// Called every update frame.
@@ -192,6 +210,35 @@ static void Update(Entity* self, Script* script) {
 		slog("No data for ui");
 		return;
 	}
+
+	//	for now wildcards are hardcoded
+	if (((UIData*)self->customData)->text && ((UIData*)self->customData)->wildcard) {
+		char* text = ((UIData*)self->customData)->text;
+		char* currentText = ((UIData*)self->customData)->currentText;
+		char* wildCard = ((UIData*)self->customData)->wildcard;
+		if (strcmp(wildCard, "currentDay") == 0)
+		{
+			char newstring[1024];
+			sprintf(newstring, "%s%d", text, script_manager_getdata()->currentDay);
+			if (currentText && strcmp(currentText, newstring) == 0) {
+				return;
+			}
+			free(currentText);
+			((UIData*)self->customData)->currentText = malloc(sizeof(char) * (strlen(newstring) + 1));
+			if (((UIData*)self->customData)->sprite) {
+				gf2d_sprite_free(((UIData*)self->customData)->sprite);
+			}
+			((UIData*)self->customData)->sprite = gf2d_sprite_from_surface(
+				TTF_RenderText_Blended(
+					gf2d_font_get_by_tag(FT_H1)->font,
+					newstring,
+					gfc_color_to_sdl(((UIData*)self->customData)->color)
+				),
+				0, 0, 0);
+		}
+	}
+
+
 	if (((UIData*)self->customData)->isInteractable && script_ui_ismouseover(self, script))
 	{
 		if(engine_utility_isleftmousedown())
@@ -201,7 +248,7 @@ static void Update(Entity* self, Script* script) {
 		if(engine_utility_isleftmousereleased() && ((UIData*)self->customData)->associatedEvent)
 			event_manager_fire_event(((UIData*)self->customData)->associatedEvent);
 	}
-	else
+	else if (((UIData*)self->customData)->isInteractable && !script_ui_ismouseover(self, script))
 	{
 		((UIData*)self->customData)->color = gfc_color(1, 1, 1, 1);
 	}
@@ -217,6 +264,14 @@ static void Destroy(Entity* self, Script* script) {
 		if (((UIData*)self->customData)->sprite)
 		{
 			gf2d_sprite_free(((UIData*)self->customData)->sprite);
+		}
+		if (((UIData*)self->customData)->text)
+		{
+			free(((UIData*)self->customData)->text);
+		}
+		if (((UIData*)self->customData)->wildcard)
+		{
+			free(((UIData*)self->customData)->wildcard);
 		}
 		free(self->customData);
 	}
@@ -263,6 +318,38 @@ static void Arguments(Entity* self, Script* script, SJson* json) {
 			(int)spriteInfo.y, 
 			(int)spriteInfo.z);
 	}
+	else if (sj_get_string_value(sj_object_get_value(json, "text"))) {
+		UIData data = script_ui_newuidata();
+		self->customData = malloc(sizeof(UIData));
+		if (!self->customData)
+		{
+			slog("Couldn't allocate memory for ui data");
+			slog_sync();
+			return;
+		}
+		memcpy(self->customData, &data, sizeof(UIData));
+
+		char* text = ((UIData*)self->customData)->text;
+		char* currentText = ((UIData*)self->customData)->currentText;
+
+		text = malloc(sizeof(char) * (strlen(sj_get_string_value(sj_object_get_value(json, "text"))) + 1));
+		if (text)
+			strcpy(text, sj_get_string_value(sj_object_get_value(json, "text")));
+
+		currentText = malloc(sizeof(char) * (strlen(sj_get_string_value(sj_object_get_value(json, "text"))) + 1));
+		if (currentText)
+			strcpy(currentText, sj_get_string_value(sj_object_get_value(json, "text")));
+		((UIData*)self->customData)->text = text;
+		((UIData*)self->customData)->currentText = currentText;
+	}
+	if (sj_get_string_value(sj_object_get_value(json, "text")) &&
+		sj_get_string_value(sj_object_get_value(json, "wildcard"))) {
+		char* wildcard = ((UIData*)self->customData)->wildcard;
+		wildcard = malloc(sizeof(char) * (strlen(sj_get_string_value(sj_object_get_value(json, "wildcard"))) + 1));
+		if (wildcard)
+			strcpy(wildcard, sj_get_string_value(sj_object_get_value(json, "wildcard")));
+		((UIData*)self->customData)->wildcard = wildcard;
+	}
 	if (sj_get_string_value(sj_object_get_value(json, "anchor"))) {
 		if (!self->customData)
 			return;
@@ -303,6 +390,13 @@ static void Arguments(Entity* self, Script* script, SJson* json) {
 		Bool isHidden;
 		sj_get_bool_value(sj_object_get_value(json, "hidden"), &isHidden);
 		self->hidden = isHidden;
+	}
+	if (sj_value_as_vector4d(sj_object_get_value(json, "color"), NULL)) {
+		if (!self->customData)
+			return;
+		Vector4D color;
+		sj_value_as_vector4d(sj_object_get_value(json, "color"), &color);
+		((UIData*)self->customData)->color = gfc_color(color.x, color.y, color.z, color.w);
 	}
 }
 Script* script_new_ui() {

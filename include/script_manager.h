@@ -15,6 +15,11 @@ typedef struct ManagerData {
 	HashMap* entities;
 
 	/// <summary>
+	/// The current day of the game.
+	/// </summary>
+	Sint32 currentDay;
+
+	/// <summary>
 	/// The gamestate of the game.
 	/// </summary>
 	GameState gamestate;
@@ -41,6 +46,12 @@ void script_manager_freedata(Script* script);
 /// </summary>
 /// <returns></returns>
 Script* script_manager_get();
+
+/// <summary>
+/// Gets the current script manager's data
+/// </summary>
+/// <returns></returns>
+ManagerData* script_manager_getdata();
 
 /// <summary>
 /// Get the current game state

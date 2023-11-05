@@ -1,7 +1,7 @@
 {
     "model":
     {
-        "model":"meshes/dice.obj",
+        "model":"meshes/dice6.obj",
         "texture":"images/dice6.png"
     }
 }

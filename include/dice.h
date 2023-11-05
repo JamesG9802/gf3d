@@ -36,6 +36,12 @@ Dice* dice_new(Bool isSeed, int age, int sideCount, DiceValue* sideValues, doubl
 void dice_free(Dice* dice);
 
 /// <summary>
+/// Randomly mutates and sets up a dice seed to become a real dice.
+/// </summary>
+/// <param name="dice"></param>
+void dice_harvest(Dice* dice);
+
+/// <summary>
 /// Sets the dice's sides as the texture for the entity.
 /// </summary>
 /// <param name="texture"></param>

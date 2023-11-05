@@ -82,6 +82,7 @@
     <ClCompile Include="..\src\script_boxcollider.c" />
     <ClCompile Include="..\src\script_camera.c" />
     <ClCompile Include="..\src\script_debug.c" />
+    <ClCompile Include="..\src\script_dice.c" />
     <ClCompile Include="..\src\script_inventoryui.c" />
     <ClCompile Include="..\src\script_manager_flag.c" />
     <ClCompile Include="..\src\script_loader.c" />
@@ -159,6 +160,7 @@
     <ClInclude Include="..\include\script.h" />
     <ClInclude Include="..\include\script_billboard.h" />
     <ClInclude Include="..\include\script_defs.h" />
+    <ClInclude Include="..\include\script_dice.h" />
     <ClInclude Include="..\include\script_inventoryui.h" />
     <ClInclude Include="..\include\script_loader.h" />
     <ClInclude Include="..\include\script_manager.h" />

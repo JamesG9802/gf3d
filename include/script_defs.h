@@ -66,4 +66,10 @@ Script* script_new_manager_flag();
 /// <returns></returns>
 Script* script_new_inventoryui();
 
+/// <summary>
+/// Script to make a dice entity.
+/// </summary>
+/// <returns></returns>
+Script* script_new_dice();
+
 /*eol@eof*/
