@@ -105,17 +105,27 @@ static void button_ui_left_arrow(Entity* entity, Script* script) {
     if (!entity || !script || !script->data) return;
     List* dices = get_current_dice_inventory(script);
     if (!dices) return;
-    ((InventoryUIData*)script->data)->diceIndex = ((InventoryUIData*)script->data)->diceIndex -= 4;
-    if (((InventoryUIData*)script->data)->diceIndex < 0)
-    {
-        if ((Sint32)gfc_list_get_count(dices) - 4 < 0)
+
+    //  Looking at multiple simplified dice information, so move by pages of 4 dice at a time.
+    if (((InventoryUIData*)script->data)->state == START) {
+        ((InventoryUIData*)script->data)->diceIndex = ((InventoryUIData*)script->data)->diceIndex - 4;
+        if (((InventoryUIData*)script->data)->diceIndex < 0)
         {
-            ((InventoryUIData*)script->data)->diceIndex = 0;
+            if ((Sint32)gfc_list_get_count(dices) - 4 < 0)
+            {
+                ((InventoryUIData*)script->data)->diceIndex = 0;
+            }
+            else
+            {
+                ((InventoryUIData*)script->data)->diceIndex = gfc_list_get_count(dices) - 4;
+            }
         }
-        else
-        {
-            ((InventoryUIData*)script->data)->diceIndex = gfc_list_get_count(dices) - 4;
-        }
+    }
+    //  Looking at dice information, so move by 1 dice at a time
+    else if (((InventoryUIData*)script->data)->state == VIEWDICE) {
+        ((InventoryUIData*)script->data)->diceIndex = ((InventoryUIData*)script->data)->diceIndex - 1;
+        if (((InventoryUIData*)script->data)->diceIndex < 0)
+            ((InventoryUIData*)script->data)->diceIndex = gfc_list_get_count(dices) - 1;
     }
     set_dice_sprite(script);
 }
@@ -129,9 +139,33 @@ static void button_ui_right_arrow(Entity* entity, Script* script) {
     if (!entity || !script || !script->data) return;
     List* dices = get_current_dice_inventory(script);
     if (!dices) return;
-    ((InventoryUIData*)script->data)->diceIndex = ((InventoryUIData*)script->data)->diceIndex += 4;
-    if (((InventoryUIData*)script->data)->diceIndex >= gfc_list_get_count(dices))
-        ((InventoryUIData*)script->data)->diceIndex = 0;
+    //  Looking at multiple simplified dice information, so move by pages of 4 dice at a time.
+    if (((InventoryUIData*)script->data)->state == START) {
+        ((InventoryUIData*)script->data)->diceIndex = ((InventoryUIData*)script->data)->diceIndex + 4;
+        if (((InventoryUIData*)script->data)->diceIndex >= gfc_list_get_count(dices))
+            ((InventoryUIData*)script->data)->diceIndex = 0;
+    }
+    //  Looking at dice information, so move by 1 dice at a time
+    else if (((InventoryUIData*)script->data)->state == VIEWDICE) {
+        ((InventoryUIData*)script->data)->diceIndex = ((InventoryUIData*)script->data)->diceIndex + 1;
+        if (((InventoryUIData*)script->data)->diceIndex >= gfc_list_get_count(dices))
+            ((InventoryUIData*)script->data)->diceIndex = 0;
+    }
+    set_dice_sprite(script);
+}
+
+/// <summary>
+/// When the dice information arrow is clicked in the UI, toggle between simplified and detailed dice view mode.
+/// </summary>
+/// <param name="entity"></param>
+/// <param name="script"></param>
+static void button_ui_dice_information(Entity* entity, Script* script) {
+    if (!entity | !script || !script->data) return;
+    if (((InventoryUIData*)script->data)->state == START)
+        ((InventoryUIData*)script->data)->state = VIEWDICE;
+    else if (((InventoryUIData*)script->data)->state = VIEWDICE)
+        ((InventoryUIData*)script->data)->state = START;
+    ((InventoryUIData*)script->data)->diceIndex = 0;
     set_dice_sprite(script);
 }
 
@@ -146,6 +180,7 @@ static void script_inventoryui_registerCallbacks(Entity* self, Script* script) {
     event_manager_register_callback("button_ui_show_loadout", &button_ui_show_loadout, self, script);
     event_manager_register_callback("button_ui_left_arrow", &button_ui_left_arrow, self, script);
     event_manager_register_callback("button_ui_right_arrow", &button_ui_right_arrow, self, script);
+    event_manager_register_callback("button_ui_dice_information", &button_ui_dice_information, self, script);
 }
 
 /// <summary>
@@ -157,6 +192,7 @@ static void script_inventoryui_unregisterCallbacks() {
     event_manager_unregister_callback("button_ui_show_loadout", &button_ui_show_loadout);
     event_manager_unregister_callback("button_ui_left_arrow", &button_ui_left_arrow);
     event_manager_unregister_callback("button_ui_right_arrow", &button_ui_right_arrow);
+    event_manager_unregister_callback("button_ui_dice_information", &button_ui_dice_information);
 }
 
 InventoryUIData* script_inventoryui_newdata() {
@@ -184,6 +220,8 @@ void script_inventoryui_toggle(Entity* entity, Script* script) {
             script_ui_sethidden(gfc_list_get_nth(entity->children, i), false);
         }
         set_dice_sprite(script);
+        ((InventoryUIData*)script->data)->diceIndex = 0;
+        ((InventoryUIData*)script->data)->currentType = SEEDS;
         script_manager_setmetastate(INMENU);
         break;
     //  If menus are showing, hide them

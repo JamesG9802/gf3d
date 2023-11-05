@@ -3,7 +3,8 @@
 
 typedef enum DiceValueType {
 	Mana,
-	Fire
+	Fire,
+	Heart
 } DiceValueType;
 
 typedef struct DiceValue {

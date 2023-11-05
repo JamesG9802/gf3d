@@ -52,6 +52,10 @@ Vector2D getRenderPosition(Entity* self) {
 		case BOTTOMLEFT:
 			position.y -= ((UIData*)self->customData)->sprite->frameHeight * self->scale.y / 2.0;
 			break;
+		case BOTTOMMIDDLE:
+			position.x -= ((UIData*)self->customData)->sprite->frameWidth * self->scale.x / 4.0;
+			position.y -= ((UIData*)self->customData)->sprite->frameHeight * self->scale.y / 2.0;
+			break;
 		case BOTTOMRIGHT:
 			position.x -= ((UIData*)self->customData)->sprite->frameWidth * self->scale.x / 2.0;
 			position.y -= ((UIData*)self->customData)->sprite->frameHeight * self->scale.y / 2.0;
@@ -275,6 +279,8 @@ static void Arguments(Entity* self, Script* script, SJson* json) {
 			((UIData*)self->customData)->mode = MIDDLERIGHT;
 		else if (strcmp(anchorMode, "bottomleft") == 0)
 			((UIData*)self->customData)->mode = BOTTOMLEFT;
+		else if (strcmp(anchorMode, "bottommiddle") == 0)
+			((UIData*)self->customData)->mode = BOTTOMMIDDLE;
 		else if(strcmp(anchorMode, "bottomright") == 0)
 			((UIData*)self->customData)->mode = BOTTOMRIGHT;
 	}

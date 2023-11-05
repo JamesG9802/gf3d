@@ -10,6 +10,7 @@ typedef enum AnchorMode {
 	CENTER,
 	MIDDLERIGHT, 
 	BOTTOMLEFT,
+	BOTTOMMIDDLE,
 	BOTTOMRIGHT
 } AnchorMode;
 

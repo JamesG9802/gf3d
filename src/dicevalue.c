@@ -18,5 +18,7 @@ SDL_Surface* dicevalue_getsurface(DiceValue dvalue) {
 		return IMG_Load("images/dice_fire.png");
 	case Mana:
 		return IMG_Load("images/dice_mana.png");
+	case Heart:
+		return IMG_Load("images/dice_heart.png");
 	}
 }
