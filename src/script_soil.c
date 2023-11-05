@@ -8,31 +8,67 @@
 #include "entity.h"
 
 #include "engine_utility.h"
+#include "event_manager.h"
 
 #include "script.h"
 #include "script_defs.h"
+#include "script_soil.h"
+#include "script_inventoryui.h"
 #include "script_billboard.h"
+#include "script_manager.h"
 
-#define state	*((SoilState*)script->data)
-typedef enum SoilState {
-	IDLE,
-	CLICKED,
-	GROWING
-} SoilState;
+static void cancel_plant(Entity* entity, Script* script);
+
+static void plant_dice(Entity* entity, Script* script) {
+	Entity* inventory = script_manager_getentity("indicator_inventory");
+	((SoilData*)script->data)->dice =
+		script_inventoryui_getselecteddice(inventory, entity_get_script(inventory, "inventoryui"));
+	//	If no dice exists
+	if (((SoilData*)script->data)->dice == NULL)
+	{
+		cancel_plant(entity, script);
+		return;
+	}
+	script_inventoryui_deleteselecteddice(inventory, entity_get_script(inventory, "inventoryui"));
+	((SoilData*)script)->state = GROWING;
+	entity->color = gfc_color(1, 0, 0, 1);
+	event_manager_unregister_callback("acceptseed", &plant_dice);
+	event_manager_unregister_callback("rejectseed", &cancel_plant);
+}
+static void cancel_plant(Entity* entity, Script* script) {
+	((SoilData*)script->data)->state = IDLE;
+	entity->color = gfc_color(1, 1, 1, 1);
+
+	event_manager_unregister_callback("acceptseed", &plant_dice);
+	event_manager_unregister_callback("rejectseed", &cancel_plant);
+}
+
+
+
+SoilData* script_soil_newdata() {
+	SoilData* data= malloc(sizeof(SoilData));
+	if (!data) return NULL;
+	data->state = IDLE;
+	data->dice = NULL;
+	return data;
+}
+
+/// <summary>
+/// Frees a soil data for a script
+/// </summary>
+/// <param name="data"></param>
+void script_soil_freedata(Script* script) {
+	if (!script || !script->data) return;
+	dice_free(((SoilData*)script->data)->dice);
+	free(script->data);
+}
+
 
 /**
  * @brief Called when a script is created.
  */
 static void Start(Entity* self, Script* script) {
-	script->data = malloc(sizeof(SoilState));
-	if (!script->data)
-	{
-		slog("Couldn't allocate memory.");
-		slog_sync();
-		return;
-	}
-	state = IDLE;
-
+	script->data = script_soil_newdata();
 	self->color = gfc_color(1, 1, 1, 1);
 }
 /**
@@ -41,37 +77,12 @@ static void Start(Entity* self, Script* script) {
 static void Think(Entity* self, Script* script) {
 	self->selected = engine_utility_ismouseover(self, NULL);
 
-	if (state == IDLE && self->selected && engine_utility_isleftmousereleased()) {
-		state = CLICKED;
+	if (((SoilData*)script->data)->state == IDLE && self->selected && engine_utility_isleftmousereleased()) {
+		event_manager_fire_event("seedPrompt");
+		event_manager_register_callback("acceptseed", &plant_dice, self, script);
+		event_manager_register_callback("rejectseed", &cancel_plant, self, script);
+		((SoilData*)script->data)->state = CLICKED;
 		self->color = gfc_color(0, 1, 1, 1);
-		Script* billboard = NULL;
-		if (gfc_list_get_count(self->children) == 0) {
-			Entity* child = entity_load_from_prefab("prefabs/text.prefab", self);
-			billboard = entity_get_script(child, "billboard");
-			if (!billboard) {
-				slog("For soil, couldn't create billboard");
-				entity_free(child);
-				return;
-			}
-			child->position.x = self->position.x;
-			child->position.y = self->position.y;
-			child->position.z = self->position.z + 30;
-			script_billboard_settext(child, billboard, "PLANT DICE?");
-			script_billboard_updatetexture(child, billboard);
-		}
-	}
-	else if (state == CLICKED && !self->selected && engine_utility_isleftmousereleased()) {
-		state = IDLE;
-		entity_free(gfc_list_get_nth(self->children, 0));
-		gfc_list_delete_nth(self->children, 0);
-		self->color = gfc_color(1, 1, 1, 1);
-	}
-	else if (state == CLICKED && self->selected && engine_utility_isleftmousereleased()) {
-		state = GROWING;
-		self->color = gfc_color(1, 0, 0, 1);
-		entity_free(gfc_list_get_nth(self->children, 0));
-		gfc_list_delete_nth(self->children, 0);
-		self->color = gfc_color(1, 0, 0, 1);
 	}
 }
 /**
@@ -84,7 +95,7 @@ static void Update(Entity* self, Script* script) {
  * @brief Called when a script is created.
  */
 static void Destroy(Entity* self, Script* script) {
-	free(script->data);
+	script_soil_freedata(script);
 }
 
 static void Arguments(Entity* self, Script* script, SJson* json) {

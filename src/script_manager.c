@@ -41,12 +41,20 @@ void handle_inventory_toggle(Entity* entity, Script* script) {
 	
 	script_inventoryui_toggle(inventory, entity_get_script(inventory, "inventoryui"));
 }
+
+void handle_seed_prompt(Entity* entity, Script* script) {
+	Entity* inventory = script_manager_getentity("indicator_inventory");
+
+	script_inventoryui_seedprompt(inventory, entity_get_script(inventory, "inventoryui"));
+}
+
 /// <summary>
 /// Register all callbacks for events.
 /// </summary>
 void script_manager_registerCallbacks(Entity* self) {
 	event_manager_register_callback("input_transition_daytonight", &input_day_to_night, self, script_manager);
 	event_manager_register_callback("inventoryToggle", &handle_inventory_toggle, self, script_manager);
+	event_manager_register_callback("seedPrompt", &handle_seed_prompt, self, script_manager);
 }
 
 /// <summary>
@@ -55,6 +63,7 @@ void script_manager_registerCallbacks(Entity* self) {
 void script_manager_unregisterCallbacks() {
 	event_manager_unregister_callback("input_transition_daytonight", &input_day_to_night);
 	event_manager_unregister_callback("inventoryToggle", &handle_inventory_toggle);
+	event_manager_unregister_callback("seedPrompt", &handle_seed_prompt);
 }
 
 ManagerData* script_manager_newdata() {
@@ -107,6 +116,10 @@ void script_manager_setmetastate(MetaState metastate) {
 void script_manager_flagentity(char* name, Entity* entity) {
 	if (!script_manager || !name || !entity) return;
 	gfc_hashmap_insert(((ManagerData*)script_manager->data)->entities, name, entity);
+}
+void script_manager_unflagentity(char* name) {
+	if (!script_manager || !name ) return;
+	gfc_hashmap_delete_by_key(((ManagerData*)script_manager->data)->entities, name);
 }
 
 Entity* script_manager_getentity(char* name) {

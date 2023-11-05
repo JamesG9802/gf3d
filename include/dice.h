@@ -51,4 +51,4 @@ void dice_to_ui(Dice* dice, Entity* entity);
 /// <summary>
 /// Sets up to four dice's information as the sprite for the entity.
 /// </summary>
-void dice_to_ui_simplified(List* dices, int diceIndex, Entity* entity);
+void dice_to_ui_simplified(List* dices, int diceIndex, int selectedDiceIndex, Entity* entity);

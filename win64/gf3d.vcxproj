@@ -163,6 +163,7 @@
     <ClInclude Include="..\include\script_loader.h" />
     <ClInclude Include="..\include\script_manager.h" />
     <ClInclude Include="..\include\script_player.h" />
+    <ClInclude Include="..\include\script_soil.h" />
     <ClInclude Include="..\include\script_ui.h" />
     <ClInclude Include="..\include\world.h" />
   </ItemGroup>

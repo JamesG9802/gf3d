@@ -57,6 +57,7 @@ static void set_dice_sprite(Script* script) {
         || !diceWindow || !script || !script->data)  return;
 
     int diceIndex = ((InventoryUIData*)script->data)->diceIndex;
+    int selectedDiceIndex = ((InventoryUIData*)script->data)->selectedDiceIndex;
     List* dices = get_current_dice_inventory(script);
     if (!dices || diceIndex < 0 || diceIndex >= gfc_list_get_count(dices))
     {
@@ -67,11 +68,11 @@ static void set_dice_sprite(Script* script) {
     //  Shows up to four dice at once.
     if (((InventoryUIData*)script->data)->state == START)
     {
-        dice_to_ui_simplified(dices, diceIndex, diceWindow);
+        dice_to_ui_simplified(dices, diceIndex, selectedDiceIndex, diceWindow);
     }
     //  Shows the dice information for a specific dice
     else if (((InventoryUIData*)script->data)->state == VIEWDICE) {
-        dice_to_ui(gfc_list_get_nth(dices, diceIndex), diceWindow);
+        dice_to_ui(gfc_list_get_nth(dices, selectedDiceIndex), diceWindow);
     }
 }
 
@@ -127,6 +128,7 @@ static void button_ui_left_arrow(Entity* entity, Script* script) {
         if (((InventoryUIData*)script->data)->diceIndex < 0)
             ((InventoryUIData*)script->data)->diceIndex = gfc_list_get_count(dices) - 1;
     }
+    ((InventoryUIData*)script->data)->selectedDiceIndex = ((InventoryUIData*)script->data)->diceIndex;
     set_dice_sprite(script);
 }
 
@@ -151,6 +153,7 @@ static void button_ui_right_arrow(Entity* entity, Script* script) {
         if (((InventoryUIData*)script->data)->diceIndex >= gfc_list_get_count(dices))
             ((InventoryUIData*)script->data)->diceIndex = 0;
     }
+    ((InventoryUIData*)script->data)->selectedDiceIndex = ((InventoryUIData*)script->data)->diceIndex;
     set_dice_sprite(script);
 }
 
@@ -201,6 +204,7 @@ InventoryUIData* script_inventoryui_newdata() {
     data->state = HIDDEN;
     data->currentType = SEEDS;
     data->diceIndex = 0;
+    data->selectedDiceIndex = 0;
     return data;
 }
 void script_inventoryui_freedata(Script* script) {
@@ -221,6 +225,7 @@ void script_inventoryui_toggle(Entity* entity, Script* script) {
         }
         set_dice_sprite(script);
         ((InventoryUIData*)script->data)->diceIndex = 0;
+        ((InventoryUIData*)script->data)->selectedDiceIndex = 0;
         ((InventoryUIData*)script->data)->currentType = SEEDS;
         script_manager_setmetastate(INMENU);
         break;
@@ -234,7 +239,41 @@ void script_inventoryui_toggle(Entity* entity, Script* script) {
         }
         script_manager_setmetastate(OK);
         break;
+    //  If in seed prompt, cancel soil accepting
+    case SEEDPROMPT:
+        ((InventoryUIData*)script->data)->state = HIDDEN;
+        script_ui_sethidden(entity, true);
+        for (int i = 0; i < gfc_list_get_count(entity->children); i++) {
+            script_ui_sethidden(gfc_list_get_nth(entity->children, i), true);
+        }
+        script_manager_setmetastate(OK);
+        event_manager_fire_event("rejectseed");
+        break;
     }
+}
+
+void script_inventoryui_seedprompt(Entity* entity, Script* script) {
+    if (!entity || !script) return;
+    script_inventoryui_toggle(entity, script);
+    ((InventoryUIData*)script->data)->state = SEEDPROMPT;
+    button_ui_show_seeds(entity, script);
+    script_ui_sethidden(script_manager_getentity("button_ui_showinventory"), true);
+    script_ui_sethidden(script_manager_getentity("button_ui_showloadout"), true);
+}
+
+Dice* script_inventoryui_getselecteddice(Entity* entity, Script* script) {
+    if (!entity || !script) return NULL;
+    List* dices = get_current_dice_inventory(script);
+    if (!dices) return NULL;
+
+    return gfc_list_get_nth(dices, ((InventoryUIData*)script->data)->selectedDiceIndex);
+}
+
+void script_inventoryui_deleteselecteddice(Entity* entity, Script* script) {
+    if (!entity || !script) return NULL;
+    List* dices = get_current_dice_inventory(script);
+    if (!dices) return NULL;
+    gfc_list_delete_nth(dices, ((InventoryUIData*)script->data)->selectedDiceIndex);
 }
 
 /**
@@ -248,6 +287,46 @@ static void Start(Entity* self, Script* script) {
  * @brief Called when a script is created.
  */
 static void Think(Entity* self, Script* script) {
+    if (((InventoryUIData*)script->data)->state == START || ((InventoryUIData*)script->data)->state == SEEDPROMPT)
+    {
+        Bool changingSprite = false;
+        int diceIndex = ((InventoryUIData*)script->data)->diceIndex;
+        int selectedDiceIndex = ((InventoryUIData*)script->data)->selectedDiceIndex;
+        if (gfc_input_keycode_released(SDL_SCANCODE_LEFT)) {
+            selectedDiceIndex = selectedDiceIndex - 1;
+            changingSprite = true;
+        }
+        if (gfc_input_keycode_released(SDL_SCANCODE_RIGHT)) {
+            selectedDiceIndex = selectedDiceIndex + 1;
+            changingSprite = true;
+        }
+        if (changingSprite) {
+            List* dices = get_current_dice_inventory(script);
+            //  Can't select a dice past the current page or if there aren't any more dice
+            if (selectedDiceIndex >= diceIndex + 3 || selectedDiceIndex >= (Sint32)gfc_list_get_count(dices))
+                ((InventoryUIData*)script->data)->selectedDiceIndex = diceIndex;
+            //  Can't select a dice before the current page
+            else if (selectedDiceIndex < diceIndex) {
+                int count = 0;
+                for (int i = diceIndex; i < gfc_list_get_count(dices) && count < 4; i++) {
+                    ((InventoryUIData*)script->data)->selectedDiceIndex = i;
+                    count++;
+                }
+            }
+            else
+            {
+                ((InventoryUIData*)script->data)->selectedDiceIndex = selectedDiceIndex;
+            }
+            set_dice_sprite(script);
+        }
+    }
+    if (((InventoryUIData*)script->data)->state == SEEDPROMPT) {
+        if (gfc_input_keycode_released(SDL_SCANCODE_RETURN)) {
+            event_manager_fire_event("acceptseed");
+            script_inventoryui_toggle(self, script);
+        }
+    }
+    
 }
 /**
  * @brief Called when a script is created.

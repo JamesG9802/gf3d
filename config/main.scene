@@ -38,6 +38,16 @@
 		},
 		{
 			"model":"models/sphere.model",
+			"position":[0,0,0],
+			"scale":[8,8,8],
+			"rotation":[0,0,0],
+			"scripts": [				
+				"soil",
+				"spherecollider"
+			]
+		},
+		{
+			"model":"models/sphere.model",
 			"position":[50,0,0],
 			"scale":[8,8,8],
 			"rotation":[0,0,0],
@@ -71,7 +81,7 @@
 				{
 					"name":		"ui",
 					"image":	"images/transition_night.png",
-					"anchor":	"middleright"
+					"anchor":	"middleright",
 					"interactable":	"true",
 					"event":	"input_transition_daytonight"	
 				},
@@ -100,7 +110,7 @@
 			],
 			"children": [
 				{
-					"position":[0,-.1,0],
+					"position":[0,-0.1,0],
 					"scale":[0.7,0.7,0],
 					"rotation":[0,0,0],
 					"scripts": [				
@@ -117,7 +127,7 @@
 					]
 				},
 				{
-					"position":[-.9,.9,0],
+					"position":[-0.9,.9,0],
 					"scale":[0.5,0.5,0],
 					"rotation":[0,0,0],
 					"scripts": [				
@@ -128,6 +138,10 @@
 							"hidden":	"true",
 							"interactable":	"true",
 							"event":	"button_ui_show_seeds"
+						},
+						{
+							"name":		"manager_flag",
+							"id":		"button_ui_showseeds"
 						}
 					]
 				},
@@ -143,6 +157,10 @@
 							"hidden":	"true",
 							"interactable":	"true",
 							"event":	"button_ui_show_inventory"
+						},
+						{
+							"name":		"manager_flag",
+							"id":		"button_ui_showinventory"
 						}
 					]
 				},
@@ -158,11 +176,15 @@
 							"hidden":	"true",
 							"interactable":	"true",
 							"event":	"button_ui_show_loadout"
+						},
+						{
+							"name":		"manager_flag",
+							"id":		"button_ui_showloadout"
 						}
 					]
 				},
 				{
-					"position":[-.9,-.9,0],
+					"position":[-0.9,-0.9,0],
 					"scale":[0.5,0.5,0],
 					"rotation":[0,0,0],
 					"scripts": [				
@@ -181,7 +203,7 @@
 					]
 				},
 				{
-					"position":[0,-.9,0],
+					"position":[0,-0.9,0],
 					"scale":[0.5,0.5,0],
 					"rotation":[0,0,0],
 					"scripts": [				
@@ -200,7 +222,7 @@
 					]
 				},
 				{
-					"position":[.9,-.9,0],
+					"position":[.9,-0.9,0],
 					"scale":[0.5,0.5,0],
 					"rotation":[0,0,0],
 					"scripts": [				

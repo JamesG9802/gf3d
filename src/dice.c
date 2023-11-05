@@ -132,7 +132,7 @@ void dice_to_ui(Dice* dice, Entity* entity) {
 }
 
 
-void dice_to_ui_simplified(List* dices, int diceIndex, Entity* entity) {
+void dice_to_ui_simplified(List* dices, int diceIndex, int selectedDiceIndex, Entity* entity) {
 	if (!dices) return;
 	int tileWidth = 640;
 	int tileHeight = 256;
@@ -140,7 +140,7 @@ void dice_to_ui_simplified(List* dices, int diceIndex, Entity* entity) {
 	//	creating a bigger surface to store both icon and text four times, two on each row.
 	SDL_Surface* combined = gf3d_vgraphics_create_surface(tileWidth * 2 + 40, tileHeight * 2 + 40);
 	int count = 0;
-	for (int i = diceIndex; i < gfc_list_get_count(dices); i++)
+	for (int i = diceIndex; i < gfc_list_get_count(dices) && count < 4; i++)
 	{
 		Dice* dice = gfc_list_get_nth(dices, i);
 		SDL_Surface* information = NULL;
@@ -192,7 +192,8 @@ void dice_to_ui_simplified(List* dices, int diceIndex, Entity* entity) {
 			break;
 
 		}
-
+		if (selectedDiceIndex == i)
+			SDL_SetSurfaceColorMod(surface, 255, 255, 128);
 		SDL_Rect iconDestination = gfc_sdl_rect(xOffset, yOffset, 256, 256);
 		SDL_Rect informationDestination = gfc_sdl_rect(xOffset + 256, yOffset, 256, 256);
 		SDL_BlitSurface(surface, NULL, combined, &iconDestination);

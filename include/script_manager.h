@@ -75,6 +75,12 @@ void script_manager_setmetastate(MetaState metastate);
 void script_manager_flagentity(char* name, Entity* entity);
 
 /// <summary>
+/// Removes the pointer to the entity.
+/// </summary>
+/// <param name="name"></param>
+void script_manager_unflagentity(char* name);
+
+/// <summary>
 /// Get an entity if it has been flagged by the manager before.
 /// </summary>
 /// <param name="name"></param>

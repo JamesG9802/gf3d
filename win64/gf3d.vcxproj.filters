@@ -503,5 +503,8 @@
     <ClInclude Include="..\include\meta_state.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\script_soil.h">
+      <Filter>Header Files\script</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
