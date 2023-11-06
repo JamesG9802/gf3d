@@ -8,6 +8,8 @@
 
 typedef struct PlayerData {
 	Inventory* inventory;
+	Entity* diceEntity;	//	entity representing the dice
+	int selectedDiceIndex;	//	current dice selected from loadout
 	int currentHealth;
 	int maxHealth;
 	int currentMana;

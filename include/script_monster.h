@@ -11,6 +11,8 @@ typedef enum MonsterState {
 
 typedef struct MonsterData {
 	MonsterState state;
+	int currentHealth;
+	int maxHealth;
 	double timeDelta;
 } MonsterData;
 
@@ -24,3 +26,15 @@ MonsterData* script_monster_newmonsterdata();
 /// Destroys a playerdata;
 /// </summary>
 void script_monster_freemonsterdata(Script* script);
+
+/// <summary>
+/// Get the monster battling the player
+/// </summary>
+/// <returns></returns>
+Entity* script_monster_getbattlingmonster();
+
+/// <summary>
+/// Get the monster data of the monster battling the player
+/// </summary>
+/// <returns></returns>
+MonsterData* script_monster_getbattlingmonsterdata();

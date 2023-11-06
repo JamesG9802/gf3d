@@ -25,11 +25,34 @@
 #include "script_manager.h"
 
 Entity* player = NULL;
-static int thirdPersonMode = 0;
 
+void createDiceEntity() {
+    PlayerData* data = script_player_getplayerdata();
+    if (gfc_list_get_count(data->inventory->diceLoadout) == 0) {
+        slog("You don't have dice in your loadout");
+        return;
+    }
+    Dice* dice = gfc_list_get_nth(data->inventory->diceLoadout, data->selectedDiceIndex);
+    if (!dice)
+    {
+        slog("Couldn't find dice");
+        return;
+    }
+    switch (dice->sideCount) {
+    case 4:
+        data->diceEntity = entity_load_from_prefab("prefabs/dice4.prefab", player);
+        break;
+    default:
+    case 6:
+        data->diceEntity = entity_load_from_prefab("prefabs/dice6.prefab", player);
+        break;
+    }
+}
 
 PlayerData script_player_newplayerdata() {
     PlayerData playerData = {0};
+    playerData.diceEntity = NULL;
+    playerData.selectedDiceIndex = 0;
     playerData.currentHealth = 20;
     playerData.maxHealth = 20;
     playerData.currentMana = 10;
@@ -94,6 +117,7 @@ PlayerData script_player_newplayerdata() {
 void script_player_freeplayerdata(Script* script) {
     if (script && script->data)
     {
+        //  No need to free diceEntity because all entities will be cleaned up with their parent
         inventory_free(((PlayerData*)(script->data))->inventory);
         free(script->data);
     }
@@ -139,12 +163,22 @@ static void Start(Entity* self, Script* script) {
  */
 static void Think(Entity* self, Script* script) {
     if (script_manager_getgamestate() == GROW) {
+        PlayerData* data = script_player_getplayerdata();
+        if (data->diceEntity) {
+            entity_free(data->diceEntity);
+            data->diceEntity = NULL;
+        }
         if (gfc_input_keycode_released(SDL_SCANCODE_ESCAPE))
         {
             event_manager_fire_event("inventoryToggle");
         }
     }
     if(script_manager_getgamestate() == BATTLE) {
+        PlayerData* data = script_player_getplayerdata();
+        if (data->diceEntity) {
+            entity_free(data->diceEntity);
+            data->diceEntity = NULL;
+        }
         Vector3D forward, move = { 0 };
         Vector2D w, mouse;
         int mx, my;
@@ -189,26 +223,33 @@ static void Think(Entity* self, Script* script) {
 
         if (self->rotation.x >= (GFC_HALF_PI * .9f)) self->rotation.x = GFC_HALF_PI * .9f;
         if (self->rotation.x <= -(GFC_HALF_PI * .9f))self->rotation.x = -GFC_HALF_PI * .9f;
-
-        if (thirdPersonMode)
-        {
-            if (mouse.x != 0)self->rotation.z -= (mouse.x * 0.001);
-            if (mouse.y != 0)self->rotation.x += (mouse.y * 0.001);
+    }
+    if (script_manager_getgamestate() == COMBAT) {
+        Bool changed = false;
+        PlayerData* data = script_player_getplayerdata();
+        if(!data->diceEntity)
+            createDiceEntity();
+        if (gfc_input_keycode_released(SDL_SCANCODE_LEFT)) {
+            data->selectedDiceIndex = data->selectedDiceIndex - 1;
+            changed = true;
+        }
+        if (gfc_input_keycode_released(SDL_SCANCODE_RIGHT)) {
+            data->selectedDiceIndex = data->selectedDiceIndex + 1;
+            changed = true;
+        }
+        if (data->selectedDiceIndex < 0) {
+            data->selectedDiceIndex = gfc_list_get_count(data->inventory->diceLoadout) - 1;
+        }
+        else if (data->selectedDiceIndex >= gfc_list_get_count(data->inventory->diceLoadout)) {
+            data->selectedDiceIndex = 0;
         }
 
-        if (keys[SDL_SCANCODE_F3])
-        {
-            self->hidden = !self->hidden;
+        if (changed) {
+            if (!data->diceEntity) return;
+            entity_free(data->diceEntity);
+            createDiceEntity();
         }
-        if (gfc_input_keycode_released(SDL_SCANCODE_BACKSPACE))
-        {
-            self->rotation.x = 0;
-            self->rotation.z = 0;
-        }
-        if (gfc_input_keycode_released(SDL_SCANCODE_HOME))
-        {
-            thirdPersonMode = !thirdPersonMode;
-        }
+
     }
 }
 
@@ -234,12 +275,34 @@ static void Update(Entity* self, Script* script) {
         gf3d_camera_set_rotation(rotation);
     }
     else if (script_manager_getgamestate() == COMBAT) {
-        Vector3D position = vector3d(-15, 50, 0);
+        Vector3D position = vector3d(-15, 50, 15);
         vector3d_rotate_about_z(&position, self->rotation.z + GFC_HALF_PI);
         vector3d_add(position, position, self->position);
         Vector3D rotation = vector3d(self->rotation.x, self->rotation.y, self->rotation.z - GFC_HALF_PI);
         gf3d_camera_set_position(position);
         gf3d_camera_set_rotation(rotation);
+
+        PlayerData* data = script_player_getplayerdata();
+        if (data->diceEntity) {
+            Vector3D position = engine_utility_mouseprojectray();
+            vector3d_scale(position, position, 40);
+            Vector3D cameraPos = { 0 };
+            gf3d_camera_get_position(&cameraPos);
+            vector3d_add(position, position, cameraPos);
+            data->diceEntity->position = vector3d(position.x, position.y, position.z);
+
+            if (gfc_list_get_count(data->inventory->diceLoadout) == 0) {
+                slog("You don't have dice in your loadout");
+                return;
+            }
+            Dice* dice = gfc_list_get_nth(data->inventory->diceLoadout, data->selectedDiceIndex);
+            if (!dice)
+            {
+                slog("Couldn't find dice");
+                return;
+            }
+            dice_to_texture(dice, data->diceEntity);
+        }
     }
 }
 

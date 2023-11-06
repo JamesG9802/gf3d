@@ -32,6 +32,12 @@ Vector2D engine_utility_ndctoscreen(Vector2D ndc);
 Bool engine_utility_ismouseover(Entity* entity, Edge3D* ray);
 
 /// <summary>
+/// Returns a vector projected from the mouse to the screen, normalized.
+/// </summary>
+/// <returns></returns>
+Vector3D engine_utility_mouseprojectray();
+
+/// <summary>
 /// Returns the current bitmask of the mouse.
 /// </summary>
 /// <returns></returns>

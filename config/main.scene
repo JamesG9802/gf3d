@@ -301,6 +301,25 @@
 					"id":	"indicator_mana"
 				}
 			]
+		},
+		{
+			"position":[1,-.2,0],
+			"scale":[1,1,0],
+			"rotation":[0,0,0],
+			"scripts": [				
+				{
+							"name":		"ui",
+							"text":		"Health: ",
+							"wildcard":	"enemyhealth",
+							"anchor":	"middleright",
+							"color":	[0,0,0,1],
+							"hidden":	"true"
+				},
+				{
+					"name":	"manager_flag",
+					"id":	"indicator_enemyhealth"
+				}
+			]
 		}
 
 

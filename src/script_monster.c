@@ -20,12 +20,15 @@
 #include "script_monster.h"
 #include "script_player.h"
 
+static Entity* battlingmonster = NULL;
+
 MonsterData* script_monster_newmonsterdata() {
     MonsterData* data = malloc(sizeof(MonsterData));
     if (!data) return NULL;
     data->state = MONSTER_IDLE;
     data->timeDelta = 0;
-
+    data->currentHealth = 30;
+    data->maxHealth = 30;
     return data;
 }
 
@@ -34,6 +37,16 @@ void script_monster_freemonsterdata(Script* script) {
     free(script->data);
 }
 
+Entity* script_monster_getbattlingmonster() {
+    return battlingmonster;
+}
+
+MonsterData* script_monster_getbattlingmonsterdata() {
+    if (!battlingmonster || !entity_get_script(battlingmonster, "monster") 
+        || !entity_get_script(battlingmonster, "monster")->data) 
+        return NULL;
+    return entity_get_script(battlingmonster, "monster")->data;
+}
 /**
  * @brief Called when a script is created.
  */
@@ -44,16 +57,17 @@ static void Start(Entity* self, Script* script) {
  * @brief Called when a script is created.
  */
 static void Think(Entity* self, Script* script) {
-    if (((MonsterData*)script->data)->state == MONSTER_IDLE &&
+    if (script_manager_getgamestate() == BATTLE && ((MonsterData*)script->data)->state == MONSTER_IDLE &&
         vector3d_magnitude_between(script_player_getplayer()->position, self->position) < 100.0) {
         ((MonsterData*)script->data)->state = MONSTER_CHASE;
     }
-    else if (((MonsterData*)script->data)->state == MONSTER_CHASE &&
+    else if (script_manager_getgamestate() == BATTLE && ((MonsterData*)script->data)->state == MONSTER_CHASE &&
         vector3d_magnitude_between(script_player_getplayer()->position, self->position) < 5.0) {
         ((MonsterData*)script->data)->state = MONSTER_COMBAT;
+        battlingmonster = self;
         event_manager_fire_event("entercombat");
     }
-    else if (((MonsterData*)script->data)->state == MONSTER_COMBAT) {
+    else if (script_manager_getgamestate() == COMBAT && ((MonsterData*)script->data)->state == MONSTER_COMBAT) {
         Vector3D position = vector3d(0, 1, 0);
         vector3d_rotate_about_z(&position, script_player_getplayer()->rotation.z);
         vector3d_scale(position, position, -30.0);

@@ -24,6 +24,7 @@
 #include "script_ui.h"
 #include "script_manager.h"
 #include "script_player.h"
+#include "script_monster.h"
 
 /// <summary>
 /// Using the anchormode, compute the actual x and y position of the sprite.
@@ -252,6 +253,16 @@ static void Update(Entity* self, Script* script) {
 			sprintf(newstring, "%s%d/%d", text,
 				script_player_getplayerdata()->currentMana,
 				script_player_getplayerdata()->maxMana);
+			if (currentText && strcmp(currentText, newstring) == 0) {
+				return;
+			}
+		}
+		else if (strcmp(wildCard, "enemyhealth") == 0)
+		{
+			if (!script_monster_getbattlingmonster()) return;
+			sprintf(newstring, "%s%d/%d", text,
+				script_monster_getbattlingmonsterdata()->currentHealth,
+				script_monster_getbattlingmonsterdata()->maxHealth);
 			if (currentText && strcmp(currentText, newstring) == 0) {
 				return;
 			}

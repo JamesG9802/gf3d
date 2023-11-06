@@ -223,11 +223,11 @@ void script_inventoryui_toggle(Entity* entity, Script* script) {
         for (int i = 0; i < gfc_list_get_count(entity->children); i++) {
             script_ui_sethidden(gfc_list_get_nth(entity->children, i), false);
         }
-        set_dice_sprite(script);
         ((InventoryUIData*)script->data)->diceIndex = 0;
         ((InventoryUIData*)script->data)->selectedDiceIndex = 0;
         ((InventoryUIData*)script->data)->currentType = SEEDS;
         script_manager_setmetastate(INMENU);
+        set_dice_sprite(script);
         break;
     //  If menus are showing, hide them
     case VIEWDICE:
@@ -333,7 +333,8 @@ static void Think(Entity* self, Script* script) {
             List* inventoryDices = get_current_dice_inventory(script);
             if (gfc_list_get_count(inventoryDices) == 0 || 
                 selectedDiceIndex < 0 || 
-                selectedDiceIndex >= gfc_list_get_count(inventoryDices))
+                selectedDiceIndex >= gfc_list_get_count(inventoryDices) ||
+                gfc_list_get_count(script_player_getplayerdata()->inventory->diceLoadout) >= 4)
                 return;
 
             Dice* dice = gfc_list_get_nth(inventoryDices, selectedDiceIndex);

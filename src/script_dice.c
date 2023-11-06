@@ -43,6 +43,8 @@ static void Start(Entity* self, Script* script) {
  * @brief Called when a script is created.
  */
 static void Think(Entity* self, Script* script) {
+    self->rotation.x += GFC_HALF_PI * engine_time_delta();
+    self->rotation.z += GFC_HALF_PI * engine_time_delta();
 }
 /**
  * @brief Called when a script is created.

@@ -46,6 +46,10 @@ void day_to_night(Entity* entity, Script* script) {
 			script_manager_getentity("indicator_mana"),
 			false
 		);
+		script_ui_sethidden(
+			script_manager_getentity("indicator_enemyhealth"),
+			false
+		);
 		Entity* entity = entity_load_from_prefab("prefabs/enemy1.prefab", NULL);
 		entity->position = vector3d(0, 100, 0);
 	}
@@ -61,6 +65,10 @@ void night_to_day(Entity* entity, Script* script) {
 	);
 	script_ui_sethidden(
 		script_manager_getentity("indicator_mana"),
+		true
+	);
+	script_ui_sethidden(
+		script_manager_getentity("indicator_enemyhealth"),
 		true
 	);
 	script_manager_getdata()->currentDay = script_manager_getdata()->currentDay + 1;
@@ -114,6 +122,7 @@ void handle_seed_prompt(Entity* entity, Script* script) {
 
 void entercombat(Entity* entity, Script* script) {
 	script_manager_getdata()->gamestate = COMBAT;
+	script_player_getplayerdata()->selectedDiceIndex = 0;
 }
 
 /// <summary>

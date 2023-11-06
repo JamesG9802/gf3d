@@ -108,7 +108,41 @@ Bool engine_utility_ismouseover(Entity* entity, Edge3D* ray) {
 	return entity_bounds_islineintersecting(entity->bounds, line);
 }
 
+Vector3D engine_utility_mouseprojectray() {
+	int mouse_x, mouse_y;
+	int width, height;
+	SDL_GetMouseState(&mouse_x, &mouse_y);
+	gf3d_vgraphics_get_window_size(&width, &height);
 
+	float x = (2.0f * mouse_x) / width - 1.0f;
+	float y = (2.0f * mouse_y) / height - 1.0f;
+	float z = -1;
+
+	Matrix4 projection, view;
+	Matrix4 projection_inverse, view_inverse;
+	gf3d_camera_get_view_mat4(view);
+	gf3d_vgraphics_get_projection_matrix(projection);
+
+	gfc_matrix4_invert(projection_inverse, projection);
+	gfc_matrix4_invert(view_inverse, view);
+
+	//	something about column major order vs row major order
+	gfc_matrix_transpose(projection_inverse, projection_inverse);
+	gfc_matrix_transpose(view_inverse, view_inverse);
+
+	Vector4D ray_clip = vector4d(x, y, z, 1);
+	Vector4D ray_eye;
+
+	gfc_matrix_M_multiply_v(&ray_eye, projection_inverse, ray_clip);
+	ray_eye = vector4d(ray_eye.x, ray_eye.y, -1, 0);
+
+	Vector4D ray_wor_4D;
+	gfc_matrix_M_multiply_v(&ray_wor_4D, view_inverse, ray_eye);
+
+	Vector3D ray_wor = vector3d(ray_wor_4D.x, ray_wor_4D.y, ray_wor_4D.z);
+	vector3d_normalize(&ray_wor);
+	return ray_wor;
+}
 
 Uint32 engine_utility_ismousedown() {
 	return mouse_state.leftMouse & DOWN || mouse_state.rightMouse & DOWN;
