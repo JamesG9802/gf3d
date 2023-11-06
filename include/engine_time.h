@@ -18,3 +18,9 @@ void engine_time_renew();
  * @brief Gets the current time delta.
  */
 double engine_time_delta();
+
+/// <summary>
+/// Gets the accumulated time delta since start.
+/// </summary>
+/// <returns></returns>
+double engine_time_since_start();

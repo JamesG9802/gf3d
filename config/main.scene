@@ -320,6 +320,23 @@
 					"id":	"indicator_enemyhealth"
 				}
 			]
+		},
+		{
+			"position":[-1,.8,0],
+			"scale":[.5,.5,0],
+			"rotation":[0,0,0],
+			"scripts": [				
+				{
+					"name":		"ui",
+					"image":	"images/panel.png",
+					"anchor":	"topleft",
+					"hidden":	"true"	
+				},
+				{
+					"name":		"manager_flag",
+					"id":		"ui_combatdiceinformation"
+				}
+			]
 		}
 
 

@@ -13,6 +13,8 @@
 #include "engine_utility.h"
 
 #include "script_ui.h"
+#include "script_player.h"
+#include "script_monster.h"
 
 Dice* dice_new(Bool isSeed, int age, int sideCount, DiceValue* sideValues, double* sideWeights, int maxLifespan, int manacost) {
 	Dice* dice = malloc(sizeof(Dice));
@@ -40,9 +42,39 @@ void dice_free(Dice* dice) {
 		free(dice->sideWeights);
 	}
 }
+Dice* dice_seed_reward(int manacost) {
+	int numSides = 0;
+	float random = gfc_random();
+	if (random > .5) {
+		numSides = 4;
+	}
+	else {
+		numSides = 6;
+	}
+	DiceValue* values = malloc(sizeof(DiceValue) * numSides);
+	double* weights = malloc(sizeof(double) * numSides);
+
+	for (int i = 0; i < numSides; i++) {
+		random = gfc_random();
+		if (random > .33) {
+			values[i].type = Mana;
+		}
+		else if (random > .66) {
+			values[i].type = Fire;
+		}
+		else {
+			values[i].type = Heart;
+		}
+		values[i].value = (int)(.75 * manacost + 1 + gfc_random() * (7 + 1.1 * manacost));
+		weights[i] = gfc_random() * .2 + 1;
+	}
+	int lifespan = (int)(gfc_random() * (6 + 0.5 * manacost) + 2 + .3 * manacost);
+	return dice_new(true, 0, numSides, values, weights, lifespan, manacost);
+}
 
 void dice_harvest(Dice* dice) {
 	if (!dice) return;
+	dice->age;
 	dice->isSeed = false;
 	for (int i = 0; i < dice->sideCount; i++) {
 		if (gfc_random() > .5)
@@ -80,6 +112,30 @@ void dice_harvest(Dice* dice) {
 	}
 	else {
 		dice->maxLifespan = dice->maxLifespan + 1;
+	}
+}
+
+void dice_activate_effect(Dice* dice) {
+	Entity* battlingmonster = script_monster_getbattlingmonster(); 
+	if (dice->manaCost > script_player_getplayerdata()->currentMana) {
+		script_player_getplayerdata()->currentMana = script_player_getplayerdata()->currentMana + 5;
+		return;
+	}
+	script_player_getplayerdata()->currentMana = script_player_getplayerdata()->currentMana - dice->manaCost;
+	
+	float sumweights = 0;
+	for (int i = 0; i < dice->sideCount; i++) {
+		sumweights = sumweights + dice->sideWeights[i];
+	}
+	float random = gfc_random() * sumweights;
+	sumweights = 0;
+	for (int i = 0; i < dice->sideCount; i++) {
+		sumweights = sumweights + dice->sideWeights[i];
+		if (random < sumweights)
+		{
+			dicevalue_activate_effect(dice->sideValues[i]);
+			return;
+		}
 	}
 }
 

@@ -36,10 +36,23 @@ Dice* dice_new(Bool isSeed, int age, int sideCount, DiceValue* sideValues, doubl
 void dice_free(Dice* dice);
 
 /// <summary>
+/// Create a random dice as a reward;
+/// </summary>
+/// <param name="manacost"></param>
+/// <returns></returns>
+Dice* dice_seed_reward(int manacost);
+
+/// <summary>
 /// Randomly mutates and sets up a dice seed to become a real dice.
 /// </summary>
 /// <param name="dice"></param>
 void dice_harvest(Dice* dice);
+
+/// <summary>
+/// Roll the dice and activate a random effect
+/// </summary>
+/// <param name="dice"></param>
+void dice_activate_effect(Dice* dice);
 
 /// <summary>
 /// Sets the dice's sides as the texture for the entity.

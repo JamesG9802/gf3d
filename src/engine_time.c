@@ -3,6 +3,7 @@
 
 static clock_t current;
 static double timeDelta = 0.0;
+static double timeAccumulated = 0.0;
 /*
  * @brief Initializes the time engine so the time delta between each update can be recorded.
  */
@@ -16,6 +17,7 @@ void engine_time_init() {
 void engine_time_renew() {
 	timeDelta = (double)(clock() - current) / (double)CLOCKS_PER_SEC;
 	current = clock();
+	timeAccumulated += timeDelta;
 }
 
 /*
@@ -23,4 +25,8 @@ void engine_time_renew() {
  */
 double engine_time_delta() {
 	return timeDelta;
+}
+
+double engine_time_since_start() {
+	return timeAccumulated;
 }

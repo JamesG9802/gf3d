@@ -29,6 +29,7 @@ static Script* script_manager = NULL;
 
 void day_to_night(Entity* entity, Script* script) {
 	script_manager_getdata()->gamestate = BATTLE;
+	script_manager_getdata()->turn = Player;
 	if (script_manager_getdata()->currentDay > 3) {
 		script_ui_sethidden(
 			script_manager_getentity("button_timetransition"),
@@ -38,20 +39,29 @@ void day_to_night(Entity* entity, Script* script) {
 			script_manager_getentity("indicator_time"),
 			1
 		);
-		script_ui_sethidden(
-			script_manager_getentity("indicator_health"),
-			false
-		);
-		script_ui_sethidden(
-			script_manager_getentity("indicator_mana"),
-			false
-		);
-		script_ui_sethidden(
-			script_manager_getentity("indicator_enemyhealth"),
-			false
-		);
-		Entity* entity = entity_load_from_prefab("prefabs/enemy1.prefab", NULL);
-		entity->position = vector3d(0, 100, 0);
+		Entity* entity = NULL;
+		switch (script_manager_getdata()->currentDay) {
+		default:
+		case 4:
+			entity = entity_load_from_prefab("prefabs/enemy1.prefab", NULL);
+			break;
+		case 5:
+			entity = entity_load_from_prefab("prefabs/enemy2.prefab", NULL);
+			break;
+		case 6:
+			entity = entity_load_from_prefab("prefabs/enemy3.prefab", NULL);
+			break;
+		case 7:
+			entity = entity_load_from_prefab("prefabs/enemy4.prefab", NULL);
+			break;
+		case 8:
+			entity = entity_load_from_prefab("prefabs/enemy5.prefab", NULL);
+			break;
+		case 9:
+			entity = entity_load_from_prefab("prefabs/boss1.prefab", NULL);
+			break;
+		}
+		entity->position = vector3d(0, 150, 0);
 	}
 	//	First three days have no fight
 	else {
@@ -71,6 +81,10 @@ void night_to_day(Entity* entity, Script* script) {
 		script_manager_getentity("indicator_enemyhealth"),
 		true
 	);
+	script_ui_sethidden(
+		script_manager_getentity("ui_combatdiceinformation"),
+		true
+	);
 	script_manager_getdata()->currentDay = script_manager_getdata()->currentDay + 1;
 	script_manager_getdata()->gamestate = GROW;
 	script_ui_sethidden(
@@ -86,7 +100,7 @@ void night_to_day(Entity* entity, Script* script) {
 	for (int i = 0; i < gfc_list_get_count(inventory->diceInventory); i++) {
 		Dice* dice = gfc_list_get_nth(inventory->diceInventory, i);
 		dice->age = dice->age + 1;
-		if (dice->age >= dice->maxLifespan);
+		if (dice->age >= dice->maxLifespan)
 		{
 			dice->isSeed = true;
 			gfc_list_delete_nth(inventory->diceInventory, i);
@@ -97,7 +111,7 @@ void night_to_day(Entity* entity, Script* script) {
 	for (int i = 0; i < gfc_list_get_count(inventory->diceLoadout); i++) {
 		Dice* dice = gfc_list_get_nth(inventory->diceLoadout, i);
 		dice->age = dice->age + 1;
-		if (dice->age >= dice->maxLifespan);
+		if (dice->age >= dice->maxLifespan)
 		{
 			dice->isSeed = true;
 			gfc_list_delete_nth(inventory->diceLoadout, i);
@@ -107,6 +121,9 @@ void night_to_day(Entity* entity, Script* script) {
 	}
 	script_player_getplayerdata()->currentHealth = script_player_getplayerdata()->maxHealth;
 	script_player_getplayerdata()->currentMana = script_player_getplayerdata()->maxMana;
+	script_player_getplayer()->position = vector3d(-5.5, -240, 0);
+	script_player_getplayer()->rotation = vector3d(-.22, 0, 0);
+
 }
 void handle_inventory_toggle(Entity* entity, Script* script) {
 	Entity* inventory = script_manager_getentity("indicator_inventory");
@@ -123,6 +140,22 @@ void handle_seed_prompt(Entity* entity, Script* script) {
 void entercombat(Entity* entity, Script* script) {
 	script_manager_getdata()->gamestate = COMBAT;
 	script_player_getplayerdata()->selectedDiceIndex = 0;
+	script_ui_sethidden(
+		script_manager_getentity("indicator_health"),
+		false
+	);
+	script_ui_sethidden(
+		script_manager_getentity("indicator_mana"),
+		false
+	);
+	script_ui_sethidden(
+		script_manager_getentity("indicator_enemyhealth"),
+		false
+	);
+	script_ui_sethidden(
+		script_manager_getentity("ui_combatdiceinformation"),
+		false
+	);
 }
 
 /// <summary>
@@ -155,6 +188,7 @@ ManagerData* script_manager_newdata() {
 		slog_sync();
 		return NULL;
 	}
+	data->turn = Player;
 	data->currentDay = 1;
 	data->gamestate = GROW;
 	data->entities = gfc_hashmap_new();

@@ -47,26 +47,29 @@ void createDiceEntity() {
         data->diceEntity = entity_load_from_prefab("prefabs/dice6.prefab", player);
         break;
     }
+    Entity* diceInfoWindow = script_manager_getentity("ui_combatdiceinformation");
+    if (!diceInfoWindow) return;
+    dice_to_ui(dice, diceInfoWindow);
 }
 
 PlayerData script_player_newplayerdata() {
     PlayerData playerData = {0};
     playerData.diceEntity = NULL;
     playerData.selectedDiceIndex = 0;
-    playerData.currentHealth = 20;
-    playerData.maxHealth = 20;
+    playerData.currentHealth = 30;
+    playerData.maxHealth = 30;
     playerData.currentMana = 10;
     playerData.maxMana = 10;
     playerData.inventory = inventory_new();
     {
         Dice* dice;
         DiceValue* diceValues = malloc(sizeof(DiceValue) * 6);
-        diceValues[0] = dicevalue_new(Mana, 1);
-        diceValues[1] = dicevalue_new(Mana, 2);
-        diceValues[2] = dicevalue_new(Mana, 3);
-        diceValues[3] = dicevalue_new(Mana, 4);
+        diceValues[0] = dicevalue_new(Mana, 4);
+        diceValues[1] = dicevalue_new(Mana, 4);
+        diceValues[2] = dicevalue_new(Mana, 4);
+        diceValues[3] = dicevalue_new(Mana, 5);
         diceValues[4] = dicevalue_new(Mana, 5);
-        diceValues[5] = dicevalue_new(Mana, 6);
+        diceValues[5] = dicevalue_new(Mana, 5);
         double* sideWeights = malloc(sizeof(double) * 6);
         sideWeights[0] = 1;
         sideWeights[1] = 1;
@@ -80,12 +83,12 @@ PlayerData script_player_newplayerdata() {
     {
         Dice* dice;
         DiceValue* diceValues = malloc(sizeof(DiceValue) * 6);
-        diceValues[0] = dicevalue_new(Fire, 4);
-        diceValues[1] = dicevalue_new(Fire, 4);
-        diceValues[2] = dicevalue_new(Fire, 3);
-        diceValues[3] = dicevalue_new(Fire, 3);
-        diceValues[4] = dicevalue_new(Heart, 2);
-        diceValues[5] = dicevalue_new(Heart, 3);
+        diceValues[0] = dicevalue_new(Fire, 20);
+        diceValues[1] = dicevalue_new(Fire, 15);
+        diceValues[2] = dicevalue_new(Fire, 10);
+        diceValues[3] = dicevalue_new(Fire, 10);
+        diceValues[4] = dicevalue_new(Heart, 8);
+        diceValues[5] = dicevalue_new(Heart, 8);
         double* sideWeights = malloc(sizeof(double) * 6);
         sideWeights[0] = 1;
         sideWeights[1] = 1;
@@ -99,10 +102,10 @@ PlayerData script_player_newplayerdata() {
     {
         Dice* dice;
         DiceValue* diceValues = malloc(sizeof(DiceValue) * 4);
-        diceValues[0] = dicevalue_new(Fire, 4);
-        diceValues[1] = dicevalue_new(Fire, 4);
-        diceValues[2] = dicevalue_new(Fire, 3);
-        diceValues[3] = dicevalue_new(Fire, 3);
+        diceValues[0] = dicevalue_new(Fire, 12);
+        diceValues[1] = dicevalue_new(Fire, 12);
+        diceValues[2] = dicevalue_new(Fire, 10);
+        diceValues[3] = dicevalue_new(Fire, 10);
         double* sideWeights = malloc(sizeof(double) * 4);
         sideWeights[0] = 1;
         sideWeights[1] = 1;
@@ -191,6 +194,7 @@ static void Think(Entity* self, Script* script) {
 
         move = vector3d_get_from_angles(self->rotation);
         move.z = 0;
+        vector3d_scale(move, move, 200 * engine_time_delta());
         if (keys[SDL_SCANCODE_W])
         {
             vector3d_add(self->position, self->position, move);
@@ -201,6 +205,7 @@ static void Think(Entity* self, Script* script) {
         }
         move = vector3d_get_from_angles(self->rotation);
         move.z = 0;
+        vector3d_scale(move, move, 200 * engine_time_delta());
         vector3d_rotate_about_z(&move, -GFC_HALF_PI);
         vector3d_normalize(&move);
         if (keys[SDL_SCANCODE_D])
@@ -224,7 +229,7 @@ static void Think(Entity* self, Script* script) {
         if (self->rotation.x >= (GFC_HALF_PI * .9f)) self->rotation.x = GFC_HALF_PI * .9f;
         if (self->rotation.x <= -(GFC_HALF_PI * .9f))self->rotation.x = -GFC_HALF_PI * .9f;
     }
-    if (script_manager_getgamestate() == COMBAT) {
+    if (script_manager_getdata()->turn == Player && script_manager_getgamestate() == COMBAT) {
         Bool changed = false;
         PlayerData* data = script_player_getplayerdata();
         if(!data->diceEntity)
@@ -274,7 +279,7 @@ static void Update(Entity* self, Script* script) {
         gf3d_camera_set_position(position);
         gf3d_camera_set_rotation(rotation);
     }
-    else if (script_manager_getgamestate() == COMBAT) {
+    else if (script_manager_getdata()->turn == Player && script_manager_getgamestate() == COMBAT) {
         Vector3D position = vector3d(-15, 50, 15);
         vector3d_rotate_about_z(&position, self->rotation.z + GFC_HALF_PI);
         vector3d_add(position, position, self->position);
@@ -302,6 +307,14 @@ static void Update(Entity* self, Script* script) {
                 return;
             }
             dice_to_texture(dice, data->diceEntity);
+        }
+        if (engine_utility_isleftmousereleased()) {
+            Dice* dice = gfc_list_get_nth(data->inventory->diceLoadout, data->selectedDiceIndex);
+            if (!dice || !data->diceEntity) return;
+            dice_activate_effect(dice);
+            entity_free(data->diceEntity);
+            data->diceEntity = NULL;
+            script_manager_getdata()->turn = Monster;
         }
     }
 }

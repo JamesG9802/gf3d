@@ -7,12 +7,21 @@
 #include "game_state.h"
 #include "meta_state.h"
 
+typedef enum CombatTurn {
+	Player,
+	Monster
+} CombatTurn;
 
 typedef struct ManagerData {
 	/// <summary>
 	/// A map<char*, Entity> of string names to entities.
 	/// </summary>
 	HashMap* entities;
+
+	/// <summary>
+	/// The current turn in the battle
+	/// </summary>
+	CombatTurn turn;
 
 	/// <summary>
 	/// The current day of the game.

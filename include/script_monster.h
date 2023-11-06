@@ -14,6 +14,7 @@ typedef struct MonsterData {
 	int currentHealth;
 	int maxHealth;
 	double timeDelta;
+	int cooldown;
 } MonsterData;
 
 /// <summary>
