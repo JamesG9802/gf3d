@@ -66,7 +66,7 @@ static void set_dice_sprite(Script* script) {
         return;
     }
     //  Shows up to four dice at once.
-    if (((InventoryUIData*)script->data)->state == START)
+    if (((InventoryUIData*)script->data)->state == START || ((InventoryUIData*)script->data)->state == SEEDPROMPT)
     {
         dice_to_ui_simplified(dices, diceIndex, selectedDiceIndex, diceWindow);
     }

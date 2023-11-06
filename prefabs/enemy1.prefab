@@ -1,0 +1,9 @@
+{
+	"model": "models/dice4.model"
+	"position":[1,0,0],
+	"scale":[4,4,4],
+	"rotation":[0,0,0],
+	"scripts": [				
+		"monster"
+	]
+}

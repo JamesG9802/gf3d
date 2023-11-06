@@ -116,7 +116,7 @@ static void Start(Entity* self, Script* script) {
         slog("A player already exists.");
         return;
     }
-    self->hidden = true;
+    self->hidden = false;
     script->data = malloc(sizeof(PlayerData));
     if (!script->data) {
         slog("Couldn't allocate memory for player data.");
@@ -124,7 +124,9 @@ static void Start(Entity* self, Script* script) {
     }
     PlayerData playerData = script_player_newplayerdata();
     memcpy(script->data, &playerData, sizeof(PlayerData));
-    gf3d_camera_set_position(self->position);
+    Vector3D position;
+    vector3d_add(position, self->position, vector3d(0, 0, 50));
+    gf3d_camera_set_position(position);
     gf3d_camera_set_rotation(self->rotation);
 }
 
@@ -150,7 +152,7 @@ static void Think(Entity* self, Script* script) {
         mouse.y = my;
 
         move = vector3d_get_from_angles(self->rotation);
-
+        move.z = 0;
         if (keys[SDL_SCANCODE_W])
         {
             vector3d_add(self->position, self->position, move);
@@ -174,8 +176,8 @@ static void Think(Entity* self, Script* script) {
         if (keys[SDL_SCANCODE_SPACE])self->position.z += 1;
         if (keys[SDL_SCANCODE_Z])self->position.z -= 1;
 
-        if (keys[SDL_SCANCODE_UP])self->rotation.x += 0.00750;
-        if (keys[SDL_SCANCODE_DOWN])self->rotation.x -= 0.00750;
+    //    if (keys[SDL_SCANCODE_UP])self->rotation.x += 0.00750;
+    //    if (keys[SDL_SCANCODE_DOWN])self->rotation.x -= 0.00750;
         if (keys[SDL_SCANCODE_RIGHT])self->rotation.z -= 0.00750;
         if (keys[SDL_SCANCODE_LEFT])self->rotation.z += 0.00750;
         if (keys[SDL_SCANCODE_KP_RIGHTBRACE])self->rotation.y -= 0.00750;
@@ -212,10 +214,28 @@ static void Think(Entity* self, Script* script) {
 static void Update(Entity* self, Script* script) {
     if (!self)return;
 
-    if (script_manager_getgamestate() == BATTLE)
+    if (script_manager_getgamestate() == GROW)
     {
-        gf3d_camera_set_position(self->position);
+        Vector3D position;
+        vector3d_add(position, self->position, vector3d(0, 0, 100));
+        gf3d_camera_set_position(position);
         gf3d_camera_set_rotation(self->rotation);
+    }
+    else if (script_manager_getgamestate() == BATTLE)
+    {
+        Vector3D position;
+        vector3d_add(position, self->position, vector3d(0, 0, 300));
+        Vector3D rotation = vector3d(-1.2, self->rotation.y, self->rotation.z);
+        gf3d_camera_set_position(position);
+        gf3d_camera_set_rotation(rotation);
+    }
+    else if (script_manager_getgamestate() == COMBAT) {
+        Vector3D position = vector3d(-15, 50, 0);
+        vector3d_rotate_about_z(&position, self->rotation.z + GFC_HALF_PI);
+        vector3d_add(position, position, self->position);
+        Vector3D rotation = vector3d(self->rotation.x, self->rotation.y, self->rotation.z - GFC_HALF_PI);
+        gf3d_camera_set_position(position);
+        gf3d_camera_set_rotation(rotation);
     }
 }
 

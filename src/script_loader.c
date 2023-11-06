@@ -32,6 +32,8 @@ Script* script_loader_getScript(char* string) {
 		return script_new_inventoryui();
 	if (strcmp(string, "dice") == 0)
 		return script_new_dice();
+	if (strcmp(string, "monster") == 0)
+		return script_new_monster();
 	return NULL;
 }
 

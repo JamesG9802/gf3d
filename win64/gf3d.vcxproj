@@ -87,6 +87,7 @@
     <ClCompile Include="..\src\script_manager_flag.c" />
     <ClCompile Include="..\src\script_loader.c" />
     <ClCompile Include="..\src\script_manager.c" />
+    <ClCompile Include="..\src\script_monster.c" />
     <ClCompile Include="..\src\script_player.c" />
     <ClCompile Include="..\src\script_rigidbody.c" />
     <ClCompile Include="..\src\script_soil.c" />
@@ -164,6 +165,7 @@
     <ClInclude Include="..\include\script_inventoryui.h" />
     <ClInclude Include="..\include\script_loader.h" />
     <ClInclude Include="..\include\script_manager.h" />
+    <ClInclude Include="..\include\script_monster.h" />
     <ClInclude Include="..\include\script_player.h" />
     <ClInclude Include="..\include\script_soil.h" />
     <ClInclude Include="..\include\script_ui.h" />

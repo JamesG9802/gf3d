@@ -104,6 +104,7 @@ static void Think(Entity* self, Script* script) {
 			slog_sync();
 			return;
 		}
+		dice_harvest(((SoilData*)script->data)->dice);
 		gfc_list_append(script_player_getplayerdata()->inventory->diceInventory, ((SoilData*)script->data)->dice);
 		((SoilData*)script->data)->state = IDLE;
 		self->color = gfc_color(1, 1, 1, 1);

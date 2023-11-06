@@ -72,4 +72,10 @@ Script* script_new_inventoryui();
 /// <returns></returns>
 Script* script_new_dice();
 
+/// <summary>
+/// Script to make a monster entity.
+/// </summary>
+/// <returns></returns>
+Script* script_new_monster();
+
 /*eol@eof*/

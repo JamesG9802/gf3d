@@ -2,6 +2,7 @@
 
 #include "simple_logger.h"
 
+#include "gfc_types.h"
 #include "gfc_list.h"
 
 #include "gf3d_vgraphics.h"
@@ -43,7 +44,43 @@ void dice_free(Dice* dice) {
 void dice_harvest(Dice* dice) {
 	if (!dice) return;
 	dice->isSeed = false;
-	
+	for (int i = 0; i < dice->sideCount; i++) {
+		if (gfc_random() > .5)
+		{
+			dice->sideValues[i].value = dice->sideValues[i].value + 1;
+			dice->manaCost = dice->manaCost + 1;
+		}
+		else if (gfc_random() > .5)
+		{
+			if (dice->sideValues[i].value > 1 && dice->manaCost > 0)
+			{
+				dice->sideValues[i].value = dice->sideValues[i].value - 1;
+				dice->manaCost = dice->manaCost - 1;
+			}
+		}
+		if (gfc_random() > .5)
+		{
+			if (gfc_random() > .5)
+				dice->sideValues[i].type = Mana;
+			else if (gfc_random() > .5)
+				dice->sideValues[i].type = Fire;
+			else
+				dice->sideValues[i].type = Heart;
+		}
+	}
+	for (int i = 0; i < dice->sideCount; i++) {
+		if (gfc_random() > .5)
+			dice->sideValues[i].value = dice->sideValues[i].value + .1;
+		else if (gfc_random() > .5 && dice->sideValues[i].value > .1)
+			dice->sideValues[i].value = dice->sideValues[i].value - .1;
+	}
+	if (gfc_random() > .5) {
+		if(dice->maxLifespan > 0)
+			dice->maxLifespan = dice->maxLifespan - 1;
+	}
+	else {
+		dice->maxLifespan = dice->maxLifespan + 1;
+	}
 }
 
 //	Dice to texture helper functions

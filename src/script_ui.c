@@ -10,6 +10,7 @@
 #include "gf3d_camera.h"
 
 #include "gf2d_sprite.h"
+#include "gf2d_draw.h"
 
 #include "entity.h"
 #include "script.h"
@@ -156,6 +157,14 @@ static void EntityUIDraw(Entity* self) {
 	if (self->customData && ((UIData*)self->customData)->sprite && !self->hidden)
 	{
 		UIData* data = (UIData*)self->customData;
+
+		if (data->text)
+		{
+			Vector2D renderPos = getRenderPosition(self);
+			gf2d_draw_rect_filled(gfc_rect(renderPos.x - 5, renderPos.y, data->sprite->frameWidth + 30, 
+				data->sprite->frameHeight + 30), gfc_color8(255, 255, 255, 255));
+		}
+
 		gf2d_sprite_draw(data->sprite,
 			getRenderPosition(self),
 			vector2d(self->scale.x, self->scale.y),
@@ -239,7 +248,7 @@ static void Update(Entity* self, Script* script) {
 	}
 
 
-	if (((UIData*)self->customData)->isInteractable && script_ui_ismouseover(self, script))
+	if (!self->hidden && ((UIData*)self->customData)->isInteractable && script_ui_ismouseover(self, script))
 	{
 		if(engine_utility_isleftmousedown())
 			((UIData*)self->customData)->color = gfc_color(0.5, 0.5, 0.5, 1);

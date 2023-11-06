@@ -20,6 +20,7 @@
 #include "script_manager.h"
 #include "script_ui.h"
 #include "script_inventoryui.h"
+#include "script_player.h"
 
 /// <summary>
 /// There can only be a single script_manager.
@@ -27,7 +28,7 @@
 static Script* script_manager = NULL;
 
 void day_to_night(Entity* entity, Script* script) {
-	slog("check");
+	script_manager_getdata()->gamestate = BATTLE;
 	if (script_manager_getdata()->currentDay > 3) {
 		script_ui_sethidden(
 			script_manager_getentity("button_timetransition"),
@@ -37,6 +38,8 @@ void day_to_night(Entity* entity, Script* script) {
 			script_manager_getentity("indicator_time"),
 			1
 		);
+		Entity* entity = entity_load_from_prefab("prefabs/enemy1.prefab", NULL);
+		entity->position = vector3d(0, 100, 0);
 	}
 	//	First three days have no fight
 	else {
@@ -45,8 +48,40 @@ void day_to_night(Entity* entity, Script* script) {
 	
 }
 void night_to_day(Entity* entity, Script* script) {
-	slog("New Day");
 	script_manager_getdata()->currentDay = script_manager_getdata()->currentDay + 1;
+	script_manager_getdata()->gamestate = GROW;
+	script_ui_sethidden(
+		script_manager_getentity("button_timetransition"),
+		false
+	);
+	script_ui_setframenum(
+		script_manager_getentity("indicator_time"),
+		0
+	);
+
+	Inventory* inventory = script_player_getplayerdata()->inventory;
+	for (int i = 0; i < gfc_list_get_count(inventory->diceInventory); i++) {
+		Dice* dice = gfc_list_get_nth(inventory->diceInventory, i);
+		dice->age = dice->age + 1;
+		if (dice->age >= dice->maxLifespan);
+		{
+			dice->isSeed = true;
+			gfc_list_delete_nth(inventory->diceInventory, i);
+			gfc_list_append(inventory->diceSeeds, dice);
+			i--;
+		}
+	}
+	for (int i = 0; i < gfc_list_get_count(inventory->diceLoadout); i++) {
+		Dice* dice = gfc_list_get_nth(inventory->diceLoadout, i);
+		dice->age = dice->age + 1;
+		if (dice->age >= dice->maxLifespan);
+		{
+			dice->isSeed = true;
+			gfc_list_delete_nth(inventory->diceLoadout, i);
+			gfc_list_append(inventory->diceSeeds, dice);
+			i--;
+		}
+	}
 }
 void handle_inventory_toggle(Entity* entity, Script* script) {
 	Entity* inventory = script_manager_getentity("indicator_inventory");
@@ -60,6 +95,10 @@ void handle_seed_prompt(Entity* entity, Script* script) {
 	script_inventoryui_seedprompt(inventory, entity_get_script(inventory, "inventoryui"));
 }
 
+void entercombat(Entity* entity, Script* script) {
+	script_manager_getdata()->gamestate = COMBAT;
+}
+
 /// <summary>
 /// Register all callbacks for events.
 /// </summary>
@@ -68,6 +107,7 @@ void script_manager_registerCallbacks(Entity* self) {
 	event_manager_register_callback("transition_nighttoday", &night_to_day, self, script_manager);
 	event_manager_register_callback("inventoryToggle", &handle_inventory_toggle, self, script_manager);
 	event_manager_register_callback("seedPrompt", &handle_seed_prompt, self, script_manager);
+	event_manager_register_callback("entercombat", &entercombat, self, script_manager);
 }
 
 /// <summary>
@@ -78,6 +118,7 @@ void script_manager_unregisterCallbacks() {
 	event_manager_unregister_callback("transition_nighttoday", &night_to_day);
 	event_manager_unregister_callback("inventoryToggle", &handle_inventory_toggle);
 	event_manager_unregister_callback("seedPrompt", &handle_seed_prompt);
+	event_manager_unregister_callback("entercombat", &entercombat);
 }
 
 ManagerData* script_manager_newdata() {
