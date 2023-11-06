@@ -8,6 +8,10 @@
 
 typedef struct PlayerData {
 	Inventory* inventory;
+	int currentHealth;
+	int maxHealth;
+	int currentMana;
+	int maxMana;
 } PlayerData;
 
 /// <summary>

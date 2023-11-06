@@ -30,6 +30,10 @@ static int thirdPersonMode = 0;
 
 PlayerData script_player_newplayerdata() {
     PlayerData playerData = {0};
+    playerData.currentHealth = 20;
+    playerData.maxHealth = 20;
+    playerData.currentMana = 10;
+    playerData.maxMana = 10;
     playerData.inventory = inventory_new();
     {
         Dice* dice;

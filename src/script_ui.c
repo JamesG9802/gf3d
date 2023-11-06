@@ -23,6 +23,7 @@
 
 #include "script_ui.h"
 #include "script_manager.h"
+#include "script_player.h"
 
 /// <summary>
 /// Using the anchormode, compute the actual x and y position of the sprite.
@@ -42,6 +43,9 @@ Vector2D getRenderPosition(Entity* self) {
 			break;
 		case TOPRIGHT:
 			position.x -= ((UIData*)self->customData)->sprite->frameWidth * self->scale.x / 2.0;
+			break;
+		case MIDDLELEFT:
+			position.y -= ((UIData*)self->customData)->sprite->frameHeight * self->scale.y / 4.0;
 			break;
 		case CENTER:
 			position.x -= ((UIData*)self->customData)->sprite->frameWidth * self->scale.x / 4.0;
@@ -225,26 +229,47 @@ static void Update(Entity* self, Script* script) {
 		char* text = ((UIData*)self->customData)->text;
 		char* currentText = ((UIData*)self->customData)->currentText;
 		char* wildCard = ((UIData*)self->customData)->wildcard;
+
+		char newstring[1024];
 		if (strcmp(wildCard, "currentDay") == 0)
 		{
-			char newstring[1024];
 			sprintf(newstring, "%s%d", text, script_manager_getdata()->currentDay);
 			if (currentText && strcmp(currentText, newstring) == 0) {
 				return;
 			}
-			free(currentText);
-			((UIData*)self->customData)->currentText = malloc(sizeof(char) * (strlen(newstring) + 1));
-			if (((UIData*)self->customData)->sprite) {
-				gf2d_sprite_free(((UIData*)self->customData)->sprite);
-			}
-			((UIData*)self->customData)->sprite = gf2d_sprite_from_surface(
-				TTF_RenderText_Blended(
-					gf2d_font_get_by_tag(FT_H1)->font,
-					newstring,
-					gfc_color_to_sdl(((UIData*)self->customData)->color)
-				),
-				0, 0, 0);
 		}
+		else if (strcmp(wildCard, "health") == 0)
+		{
+			sprintf(newstring, "%s%d/%d", text, 
+				script_player_getplayerdata()->currentHealth, 
+				script_player_getplayerdata()->maxHealth);
+			if (currentText && strcmp(currentText, newstring) == 0) {
+				return;
+			}
+		}
+		else if (strcmp(wildCard, "mana") == 0)
+		{
+			sprintf(newstring, "%s%d/%d", text,
+				script_player_getplayerdata()->currentMana,
+				script_player_getplayerdata()->maxMana);
+			if (currentText && strcmp(currentText, newstring) == 0) {
+				return;
+			}
+		}
+		else return;
+
+		free(currentText);
+		((UIData*)self->customData)->currentText = malloc(sizeof(char) * (strlen(newstring) + 1));
+		if (((UIData*)self->customData)->sprite) {
+			gf2d_sprite_free(((UIData*)self->customData)->sprite);
+		}
+		((UIData*)self->customData)->sprite = gf2d_sprite_from_surface(
+			TTF_RenderText_Blended(
+				gf2d_font_get_by_tag(FT_H1)->font,
+				newstring,
+				gfc_color_to_sdl(((UIData*)self->customData)->color)
+			),
+			0, 0, 0);
 	}
 
 
@@ -369,7 +394,9 @@ static void Arguments(Entity* self, Script* script, SJson* json) {
 			((UIData*)self->customData)->mode = TOPMIDDLE;
 		else if (strcmp(anchorMode, "topright") == 0)
 			((UIData*)self->customData)->mode = TOPRIGHT;
-		else if(strcmp(anchorMode, "center") == 0)
+		else if (strcmp(anchorMode, "middleleft") == 0)
+			((UIData*)self->customData)->mode = MIDDLELEFT;
+		else if (strcmp(anchorMode, "center") == 0)
 			((UIData*)self->customData)->mode = CENTER;
 		else if(strcmp(anchorMode, "middleright") == 0)
 			((UIData*)self->customData)->mode = MIDDLERIGHT;

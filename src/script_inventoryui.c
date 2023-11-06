@@ -259,6 +259,7 @@ void script_inventoryui_seedprompt(Entity* entity, Script* script) {
     button_ui_show_seeds(entity, script);
     script_ui_sethidden(script_manager_getentity("button_ui_showinventory"), true);
     script_ui_sethidden(script_manager_getentity("button_ui_showloadout"), true);
+    script_ui_sethidden(script_manager_getentity("button_ui_diceinformation"), true);
 }
 
 Dice* script_inventoryui_getselecteddice(Entity* entity, Script* script) {
@@ -326,7 +327,46 @@ static void Think(Entity* self, Script* script) {
             script_inventoryui_toggle(self, script);
         }
     }
-    
+    if (((InventoryUIData*)script->data)->state == START && ((InventoryUIData*)script->data)->currentType == INVENTORY) {
+        if (gfc_input_keycode_released(SDL_SCANCODE_RETURN)) {
+            int selectedDiceIndex = ((InventoryUIData*)script->data)->selectedDiceIndex;
+            List* inventoryDices = get_current_dice_inventory(script);
+            if (gfc_list_get_count(inventoryDices) == 0 || 
+                selectedDiceIndex < 0 || 
+                selectedDiceIndex >= gfc_list_get_count(inventoryDices))
+                return;
+
+            Dice* dice = gfc_list_get_nth(inventoryDices, selectedDiceIndex);
+            gfc_list_delete_nth(inventoryDices, selectedDiceIndex);
+            if (!dice)
+            {
+                slog("Something went wrong adding dice to loadout.");
+                return;
+            }
+            gfc_list_append(script_player_getplayerdata()->inventory->diceLoadout, dice);
+            script_inventoryui_toggle(self, script);
+        }
+    }
+    else if (((InventoryUIData*)script->data)->state == START && ((InventoryUIData*)script->data)->currentType == LOADOUT) {
+        if (gfc_input_keycode_released(SDL_SCANCODE_RETURN)) {
+            int selectedDiceIndex = ((InventoryUIData*)script->data)->selectedDiceIndex;
+            List* loadoutDices = get_current_dice_inventory(script);
+            if (gfc_list_get_count(loadoutDices) == 0 ||
+                selectedDiceIndex < 0 ||
+                selectedDiceIndex >= gfc_list_get_count(loadoutDices))
+                return;
+
+            Dice* dice = gfc_list_get_nth(loadoutDices, selectedDiceIndex);
+            gfc_list_delete_nth(loadoutDices, selectedDiceIndex);
+            if (!dice)
+            {
+                slog("Something went wrong adding dice to inventory.");
+                return;
+            }
+            gfc_list_append(script_player_getplayerdata()->inventory->diceInventory, dice);
+            script_inventoryui_toggle(self, script);
+        }
+    }
 }
 /**
  * @brief Called when a script is created.

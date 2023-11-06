@@ -38,6 +38,14 @@ void day_to_night(Entity* entity, Script* script) {
 			script_manager_getentity("indicator_time"),
 			1
 		);
+		script_ui_sethidden(
+			script_manager_getentity("indicator_health"),
+			false
+		);
+		script_ui_sethidden(
+			script_manager_getentity("indicator_mana"),
+			false
+		);
 		Entity* entity = entity_load_from_prefab("prefabs/enemy1.prefab", NULL);
 		entity->position = vector3d(0, 100, 0);
 	}
@@ -45,9 +53,16 @@ void day_to_night(Entity* entity, Script* script) {
 	else {
 		event_manager_fire_event("transition_nighttoday");
 	}
-	
 }
 void night_to_day(Entity* entity, Script* script) {
+	script_ui_sethidden(
+		script_manager_getentity("indicator_health"),
+		true
+	);
+	script_ui_sethidden(
+		script_manager_getentity("indicator_mana"),
+		true
+	);
 	script_manager_getdata()->currentDay = script_manager_getdata()->currentDay + 1;
 	script_manager_getdata()->gamestate = GROW;
 	script_ui_sethidden(
@@ -82,6 +97,8 @@ void night_to_day(Entity* entity, Script* script) {
 			i--;
 		}
 	}
+	script_player_getplayerdata()->currentHealth = script_player_getplayerdata()->maxHealth;
+	script_player_getplayerdata()->currentMana = script_player_getplayerdata()->maxMana;
 }
 void handle_inventory_toggle(Entity* entity, Script* script) {
 	Entity* inventory = script_manager_getentity("indicator_inventory");

@@ -90,7 +90,7 @@
 							"wildcard":	"currentDay",
 							"anchor":	"topleft",
 							"color":	[0,0,0,1]
-						},
+						}
 					]
 				}
 			]
@@ -263,6 +263,46 @@
 					]
 				}
 			]
+		},
+		{
+			"position":[-1,0,0],
+			"scale":[1,1,0],
+			"rotation":[0,0,0],
+			"scripts": [				
+				{
+							"name":		"ui",
+							"text":		"Health: ",
+							"wildcard":	"health",
+							"anchor":	"middleleft",
+							"color":	[0,0,0,1],
+							"hidden":	"true"
+				},
+				{
+					"name":	"manager_flag",
+					"id":	"indicator_health"
+				}
+			]
+		},
+		{
+			"position":[-1,-.2,0],
+			"scale":[1,1,0],
+			"rotation":[0,0,0],
+			"scripts": [				
+				{
+							"name":		"ui",
+							"text":		"Mana: ",
+							"wildcard":	"mana",
+							"anchor":	"middleleft",
+							"color":	[0,0,0,1],
+							"hidden":	"true"
+				},
+				{
+					"name":	"manager_flag",
+					"id":	"indicator_mana"
+				}
+			]
 		}
+
+
 	]
 }
