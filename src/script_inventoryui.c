@@ -252,6 +252,11 @@ void script_inventoryui_toggle(Entity* entity, Script* script) {
     }
 }
 
+void script_inventoryui_hide(Entity* entity, Script* script) {
+    if (!entity || !script) return;
+    ((InventoryUIData*)script->data)->state = START;
+    script_inventoryui_toggle(entity, script);
+}
 void script_inventoryui_seedprompt(Entity* entity, Script* script) {
     if (!entity || !script) return;
     script_inventoryui_toggle(entity, script);

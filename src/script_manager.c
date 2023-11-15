@@ -39,6 +39,10 @@ void day_to_night(Entity* entity, Script* script) {
 			script_manager_getentity("indicator_time"),
 			1
 		);
+		script_inventoryui_hide(
+			script_manager_getentity("indicator_inventory"),
+			entity_get_script(script_manager_getentity("indicator_inventory"), "inventoryui")
+		);
 		Entity* entity = NULL;
 		switch (script_manager_getdata()->currentDay) {
 		default:
@@ -95,7 +99,10 @@ void night_to_day(Entity* entity, Script* script) {
 		script_manager_getentity("indicator_time"),
 		0
 	);
-
+	script_inventoryui_hide(
+		script_manager_getentity("indicator_inventory"),
+		entity_get_script(script_manager_getentity("indicator_inventory"), "inventoryui")
+	);
 	Inventory* inventory = script_player_getplayerdata()->inventory;
 	for (int i = 0; i < gfc_list_get_count(inventory->diceInventory); i++) {
 		Dice* dice = gfc_list_get_nth(inventory->diceInventory, i);

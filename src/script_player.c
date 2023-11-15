@@ -205,9 +205,8 @@ static void Think(Entity* self, Script* script) {
         }
         move = vector3d_get_from_angles(self->rotation);
         move.z = 0;
-        vector3d_scale(move, move, 200 * engine_time_delta());
         vector3d_rotate_about_z(&move, -GFC_HALF_PI);
-        vector3d_normalize(&move);
+        vector3d_scale(move, move, 200 * engine_time_delta());
         if (keys[SDL_SCANCODE_D])
         {
             vector3d_add(self->position, self->position, move);
@@ -216,18 +215,17 @@ static void Think(Entity* self, Script* script) {
         {
             vector3d_add(self->position, self->position, -move);
         }
-        if (keys[SDL_SCANCODE_SPACE])self->position.z += 1;
-        if (keys[SDL_SCANCODE_Z])self->position.z -= 1;
 
-    //    if (keys[SDL_SCANCODE_UP])self->rotation.x += 0.00750;
-    //    if (keys[SDL_SCANCODE_DOWN])self->rotation.x -= 0.00750;
-        if (keys[SDL_SCANCODE_RIGHT])self->rotation.z -= 0.00750;
-        if (keys[SDL_SCANCODE_LEFT])self->rotation.z += 0.00750;
-        if (keys[SDL_SCANCODE_KP_RIGHTBRACE])self->rotation.y -= 0.00750;
-        if (keys[SDL_SCANCODE_KP_LEFTBRACE])self->rotation.y += 0.00750;
+        if (keys[SDL_SCANCODE_RIGHT])self->rotation.z -= GFC_PI * engine_time_delta();
+        if (keys[SDL_SCANCODE_LEFT])self->rotation.z += GFC_PI * engine_time_delta();
 
         if (self->rotation.x >= (GFC_HALF_PI * .9f)) self->rotation.x = GFC_HALF_PI * .9f;
         if (self->rotation.x <= -(GFC_HALF_PI * .9f))self->rotation.x = -GFC_HALF_PI * .9f;
+
+        if (self->position.x < -300)    self->position.x = -300;
+        else if (self->position.x > 300)    self->position.x = 300;
+        if (self->position.y < -300)    self->position.y = -300;
+        else if (self->position.y > 300)    self->position.y = 300;
     }
     if (script_manager_getdata()->turn == Player && script_manager_getgamestate() == COMBAT) {
         Bool changed = false;

@@ -46,11 +46,18 @@ InventoryUIData* script_inventoryui_newdata();
 void script_inventoryui_freedata(Script* script);
 
 /// <summary>
-/// Shows the inventory ui.
+/// Toggles the inventory ui between different states.
 /// </summary>
 /// <param name="entity"></param>
 /// <param name="script"></param>
 void script_inventoryui_toggle(Entity* entity, Script* script);
+
+/// <summary>
+/// Hides the script inventory ui
+/// </summary>
+/// <param name="entity"></param>
+/// <param name="script"></param>
+void script_inventoryui_hide(Entity* entity, Script* script);
 
 /// <summary>
 /// Shows the inventory ui specifically so the player can choose a seed
