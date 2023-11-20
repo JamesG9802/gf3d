@@ -16,6 +16,8 @@
 
 #include "scene.h"
 
+extern EntityManager entity_manager;
+
 void scene_load(char *filename)
 {
     SJson *json,* scene;
@@ -38,6 +40,11 @@ void scene_load(char *filename)
     if (!sj_is_array(scene)) {
         slog("scene is not formatted as an array in %s scene config", filename);
         goto fail;
+    }
+    //  Clear out existing scene
+    for (int i = 0; i < entity_manager.entity_count; i++)
+    {
+        entity_free(&entity_manager.entity_list[i]);
     }
     for (int i = 0; i < sj_array_get_count(scene); i++) {
         slog("Loading %dth entity", i);

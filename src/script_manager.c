@@ -12,6 +12,7 @@
 #include "event_manager.h"
 
 #include "entity.h"
+#include "scene.h"
 #include "script.h"
 
 #include "game_state.h"
@@ -165,6 +166,10 @@ void entercombat(Entity* entity, Script* script) {
 	);
 }
 
+void playgame(Entity* entity, Script* script) {
+	scene_load("config/game.scene");
+}
+
 /// <summary>
 /// Register all callbacks for events.
 /// </summary>
@@ -174,6 +179,7 @@ void script_manager_registerCallbacks(Entity* self) {
 	event_manager_register_callback("inventoryToggle", &handle_inventory_toggle, self, script_manager);
 	event_manager_register_callback("seedPrompt", &handle_seed_prompt, self, script_manager);
 	event_manager_register_callback("entercombat", &entercombat, self, script_manager);
+	event_manager_register_callback("playgame", &playgame, self, script_manager);
 }
 
 /// <summary>
@@ -185,6 +191,7 @@ void script_manager_unregisterCallbacks() {
 	event_manager_unregister_callback("inventoryToggle", &handle_inventory_toggle);
 	event_manager_unregister_callback("seedPrompt", &handle_seed_prompt);
 	event_manager_unregister_callback("entercombat", &entercombat);
+	event_manager_unregister_callback("playgame", &playgame);
 }
 
 ManagerData* script_manager_newdata() {
@@ -292,6 +299,7 @@ static void Update(Entity* self, Script* script) {
 /// </summary>
 static void Destroy(Entity* self, Script* script) {
 	script_manager_freedata(script);
+	script_manager = NULL;
 }
 
 /// <summary>

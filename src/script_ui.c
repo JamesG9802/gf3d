@@ -166,8 +166,9 @@ static void EntityUIDraw(Entity* self) {
 		if (data->text)
 		{
 			Vector2D renderPos = getRenderPosition(self);
-			gf2d_draw_rect_filled(gfc_rect(renderPos.x - 5, renderPos.y, data->sprite->frameWidth + 30, 
-				data->sprite->frameHeight + 30), gfc_color8(255, 255, 255, 255));
+			gf2d_draw_rect_filled(gfc_rect(renderPos.x - 7.5f, renderPos.y - 7.5f, 
+				data->sprite->frameWidth * self->scale.x + 30, 
+				data->sprite->frameHeight * self->scale.y + 30), gfc_color8(255, 255, 255, 255));
 		}
 
 		gf2d_sprite_draw(data->sprite,

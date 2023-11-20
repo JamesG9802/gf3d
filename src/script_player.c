@@ -322,6 +322,7 @@ static void Update(Entity* self, Script* script) {
  */
 static void Destroy(Entity* self, Script* script) {
     script_player_freeplayerdata(script);
+    player = NULL;
 }
 static void Arguments(Entity* self, Script* script, SJson* json) {
 }
