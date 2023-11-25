@@ -8,6 +8,7 @@ layout(binding = 0) uniform UniformBufferObject {
     vec4 color;
     vec4 ambient;
     vec4 lightPosition;
+    vec4 cameraPosition;
 } ubo;
 
 out gl_PerVertex
@@ -23,7 +24,8 @@ layout(location = 1) out vec2 fragTexCoord;
 layout(location = 2) out vec4 colorMod;
 layout(location = 3) out vec4 fragAmbient;
 layout(location = 4) out vec4 lightPosition;
-layout(location = 5) out vec4 vertPosition;
+layout(location = 5) out vec4 cameraPosition;
+layout(location = 6) out vec4 vertPosition;
 void main()
 {
     vec3 tempNormal;
@@ -35,4 +37,5 @@ void main()
     colorMod = ubo.color;
     fragAmbient = ubo.ambient;
     lightPosition = ubo.lightPosition;
+    cameraPosition = ubo.cameraPosition;
 }

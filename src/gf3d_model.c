@@ -10,6 +10,7 @@
 #include "gf3d_uniform_buffers.h"
 
 #include "gf3d_model.h"
+#include "gf3d_camera.h"
 
 #include "script_defs.h"
 
@@ -470,8 +471,14 @@ void gf3d_model_update_uniform_buffer(
     
     vector4d_copy(modelUBO.color,colorMod);
     vector4d_copy(modelUBO.ambient,ambient);
+
+    Vector3D cameraPos;
+    gf3d_camera_get_position(&cameraPos);
+    modelUBO.cameraPosition = vector4d(cameraPos.x, cameraPos.y, cameraPos.z, 0);
+
     Vector4D lightPos = vector4d(player->position.x, player->position.y, player->position.z, 0);
     modelUBO.lightPosition = vector4d(0,0,100,0);
+
     vkMapMemory(gf3d_model.device, ubo->uniformBufferMemory, 0, sizeof(MeshUBO), 0, &data);
     
         memcpy(data, &modelUBO, sizeof(MeshUBO));

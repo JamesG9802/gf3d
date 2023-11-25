@@ -15,6 +15,8 @@ typedef struct
     Vector4D color; //color mod
     Vector4D ambient;
     Vector4D lightPosition;
+    Vector4D cameraPosition;
+    Bool isSolid;
 }MeshUBO;
 
 /**
