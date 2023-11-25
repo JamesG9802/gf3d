@@ -1,3 +1,5 @@
+#include <SDL_mixer.h>
+
 #include <time.h>
 #include "engine_time.h"
 

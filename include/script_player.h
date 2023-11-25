@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gfc_list.h"
+#include "gfc_audio.h"
 
 #include "entity.h"
 
@@ -9,6 +10,7 @@
 typedef struct PlayerData {
 	Inventory* inventory;
 	Entity* diceEntity;	//	entity representing the dice
+	Sound* soundDice;		//	sound effect for dice
 	int selectedDiceIndex;	//	current dice selected from loadout
 	int currentHealth;
 	int maxHealth;

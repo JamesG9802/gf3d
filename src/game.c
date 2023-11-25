@@ -16,6 +16,7 @@
 #include "gf2d_sprite.h"
 #include "gf2d_font.h"
 #include "gf2d_draw.h"
+#include "gfc_audio.h"
 
 #include "engine_time.h"
 #include "event_manager.h"
@@ -54,6 +55,7 @@ int main(int argc,char *argv[])
     slog("gf3d begin");
     gf3d_vgraphics_init("config/setup.cfg");
     gf2d_font_init("config/font.cfg");
+    gfc_audio_init(64, 64, 8, 8, 1, 0);
     gf2d_draw_manager_init(1000);
     engine_time_init();
     event_manager_init();

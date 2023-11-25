@@ -26,6 +26,7 @@ MonsterData* script_monster_newmonsterdata() {
     MonsterData* data = malloc(sizeof(MonsterData));
     if (!data) return NULL;
     data->state = MONSTER_IDLE;
+    data->soundAttack = gfc_sound_load("sounds/emergency-meeting.wav", 1, -1);
     data->controller = MONSTER1;
     data->timeDelta = 0;
     data->currentHealth = 30;
@@ -36,6 +37,7 @@ MonsterData* script_monster_newmonsterdata() {
 
 void script_monster_freemonsterdata(Script* script) {
     if (!script || !script->data) return;
+    if (((MonsterData*)(script->data))->soundAttack) gfc_sound_free(((MonsterData*)(script->data))->soundAttack);
     free(script->data);
 }
 
@@ -213,6 +215,7 @@ void script_monster_aithink(Entity* self, Script* script) {
         break;
     }
     if (((MonsterData*)script->data)->timeDelta >= 1) {
+        gfc_sound_play(((MonsterData*)script->data)->soundAttack, 0, 1, -1, -1);
         script_manager_getdata()->turn = Player;
         switch (((MonsterData*)script->data)->controller) {
         default:

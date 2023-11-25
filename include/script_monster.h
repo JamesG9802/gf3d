@@ -1,5 +1,7 @@
 #pragma once
 
+#include "gfc_audio.h"
+
 #include "entity.h"
 #include "script.h"
 
@@ -21,6 +23,7 @@ typedef enum MonsterController {
 typedef struct MonsterData {
 	MonsterState state;
 	MonsterController controller;
+	Sound* soundAttack;
 	int currentHealth;
 	int maxHealth;
 	double timeDelta;

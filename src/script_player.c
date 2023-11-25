@@ -55,6 +55,7 @@ void createDiceEntity() {
 PlayerData script_player_newplayerdata() {
     PlayerData playerData = {0};
     playerData.diceEntity = NULL;
+    playerData.soundDice = gfc_sound_load("sounds/diceroll.wav", 1, -1);
     playerData.selectedDiceIndex = 0;
     playerData.currentHealth = 30;
     playerData.maxHealth = 30;
@@ -120,6 +121,7 @@ PlayerData script_player_newplayerdata() {
 void script_player_freeplayerdata(Script* script) {
     if (script && script->data)
     {
+        if (((PlayerData*)(script->data))->soundDice) gfc_sound_free(((PlayerData*)(script->data))->soundDice);
         //  No need to free diceEntity because all entities will be cleaned up with their parent
         inventory_free(((PlayerData*)(script->data))->inventory);
         free(script->data);
@@ -313,6 +315,7 @@ static void Update(Entity* self, Script* script) {
             entity_free(data->diceEntity);
             data->diceEntity = NULL;
             script_manager_getdata()->turn = Monster;
+            gfc_sound_play(data->soundDice, 0, 1, -1, -1);
         }
     }
 }
