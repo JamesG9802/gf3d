@@ -63,9 +63,10 @@ Model * gf3d_model_new();
  * @brief load a model and texture from a config file that describe where the mesh data and texture data can be found
  * texture is in images><filename>,png
  * @param filename the common filename to load by
+ * @param isAnimated populates with 0 if the model is animated and -1 if not.
  * @return NULL on error, or the loaded model data otherwise
  */
-Model * gf3d_model_load(const char * filename);
+Model * gf3d_model_load(const char * filename, float* isAnimated);
 
 /**
  * @brief load a model by its model file path and texture file path
@@ -78,9 +79,10 @@ Model * gf3d_model_load_full(const char * modelFile,const char *textureFile);
 /**
  * @brief load a model from config file
  * @param json the json config to parse
+ * @param isAnimated populates with 0 if the model is animated and -1 if not.
  * @return NULL on error, or the json 
  */
-Model * gf3d_model_load_from_config(SJson *json);
+Model * gf3d_model_load_from_config(SJson *json, float* isAnimated);
 
 /**
  * @brief queue up a model for rendering

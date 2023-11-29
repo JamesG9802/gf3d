@@ -58,6 +58,7 @@ Entity *entity_new()
             entity_manager.entity_list[i].scale.y = 1;
             entity_manager.entity_list[i].scale.z = 1;
             
+            entity_manager.entity_list[i].animationFrame = -1;
             entity_manager.entity_list[i].color = gfc_color(1,1,1,1);
             entity_manager.entity_list[i].selectedColor = gfc_color(1,1,1,1);
 
@@ -114,7 +115,19 @@ void entity_free(Entity *self)
         gfc_list_delete(self->children);
     }
     //MUST DESTROY
-    gf3d_model_free(self->model);
+    if (self->animationFrame == -1)  //  the model is actually a Model*
+    {
+        gf3d_model_free(self->model);
+    }
+    else    //  the model is actually a List* to a collection of models
+    {
+        if (self->model) {
+            for (int i = 0; i < gfc_list_get_count(self->model); i++) {
+                gf3d_model_free(gfc_list_get_nth(self->model, i));
+            }
+            gfc_list_delete(self->model);
+        }
+    }
     memset(self,0,sizeof(Entity));
 }
 
@@ -124,13 +137,36 @@ void entity_draw(Entity *self)
     if (!self)return;
     if (!self->skipCommonDraw && !self->hidden)
     {
-        gf3d_model_draw(self->model, self->modelMat, gfc_color_to_vector4f(self->color), vector4d(1, 1, 1, 1));
-        if (self->selected)
+        if (self->animationFrame == -1)
         {
-            gf3d_model_draw_highlight(
-                self->model,
-                self->modelMat,
-                gfc_color_to_vector4f(self->selectedColor));
+            gf3d_model_draw(self->model, self->modelMat, gfc_color_to_vector4f(self->color), vector4d(1, 1, 1, 1));
+            if (self->selected)
+            {
+                gf3d_model_draw_highlight(
+                    self->model,
+                    self->modelMat,
+                    gfc_color_to_vector4f(self->selectedColor));
+            }
+        }
+        else {
+            if (self->model) {
+                self->animationFrame += 30 * engine_time_delta();   //  30 frames a second
+                if (self->animationFrame > gfc_list_get_count(self->model)) {
+                    self->animationFrame = 0;
+                }
+                gf3d_model_draw(
+                    gfc_list_get_nth(self->model, (int)self->animationFrame),
+                    self->modelMat,
+                    gfc_color_to_vector4f(self->color),
+                    vector4d(1, 1, 1, 1));
+                if (self->selected)
+                {
+                    gf3d_model_draw_highlight(
+                        self->model,
+                        self->modelMat,
+                        gfc_color_to_vector4f(self->selectedColor));
+                }
+            }
         }
     }
     if (self->draw) self->draw(self);
@@ -376,7 +412,7 @@ Entity* entity_load_from_sjson(SJson* json, const char* filename, Entity* parent
         }
     }
 
-    entity_setup(entity, gf3d_model_load(model), scale, position, rotation, scripts, parent);
+    entity_setup(entity, gf3d_model_load(model, &entity->animationFrame), scale, position, rotation, scripts, parent);
     
     //  Load children 
     if (sj_object_get_value(json, "children") && sj_is_array(sj_object_get_value(json, "children"))) {

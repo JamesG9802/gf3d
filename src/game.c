@@ -71,7 +71,7 @@ int main(int argc,char *argv[])
     SDL_SetRelativeMouseMode(SDL_TRUE);
     slog_sync();
     
-    sky = gf3d_model_load("models/sky.model");
+    sky = gf3d_model_load("models/sky.model", NULL);
     gfc_matrix_identity(skyMat);
     gfc_matrix_scale(skyMat,vector3d(100,100,100));
     

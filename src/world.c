@@ -49,7 +49,7 @@ World *world_load(char *filename)
         sj_free(json);
         return w;
     }
-    w->model = gf3d_model_load(modelName);
+    w->model = gf3d_model_load(modelName, NULL);
 
     sj_value_as_vector3d(sj_object_get_value(wjson,"scale"),&w->scale);
     sj_value_as_vector3d(sj_object_get_value(wjson,"position"),&w->position);

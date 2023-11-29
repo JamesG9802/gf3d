@@ -109,7 +109,7 @@ Model * gf3d_model_new()
     return NULL;
 }
 
-Model * gf3d_model_load(const char * filename)
+Model * gf3d_model_load(const char * filename, float* isAnimated)
 {    
     SJson *json,*config;
     Model *model;
@@ -123,7 +123,7 @@ Model * gf3d_model_load(const char * filename)
         sj_free(json);
         return NULL;
     }
-    model = gf3d_model_load_from_config(config);
+    model = gf3d_model_load_from_config(config, isAnimated);
     sj_free(json);
     return model;
 }
@@ -152,14 +152,39 @@ Model * gf3d_model_load_full(const char * modelFile,const char *textureFile)
     return model;
 }
 
-Model * gf3d_model_load_from_config(SJson *json)
+Model * gf3d_model_load_from_config(SJson *json, float* isAnimated)
 {
     const char *model;
     const char *texture;
     if (!json)return NULL;
-    model = sj_get_string_value(sj_object_get_value(json,"model"));
-    texture = sj_get_string_value(sj_object_get_value(json,"texture"));
-    return gf3d_model_load_full(model,texture);
+
+    if(isAnimated)  //  by default, models are not animated
+        *isAnimated = -1;
+
+    texture = sj_get_string_value(sj_object_get_value(json, "texture"));
+    if (sj_is_string(sj_object_get_value(json, "model"))) {
+        model = sj_get_string_value(sj_object_get_value(json, "model"));
+        return gf3d_model_load_full(model, texture);
+    }
+    else if (sj_is_array(sj_object_get_value(json, "model"))) {
+        //  instead of a Model, we return a pointer to a List containing all animation frame models.
+        List* models = gfc_list_new();
+        SJson* modelArray = sj_object_get_value(json, "model");
+
+        for (int i = 0; i < sj_array_get_count(modelArray); i++) {
+            Model* modelFrame = NULL;
+            if (sj_is_string(sj_array_get_nth(modelArray, i))) {
+                modelFrame = gf3d_model_load_full(
+                    sj_get_string_value(sj_array_get_nth(modelArray, i)), 
+                    texture
+                );
+            }
+            gfc_list_append(models, modelFrame);
+        }
+        if (isAnimated)
+            *isAnimated = 0;
+        return models;
+    }
 }
 
 

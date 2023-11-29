@@ -217,6 +217,10 @@ static void Think(Entity* self, Script* script) {
         {
             vector3d_add(self->position, self->position, -move);
         }
+        if (keys[SDL_SCANCODE_Z])
+            self->position.z -= 20 * engine_time_delta();
+        if (keys[SDL_SCANCODE_SPACE])
+            self->position.z += 20 * engine_time_delta();
 
         if (keys[SDL_SCANCODE_RIGHT])self->rotation.z -= GFC_PI * engine_time_delta();
         if (keys[SDL_SCANCODE_LEFT])self->rotation.z += GFC_PI * engine_time_delta();

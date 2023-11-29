@@ -48,7 +48,7 @@ typedef struct Entity_S
     void        (*damage)(struct Entity_S *self, float damage, struct Entity_S *inflictor); /**<pointer to the think function*/
     void        (*onDeath)(struct Entity_S *self); /**<pointer to an funciton to call when the entity dies*/
     
-    EntityState state;
+    float      animationFrame; //  if -1, then the entity is not animated. Otherwise, model is a List* pointer.
     
     Vector3D    position;  
     Vector3D    velocity;

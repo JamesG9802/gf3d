@@ -3,7 +3,6 @@
 
 # Object files
 *.o
-*.obj
 *.ko
 *.elf
 
@@ -57,3 +56,4 @@ dkms.conf
 makefile.dep
 gf3d
 *.log
+win64/x64/Release

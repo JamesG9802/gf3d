@@ -1,7 +1,33 @@
 {
     "model":
     {
-        "model":"models/dino/dino.obj",
+        "model": [
+		"models/dino/dino_skin5.obj",
+		"models/dino/dino_skin6.obj",
+		"models/dino/dino_skin7.obj",
+		"models/dino/dino_skin8.obj",
+		"models/dino/dino_skin9.obj",
+		"models/dino/dino_skin10.obj",
+		"models/dino/dino_skin11.obj",
+		"models/dino/dino_skin12.obj",
+		"models/dino/dino_skin13.obj",
+		"models/dino/dino_skin14.obj",
+		"models/dino/dino_skin15.obj",
+		"models/dino/dino_skin16.obj",
+		"models/dino/dino_skin17.obj",
+		"models/dino/dino_skin18.obj",
+		"models/dino/dino_skin19.obj",
+		"models/dino/dino_skin20.obj",
+		"models/dino/dino_skin21.obj",
+		"models/dino/dino_skin22.obj",
+		"models/dino/dino_skin23.obj",
+		"models/dino/dino_skin24.obj",
+		"models/dino/dino_skin25.obj",
+		"models/dino/dino_skin26.obj",
+		"models/dino/dino_skin27.obj",
+		"models/dino/dino_skin28.obj",
+		"models/dino/dino_skin29.obj"
+	],
         "texture":"models/dino/dino.png"
     }
 }
