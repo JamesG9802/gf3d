@@ -34,6 +34,8 @@ Script* script_loader_getScript(char* string) {
 		return script_new_dice();
 	if (strcmp(string, "monster") == 0)
 		return script_new_monster();
+	if (strcmp(string, "shopui") == 0)
+		return script_new_shopui();
 	return NULL;
 }
 

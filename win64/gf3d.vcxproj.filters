@@ -55,9 +55,6 @@
     <Filter Include="Header Files\simple_logger">
       <UniqueIdentifier>{56d7afa5-c7a1-44ca-8613-f2abcb4e9ea4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\game">
-      <UniqueIdentifier>{9329628e-5449-429e-b2a5-1e0486436a7e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\game">
       <UniqueIdentifier>{ba64ec12-64f6-4709-b779-d0baf124fc9c}</UniqueIdentifier>
     </Filter>
@@ -66,6 +63,9 @@
     </Filter>
     <Filter Include="Source Files\dice">
       <UniqueIdentifier>{e6299176-4e6b-455d-9b95-cfe89925bea2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine_retrofit\game">
+      <UniqueIdentifier>{9329628e-5449-429e-b2a5-1e0486436a7e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -297,6 +297,9 @@
     <ClCompile Include="..\src\script_monster.c">
       <Filter>Source Files\script</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\script_shopui.c">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\agumon.h">
@@ -471,13 +474,13 @@
       <Filter>Header Files\engine_retrofit</Filter>
     </ClInclude>
     <ClInclude Include="..\include\game_state.h">
-      <Filter>Header Files\game</Filter>
+      <Filter>Header Files\engine_retrofit\game</Filter>
     </ClInclude>
     <ClInclude Include="..\include\engine_utility.h">
       <Filter>Header Files\engine_retrofit</Filter>
     </ClInclude>
     <ClInclude Include="..\include\entity.h">
-      <Filter>Header Files\game</Filter>
+      <Filter>Header Files\engine_retrofit\game</Filter>
     </ClInclude>
     <ClInclude Include="..\include\script_player.h">
       <Filter>Header Files\script</Filter>
@@ -501,13 +504,13 @@
       <Filter>Header Files\script</Filter>
     </ClInclude>
     <ClInclude Include="..\include\inventory.h">
-      <Filter>Header Files\game</Filter>
+      <Filter>Header Files\engine_retrofit\game</Filter>
     </ClInclude>
     <ClInclude Include="..\include\script_inventoryui.h">
       <Filter>Header Files\script</Filter>
     </ClInclude>
     <ClInclude Include="..\include\meta_state.h">
-      <Filter>Header Files\game</Filter>
+      <Filter>Header Files\engine_retrofit\game</Filter>
     </ClInclude>
     <ClInclude Include="..\include\script_soil.h">
       <Filter>Header Files\script</Filter>
@@ -516,6 +519,9 @@
       <Filter>Header Files\script</Filter>
     </ClInclude>
     <ClInclude Include="..\include\script_monster.h">
+      <Filter>Header Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\script_shopui.h">
       <Filter>Header Files\script</Filter>
     </ClInclude>
   </ItemGroup>

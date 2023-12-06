@@ -24,10 +24,17 @@ typedef struct Dice {
 } Dice;
 
 /// <summary>
+/// Creates a dice from a json.
+/// </summary>
+/// <param name="json"></param>
+/// <returns></returns>
+Dice* dice_load(SJson* json);
+
+/// <summary>
 /// Creates a new dice object.
 /// </summary>
 /// <returns></returns>
-Dice* dice_new(Bool isSeed, int age, int sideCount, DiceValue* sideValues, double* sideWeights, int maxLifespan, int manacost);
+Dice* dice_new(Bool isSeed, int age, int sideCount, DiceValue* sideValues, double* sideWeights, int maxLifespan, int manaCost);
 
 /// <summary>
 /// Frees a dice object.

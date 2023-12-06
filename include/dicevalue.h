@@ -19,6 +19,13 @@ typedef struct DiceValue {
 DiceValue dicevalue_new(DiceValueType type, int value);
 
 /// <summary>
+/// Gets the corresponding DiceValueType for a string
+/// </summary>
+/// <param name="type"></param>
+/// <returns></returns>
+DiceValueType dicevalue_get_type_from_string(char* type);
+
+/// <summary>
 /// Activates a dice's effect
 /// </summary>
 /// <param name="dvalue"></param>

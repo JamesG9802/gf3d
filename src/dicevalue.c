@@ -15,6 +15,22 @@ DiceValue dicevalue_new(DiceValueType type, int value) {
 	return dvalue;
 }
 
+DiceValueType dicevalue_get_type_from_string(char* type) {
+	if (!type) return Mana;
+
+	if (strcmp(type, "mana") == 0) {
+		return Mana;
+	}
+	else if (strcmp(type, "fire") == 0) {
+		return Fire;
+	}
+	else if (strcmp(type, "heart") == 0) {
+		return Heart;
+	}
+
+	//	Unknown types default to mana
+	return Mana;
+}
 void dicevalue_activate_effect(DiceValue dvalue) {
 	PlayerData* playerData = script_player_getplayerdata();
 	MonsterData* monsterData = script_monster_getbattlingmonsterdata();

@@ -90,6 +90,7 @@
     <ClCompile Include="..\src\script_monster.c" />
     <ClCompile Include="..\src\script_player.c" />
     <ClCompile Include="..\src\script_rigidbody.c" />
+    <ClCompile Include="..\src\script_shopui.c" />
     <ClCompile Include="..\src\script_soil.c" />
     <ClCompile Include="..\src\script_spherecollider.c" />
     <ClCompile Include="..\src\script_billboard.c" />
@@ -167,6 +168,7 @@
     <ClInclude Include="..\include\script_manager.h" />
     <ClInclude Include="..\include\script_monster.h" />
     <ClInclude Include="..\include\script_player.h" />
+    <ClInclude Include="..\include\script_shopui.h" />
     <ClInclude Include="..\include\script_soil.h" />
     <ClInclude Include="..\include\script_ui.h" />
     <ClInclude Include="..\include\world.h" />

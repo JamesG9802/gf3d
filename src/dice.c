@@ -16,7 +16,102 @@
 #include "script_player.h"
 #include "script_monster.h"
 
-Dice* dice_new(Bool isSeed, int age, int sideCount, DiceValue* sideValues, double* sideWeights, int maxLifespan, int manacost) {
+Dice* dice_load(SJson* json) {
+	if (!json) {
+		slog("Dice json does not exist");
+		return NULL;
+	}
+	Bool isSeed;
+	int age, sideCount, maxLifespan, manaCost;
+	DiceValue* sideValues;
+	double* sideWeights;
+	SJson* array;
+	if (!sj_object_get_value_as_bool(json, "isSeed", &isSeed)) {
+		slog("Something went wrong reading isSeed");
+		goto fail;
+	}
+	if (!sj_object_get_value_as_int(json, "age", &age)) {
+		slog("Something went wrong reading age");
+		goto fail;
+	}
+	if (!sj_object_get_value_as_int(json, "sideCount", &sideCount)) {
+		slog("Something went wrong reading sideCount");
+		goto fail;
+	}
+	if (!sj_object_get_value_as_int(json, "maxLifespan", &maxLifespan)) {
+		slog("Something went wrong reading maxLifespan");
+		goto fail;
+	}
+	if (!sj_object_get_value_as_int(json, "manaCost", &manaCost)) {
+		slog("Something went wrong reading manaCost");
+		goto fail;
+	}
+	if (!(array = sj_object_get_value(json, "sideValues"))) {
+		slog("Something went wrong reading sideValues");
+		goto fail;
+	}	
+	if (sideCount != sj_array_get_count(array)) {
+		slog("Side counts do not match number of side values");
+		goto fail;
+	}
+	sideValues = malloc(sizeof(DiceValue) * sideCount);
+	if (!sideValues) {
+		slog("Couldn't allocate memory for side values");
+		goto fail;
+	}
+
+	for (int i = 0; i < sj_array_get_count(array); i++) {
+		DiceValueType type;
+		int value;
+		if (sj_is_object(sj_array_get_nth(array, i))) {
+			if (!sj_object_get_value_as_string(sj_array_get_nth(array, i), "type")) {
+				slog("Something went wrong reading the %dth side value's type", i);
+				goto diceValueFail;
+			}
+			type = dicevalue_get_type_from_string(
+				sj_object_get_value_as_string(sj_array_get_nth(array, i), 
+				"type")
+			);
+			if (!sj_object_get_value_as_int(sj_array_get_nth(array, i), "value", &value)) {
+				slog("Something went wrong reading the %dth side value's value", i);
+				goto diceValueFail;
+			}
+			sideValues[i].type = type;
+			sideValues[i].value = value;
+		}
+	}
+	array = NULL;
+	if (!(array = sj_object_get_value(json, "sideWeights"))) {
+		slog("Something went wrong reading sideWeights");
+		goto diceValueFail;
+	}	
+	if (sideCount != sj_array_get_count(array)) {
+		slog("Side counts do not match number of side weights");
+		goto diceValueFail;
+	}
+	sideWeights = malloc(sizeof(double) * sideCount);
+	if (!sideWeights) {
+		slog("Couldn't allocate memory for sideWeights");
+		goto diceValueFail;
+	}
+	for (int i = 0; i < sj_array_get_count(array); i++) {
+		float weight;
+		if (!sj_get_float_value(sj_array_get_nth(array, i), &weight)) {
+			slog("Something went wrong reading the %dth side weight", i);
+			goto diceWeightFail;
+		}
+		sideWeights[i] = (double)weight;
+	}
+	return dice_new(isSeed, age, sideCount, sideValues, sideWeights, maxLifespan, manaCost);
+diceWeightFail:
+	free(sideWeights);
+diceValueFail:
+	free(sideValues);
+fail:
+	return NULL;
+}
+
+Dice* dice_new(Bool isSeed, int age, int sideCount, DiceValue* sideValues, double* sideWeights, int maxLifespan, int manaCost) {
 	Dice* dice = malloc(sizeof(Dice));
 	if (!dice) return NULL;
 
@@ -26,7 +121,7 @@ Dice* dice_new(Bool isSeed, int age, int sideCount, DiceValue* sideValues, doubl
 	dice->sideValues = sideValues;
 	dice->sideWeights = sideWeights;
 	dice->maxLifespan = maxLifespan;
-	dice->manaCost = manacost;
+	dice->manaCost = manaCost;
 
 	return dice;
 }

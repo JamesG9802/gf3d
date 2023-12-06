@@ -2,16 +2,16 @@
 #include "dice.h"
 
 typedef enum InventoryUIState {
-	HIDDEN,
-	START,
-	VIEWDICE,
-	SEEDPROMPT	//	used when the inventory is specifically showing just the seeds
+	InventoryUI_HIDDEN,
+	InventoryUI_START,
+	InventoryUI_VIEWDICE,
+	InventoryUI_SEEDPROMPT	//	used when the inventory is specifically showing just the seeds
 } InventoryUIState;
 
 typedef enum DiceInventoryType {
-	SEEDS,
-	INVENTORY,
-	LOADOUT
+	InventoryUI_SEEDS,
+	InventoryUI_INVENTORY,
+	InventoryUI_LOADOUT
 } DiceInventoryType;
 
 typedef struct InventoryUIData {

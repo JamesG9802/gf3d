@@ -78,4 +78,10 @@ Script* script_new_dice();
 /// <returns></returns>
 Script* script_new_monster();
 
+/// <summary>
+/// Script to control the dice shop UI
+/// </summary>
+/// <returns></returns>
+Script* script_new_shopui();
+
 /*eol@eof*/

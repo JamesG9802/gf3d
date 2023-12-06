@@ -28,13 +28,13 @@ List* get_current_dice_inventory(Script* script) {
 
     List* dices = NULL;
     switch (((InventoryUIData*)script->data)->currentType) {
-    case SEEDS:
+    case InventoryUI_SEEDS:
         dices = script_player_getplayerdata()->inventory->diceSeeds;
         break;
-    case INVENTORY:
+    case InventoryUI_INVENTORY:
         dices = script_player_getplayerdata()->inventory->diceInventory;
         break;
-    case LOADOUT:
+    case InventoryUI_LOADOUT:
         dices = script_player_getplayerdata()->inventory->diceLoadout;
         break;
     }
@@ -66,12 +66,12 @@ static void set_dice_sprite(Script* script) {
         return;
     }
     //  Shows up to four dice at once.
-    if (((InventoryUIData*)script->data)->state == START || ((InventoryUIData*)script->data)->state == SEEDPROMPT)
+    if (((InventoryUIData*)script->data)->state == InventoryUI_START || ((InventoryUIData*)script->data)->state == InventoryUI_SEEDPROMPT)
     {
         dice_to_ui_simplified(dices, diceIndex, selectedDiceIndex, diceWindow);
     }
     //  Shows the dice information for a specific dice
-    else if (((InventoryUIData*)script->data)->state == VIEWDICE) {
+    else if (((InventoryUIData*)script->data)->state == InventoryUI_VIEWDICE) {
         dice_to_ui(gfc_list_get_nth(dices, selectedDiceIndex), diceWindow);
     }
 }
@@ -79,21 +79,21 @@ static void set_dice_sprite(Script* script) {
 static void button_ui_show_seeds(Entity* entity, Script* script) {
     if (!entity || !script || !script->data) return;
     ((InventoryUIData*)script->data)->diceIndex = 0;
-    ((InventoryUIData*)script->data)->currentType = SEEDS;
+    ((InventoryUIData*)script->data)->currentType = InventoryUI_SEEDS;
     set_dice_sprite(script);
 }
 
 static void button_ui_show_inventory(Entity* entity, Script* script) {
     if (!entity || !script || !script->data) return;
     ((InventoryUIData*)script->data)->diceIndex = 0;
-    ((InventoryUIData*)script->data)->currentType = INVENTORY;
+    ((InventoryUIData*)script->data)->currentType = InventoryUI_INVENTORY;
     set_dice_sprite(script);
 }
 
 static void button_ui_show_loadout(Entity* entity, Script* script) {
     if (!entity || !script || !script->data) return;
     ((InventoryUIData*)script->data)->diceIndex = 0;
-    ((InventoryUIData*)script->data)->currentType = LOADOUT;
+    ((InventoryUIData*)script->data)->currentType = InventoryUI_LOADOUT;
     set_dice_sprite(script);
 }
 
@@ -108,7 +108,7 @@ static void button_ui_left_arrow(Entity* entity, Script* script) {
     if (!dices) return;
 
     //  Looking at multiple simplified dice information, so move by pages of 4 dice at a time.
-    if (((InventoryUIData*)script->data)->state == START) {
+    if (((InventoryUIData*)script->data)->state == InventoryUI_START) {
         ((InventoryUIData*)script->data)->diceIndex = ((InventoryUIData*)script->data)->diceIndex - 4;
         if (((InventoryUIData*)script->data)->diceIndex < 0)
         {
@@ -123,7 +123,7 @@ static void button_ui_left_arrow(Entity* entity, Script* script) {
         }
     }
     //  Looking at dice information, so move by 1 dice at a time
-    else if (((InventoryUIData*)script->data)->state == VIEWDICE) {
+    else if (((InventoryUIData*)script->data)->state == InventoryUI_VIEWDICE) {
         ((InventoryUIData*)script->data)->diceIndex = ((InventoryUIData*)script->data)->diceIndex - 1;
         if (((InventoryUIData*)script->data)->diceIndex < 0)
             ((InventoryUIData*)script->data)->diceIndex = gfc_list_get_count(dices) - 1;
@@ -142,13 +142,13 @@ static void button_ui_right_arrow(Entity* entity, Script* script) {
     List* dices = get_current_dice_inventory(script);
     if (!dices) return;
     //  Looking at multiple simplified dice information, so move by pages of 4 dice at a time.
-    if (((InventoryUIData*)script->data)->state == START) {
+    if (((InventoryUIData*)script->data)->state == InventoryUI_START) {
         ((InventoryUIData*)script->data)->diceIndex = ((InventoryUIData*)script->data)->diceIndex + 4;
         if (((InventoryUIData*)script->data)->diceIndex >= gfc_list_get_count(dices))
             ((InventoryUIData*)script->data)->diceIndex = 0;
     }
     //  Looking at dice information, so move by 1 dice at a time
-    else if (((InventoryUIData*)script->data)->state == VIEWDICE) {
+    else if (((InventoryUIData*)script->data)->state == InventoryUI_VIEWDICE) {
         ((InventoryUIData*)script->data)->diceIndex = ((InventoryUIData*)script->data)->diceIndex + 1;
         if (((InventoryUIData*)script->data)->diceIndex >= gfc_list_get_count(dices))
             ((InventoryUIData*)script->data)->diceIndex = 0;
@@ -164,10 +164,10 @@ static void button_ui_right_arrow(Entity* entity, Script* script) {
 /// <param name="script"></param>
 static void button_ui_dice_information(Entity* entity, Script* script) {
     if (!entity | !script || !script->data) return;
-    if (((InventoryUIData*)script->data)->state == START)
-        ((InventoryUIData*)script->data)->state = VIEWDICE;
-    else if (((InventoryUIData*)script->data)->state = VIEWDICE)
-        ((InventoryUIData*)script->data)->state = START;
+    if (((InventoryUIData*)script->data)->state == InventoryUI_START)
+        ((InventoryUIData*)script->data)->state = InventoryUI_VIEWDICE;
+    else if (((InventoryUIData*)script->data)->state = InventoryUI_VIEWDICE)
+        ((InventoryUIData*)script->data)->state = InventoryUI_START;
     ((InventoryUIData*)script->data)->diceIndex = 0;
     set_dice_sprite(script);
 }
@@ -201,8 +201,8 @@ static void script_inventoryui_unregisterCallbacks() {
 InventoryUIData* script_inventoryui_newdata() {
     InventoryUIData* data = malloc(sizeof(InventoryUIData));
     if (!data)   return NULL;
-    data->state = HIDDEN;
-    data->currentType = SEEDS;
+    data->state = InventoryUI_HIDDEN;
+    data->currentType = InventoryUI_SEEDS;
     data->diceIndex = 0;
     data->selectedDiceIndex = 0;
     return data;
@@ -213,26 +213,31 @@ void script_inventoryui_freedata(Script* script) {
 }
 
 void script_inventoryui_toggle(Entity* entity, Script* script) {
-    if (!entity || !script) return;
+    if (!entity || !script->data || !script) return;
     switch (((InventoryUIData*)script->data)->state) {
 
     //  If menus are hidden, show them
-    case HIDDEN:
-        ((InventoryUIData*)script->data)->state = START;
+    case InventoryUI_HIDDEN:
+        if (script_manager_getmetastate() == INMENU)
+        {
+            //  You aren't supposed to be able to open inventory if another menu is open.
+            return;
+        }
+        ((InventoryUIData*)script->data)->state = InventoryUI_START;
         script_ui_sethidden(entity, false);
         for (int i = 0; i < gfc_list_get_count(entity->children); i++) {
             script_ui_sethidden(gfc_list_get_nth(entity->children, i), false);
         }
         ((InventoryUIData*)script->data)->diceIndex = 0;
         ((InventoryUIData*)script->data)->selectedDiceIndex = 0;
-        ((InventoryUIData*)script->data)->currentType = SEEDS;
+        ((InventoryUIData*)script->data)->currentType = InventoryUI_SEEDS;
         script_manager_setmetastate(INMENU);
         set_dice_sprite(script);
         break;
     //  If menus are showing, hide them
-    case VIEWDICE:
-    case START:
-        ((InventoryUIData*)script->data)->state = HIDDEN;
+    case InventoryUI_VIEWDICE:
+    case InventoryUI_START:
+        ((InventoryUIData*)script->data)->state = InventoryUI_HIDDEN;
         script_ui_sethidden(entity, true);
         for (int i = 0; i < gfc_list_get_count(entity->children); i++) {
             script_ui_sethidden(gfc_list_get_nth(entity->children, i), true);
@@ -240,8 +245,8 @@ void script_inventoryui_toggle(Entity* entity, Script* script) {
         script_manager_setmetastate(OK);
         break;
     //  If in seed prompt, cancel soil accepting
-    case SEEDPROMPT:
-        ((InventoryUIData*)script->data)->state = HIDDEN;
+    case InventoryUI_SEEDPROMPT:
+        ((InventoryUIData*)script->data)->state = InventoryUI_HIDDEN;
         script_ui_sethidden(entity, true);
         for (int i = 0; i < gfc_list_get_count(entity->children); i++) {
             script_ui_sethidden(gfc_list_get_nth(entity->children, i), true);
@@ -254,13 +259,13 @@ void script_inventoryui_toggle(Entity* entity, Script* script) {
 
 void script_inventoryui_hide(Entity* entity, Script* script) {
     if (!entity || !script) return;
-    ((InventoryUIData*)script->data)->state = START;
+    ((InventoryUIData*)script->data)->state = InventoryUI_START;
     script_inventoryui_toggle(entity, script);
 }
 void script_inventoryui_seedprompt(Entity* entity, Script* script) {
     if (!entity || !script) return;
     script_inventoryui_toggle(entity, script);
-    ((InventoryUIData*)script->data)->state = SEEDPROMPT;
+    ((InventoryUIData*)script->data)->state = InventoryUI_SEEDPROMPT;
     button_ui_show_seeds(entity, script);
     script_ui_sethidden(script_manager_getentity("button_ui_showinventory"), true);
     script_ui_sethidden(script_manager_getentity("button_ui_showloadout"), true);
@@ -293,7 +298,7 @@ static void Start(Entity* self, Script* script) {
  * @brief Called when a script is created.
  */
 static void Think(Entity* self, Script* script) {
-    if (((InventoryUIData*)script->data)->state == START || ((InventoryUIData*)script->data)->state == SEEDPROMPT)
+    if (((InventoryUIData*)script->data)->state == InventoryUI_START || ((InventoryUIData*)script->data)->state == InventoryUI_SEEDPROMPT)
     {
         Bool changingSprite = false;
         int diceIndex = ((InventoryUIData*)script->data)->diceIndex;
@@ -326,13 +331,13 @@ static void Think(Entity* self, Script* script) {
             set_dice_sprite(script);
         }
     }
-    if (((InventoryUIData*)script->data)->state == SEEDPROMPT) {
+    if (((InventoryUIData*)script->data)->state == InventoryUI_SEEDPROMPT) {
         if (gfc_input_keycode_released(SDL_SCANCODE_RETURN)) {
             event_manager_fire_event("acceptseed");
             script_inventoryui_toggle(self, script);
         }
     }
-    if (((InventoryUIData*)script->data)->state == START && ((InventoryUIData*)script->data)->currentType == INVENTORY) {
+    if (((InventoryUIData*)script->data)->state == InventoryUI_START && ((InventoryUIData*)script->data)->currentType == InventoryUI_INVENTORY) {
         if (gfc_input_keycode_released(SDL_SCANCODE_RETURN)) {
             int selectedDiceIndex = ((InventoryUIData*)script->data)->selectedDiceIndex;
             List* inventoryDices = get_current_dice_inventory(script);
@@ -353,7 +358,7 @@ static void Think(Entity* self, Script* script) {
             script_inventoryui_toggle(self, script);
         }
     }
-    else if (((InventoryUIData*)script->data)->state == START && ((InventoryUIData*)script->data)->currentType == LOADOUT) {
+    else if (((InventoryUIData*)script->data)->state == InventoryUI_START && ((InventoryUIData*)script->data)->currentType == InventoryUI_LOADOUT) {
         if (gfc_input_keycode_released(SDL_SCANCODE_RETURN)) {
             int selectedDiceIndex = ((InventoryUIData*)script->data)->selectedDiceIndex;
             List* loadoutDices = get_current_dice_inventory(script);

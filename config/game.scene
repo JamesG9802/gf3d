@@ -337,6 +337,98 @@
 					"id":		"ui_combatdiceinformation"
 				}
 			]
+		},
+		{
+			"position":[.5,1,0],
+			"scale":[.5,.5,0],
+			"rotation":[0,0,0],
+			"scripts": [				
+				{
+					"name":		"ui",
+					"image":	"images/ui_shop.png",
+					"anchor":	"topmiddle",
+					"interactable":	"true",
+					"event":	"button_ui_dice_shop"
+				},
+				{
+					"name":		"manager_flag",
+					"id":		"ui_diceshop"
+				}
+			]
+		},
+		{
+			"position":[0,0,0],
+			"scale":[2,2,0],
+			"rotation":[0,0,0],
+			"scripts": [				
+				{
+					"name":		"ui",
+					"image":	"images/panel.png",
+					"anchor":	"center",
+					"hidden":	"true"	
+				},
+				"shopui",
+				{
+					"name":	"manager_flag",
+					"id":	"indicator_shop"
+				}
+			],
+			"children": [
+				{
+					"position": [-.9,.9,0],
+					"scale": [1,1,1],
+					"rotation": [0,0,0],
+					"scripts": [
+						{
+							"name":		"ui",
+							"image":	"images/default.png",
+							"anchor":	"topleft",
+							"hidden":	"true",
+							"interactable":	"true"
+						}
+					]
+				},
+				{
+					"position": [.9,.9,0],
+					"scale": [1,1,1],
+					"rotation": [0,0,0],
+					"scripts": [
+						{
+							"name":		"ui",
+							"image":	"images/default.png",
+							"anchor":	"topright",
+							"hidden":	"true",
+							"interactable":	"true"
+						}
+					]
+				},				{
+					"position": [-.9,-.9,0],
+					"scale": [1,1,1],
+					"rotation": [0,0,0],
+					"scripts": [
+						{
+							"name":		"ui",
+							"image":	"images/default.png",
+							"anchor":	"bottomleft",
+							"hidden":	"true",
+							"interactable":	"true"
+						}
+					]
+				},				{
+					"position": [.9,-.9,0],
+					"scale": [1,1,1],
+					"rotation": [0,0,0],
+					"scripts": [
+						{
+							"name":		"ui",
+							"image":	"images/default.png",
+							"anchor":	"bottomright",
+							"hidden":	"true",
+							"interactable":	"true"
+						}
+					]
+				}
+			]
 		}
 	]
 }
