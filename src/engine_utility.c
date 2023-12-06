@@ -164,6 +164,14 @@ Bool engine_utility_isrightmousereleased() {
 	return mouse_state.rightMouse & RELEASED;
 }
 
+void engine_utility_leftmouse_consume() {
+	mouse_state.leftMouse = UNPRESSED;
+}
+
+void engine_utility_rightmouse_consume() {
+	mouse_state.rightMouse = UNPRESSED;
+}
+
 Model* engine_utility_createquadmodel(char* texture_filepath) {
 	Model* model = gf3d_model_new();
 	if (!model)return NULL;

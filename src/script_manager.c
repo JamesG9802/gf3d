@@ -37,10 +37,6 @@ void day_to_night(Entity* entity, Script* script) {
 			script_manager_getentity("button_timetransition"),
 			true
 		);
-		script_ui_sethidden(
-			script_manager_getentity("ui_diceshop"),
-			true
-		);
 		script_ui_setframenum(
 			script_manager_getentity("indicator_time"),
 			1
@@ -107,10 +103,6 @@ void night_to_day(Entity* entity, Script* script) {
 		script_manager_getentity("button_timetransition"),
 		false
 	);
-	script_ui_sethidden(
-		script_manager_getentity("ui_diceshop"),
-		false
-	);
 	script_ui_setframenum(
 		script_manager_getentity("indicator_time"),
 		0
@@ -118,6 +110,10 @@ void night_to_day(Entity* entity, Script* script) {
 	script_inventoryui_hide(
 		script_manager_getentity("indicator_inventory"),
 		entity_get_script(script_manager_getentity("indicator_inventory"), "inventoryui")
+	);
+	script_shopui_newday(
+		script_manager_getentity("indicator_shop"),
+		entity_get_script(script_manager_getentity("indicator_shop"), "shopui")
 	);
 	Inventory* inventory = script_player_getplayerdata()->inventory;
 	for (int i = 0; i < gfc_list_get_count(inventory->diceInventory); i++) {

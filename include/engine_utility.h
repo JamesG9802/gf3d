@@ -68,6 +68,18 @@ Bool engine_utility_isleftmousereleased();
 Bool engine_utility_isrightmousereleased();
 
 /// <summary>
+/// When the left mouse button is pressed or released, it clears itself 
+/// so no one else will think it is pressed or released
+/// </summary>
+void engine_utility_leftmouse_consume();
+
+/// <summary>
+/// When the right mouse button is pressed or released, it clears itself 
+/// so no one else will think it is pressed or released
+/// </summary>
+void engine_utility_rightmouse_consume();
+
+/// <summary>
 /// Creates and returns a quad model with a specified texture.
 /// </summary>
 /// <returns></returns>

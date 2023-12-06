@@ -1,5 +1,6 @@
 #pragma once
 
+#include "dice.h"
 #include "entity.h"
 #include "script.h"
 
@@ -10,6 +11,8 @@ typedef enum ShopUIState {
 
 typedef struct ShopUIData {
 	ShopUIState state;
+	int daysLocked;
+	Dice diceInventory[4];
 } ShopUIData;
 
 /// <summary>
@@ -36,3 +39,10 @@ void script_shopui_toggle(Entity* entity, Script* script);
 /// <param name="entity"></param>
 /// <param name="script"></param>
 void script_shopui_hide(Entity* entity, Script* script);
+
+/// <summary>
+/// Updates the shop ui for a new day.
+/// </summary>
+/// <param name="entity"></param>
+/// <param name="script"></param>
+void script_shopui_newday(Entity* entity, Script* script);

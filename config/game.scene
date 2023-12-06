@@ -358,7 +358,7 @@
 		},
 		{
 			"position":[0,0,0],
-			"scale":[2,2,0],
+			"scale":[3,3,0],
 			"rotation":[0,0,0],
 			"scripts": [				
 				{
@@ -376,7 +376,7 @@
 			"children": [
 				{
 					"position": [-.9,.9,0],
-					"scale": [1,1,1],
+					"scale": [.5,.5,1],
 					"rotation": [0,0,0],
 					"scripts": [
 						{
@@ -384,13 +384,14 @@
 							"image":	"images/default.png",
 							"anchor":	"topleft",
 							"hidden":	"true",
-							"interactable":	"true"
+							"interactable":	"true",
+							"event":	"button_ui_dice_shop_buy1"
 						}
 					]
 				},
 				{
 					"position": [.9,.9,0],
-					"scale": [1,1,1],
+					"scale": [.5,.5,1],
 					"rotation": [0,0,0],
 					"scripts": [
 						{
@@ -398,12 +399,13 @@
 							"image":	"images/default.png",
 							"anchor":	"topright",
 							"hidden":	"true",
-							"interactable":	"true"
+							"interactable":	"true",
+							"event":	"button_ui_dice_shop_buy2"
 						}
 					]
 				},				{
 					"position": [-.9,-.9,0],
-					"scale": [1,1,1],
+					"scale": [.5,.5,1],
 					"rotation": [0,0,0],
 					"scripts": [
 						{
@@ -411,12 +413,13 @@
 							"image":	"images/default.png",
 							"anchor":	"bottomleft",
 							"hidden":	"true",
-							"interactable":	"true"
+							"interactable":	"true",
+							"event":	"button_ui_dice_shop_buy3"
 						}
 					]
 				},				{
 					"position": [.9,-.9,0],
-					"scale": [1,1,1],
+					"scale": [.5,.5,1],
 					"rotation": [0,0,0],
 					"scripts": [
 						{
@@ -424,7 +427,8 @@
 							"image":	"images/default.png",
 							"anchor":	"bottomright",
 							"hidden":	"true",
-							"interactable":	"true"
+							"interactable":	"true",
+							"event":	"button_ui_dice_shop_buy4"
 						}
 					]
 				}

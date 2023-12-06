@@ -291,8 +291,12 @@ static void Update(Entity* self, Script* script) {
 			((UIData*)self->customData)->color = gfc_color(0.5, 0.5, 0.5, 1);
 		else
 			((UIData*)self->customData)->color = gfc_color(0.75, 0.75, 0.75, 1);
-		if(engine_utility_isleftmousereleased() && ((UIData*)self->customData)->associatedEvent)
+		if (engine_utility_isleftmousereleased() && ((UIData*)self->customData)->associatedEvent)
+		{
+			//	Consume event
+			engine_utility_leftmouse_consume();
 			event_manager_fire_event(((UIData*)self->customData)->associatedEvent);
+		}
 	}
 	else if (((UIData*)self->customData)->isInteractable && !script_ui_ismouseover(self, script))
 	{

@@ -15,13 +15,16 @@
 #include "script_defs.h"
 
 #include "script_manager.h"
+#include "script_player.h"
 #include "script_ui.h"
 #include "script_shopui.h"
 
 /// <summary>
 /// Set the buyable dice sprites for the children
 /// </summary>
-script_shopui_setsprites(Entity* self) {
+void set_sprites(Entity* self, Script* script) {
+	if (!self || !script || !script->data) return;
+
 	for (int i = 0; i < gfc_list_get_count(self->children); i++) {
 		Entity* child = gfc_list_get_nth(self->children, i);
 		if (!child->customData) {
@@ -30,12 +33,102 @@ script_shopui_setsprites(Entity* self) {
 		}
 		if(((UIData*)child->customData)->sprite)
 			gf2d_sprite_free(((UIData*)child->customData)->sprite);
-		((UIData*)child->customData)->sprite = gf2d_sprite_load("images/panel.png", 0, 0, 0);
+		dice_to_ui(&((ShopUIData*)script->data)->diceInventory[i], child);
 	}
 }
 
-void script_shopui_register_callbacks(Entity* self, Script* script) {
+/// <summary>
+/// Updates the shop inventory with random dice from the config file.
+/// </summary>
+/// <param name="script"></param>
+void update_shop(Script* script) {
+	if (!script || !script->data) return;
+	SJson* shopdata = sj_load("config/diceshop.json");
+	SJson* array;
+	if (!shopdata) {
+		slog("Couldn't load dice shop data.");
+		return;
+	}
+	List* dices = gfc_list_new();
+	if (!dices)
+	{
+		slog("Could not allocate memoru for dice shop list.");
+		goto fail;
+	}
 
+	if (!(array = sj_object_get_value(shopdata, "dices")) || !sj_is_array(array)) {
+		slog("Dice shop data not properly formatted");
+		goto listfail;
+	}
+
+	for (int i = 0; i < sj_array_get_count(array); i++) {
+		Dice* dice = dice_load(sj_array_get_nth(array, i));
+		if (!dice) {
+			goto listfail;
+		}
+		gfc_list_append(dices, dice);
+	}
+	//	If the number of dice available to pick from is >= 4 
+	//	we can delete a dice to prevent duplicates
+	Bool largeEnough = gfc_list_get_count(dices) >= 4;
+
+	for (int i = 0; i < 4; i++) {
+		int index = (int)(gfc_random() * gfc_list_get_count(dices));
+		memcpy(
+			&((ShopUIData*)script->data)->diceInventory[i],
+			gfc_list_get_nth(dices, index),
+			sizeof(Dice)
+		);
+		if (largeEnough) {
+			gfc_list_delete_nth(dices, index);
+		}
+	}
+
+listfail:
+	gfc_list_delete(dices);
+fail:
+	sj_free(shopdata);
+}
+
+/// <summary>
+/// Adds a dice to the player's inventory and locks the shop for three days.
+/// </summary>
+/// <param name="entity"></param>
+/// <param name="script"></param>
+/// <param name="number"></param>
+void buy_dice(Entity* entity, Script* script, int number) {
+	if (!entity || !script || !script->data || number < 0 || number > 3) return;
+	Dice* dice = malloc(sizeof(Dice));
+	memcpy(dice, &((ShopUIData*)script->data)->diceInventory[number], sizeof(Dice));
+
+	if (dice->isSeed) {
+		gfc_list_append(script_player_getplayerdata()->inventory->diceSeeds, dice);
+	}
+	else {
+		gfc_list_append(script_player_getplayerdata()->inventory->diceInventory, dice);
+	}
+
+	((ShopUIData*)script->data)->daysLocked = 3;
+	script_shopui_hide(entity, script);
+}
+
+void buy_dice_1(Entity* entity, Script* script) { buy_dice(entity, script, 0); }
+void buy_dice_2(Entity* entity, Script* script) { buy_dice(entity, script, 1); }
+void buy_dice_3(Entity* entity, Script* script) { buy_dice(entity, script, 2); }
+void buy_dice_4(Entity* entity, Script* script) { buy_dice(entity, script, 3); }
+
+void script_shopui_register_callbacks(Entity* self, Script* script) {
+	//	horrifying code
+	event_manager_register_callback("button_ui_dice_shop_buy1", &buy_dice_1, self, script);
+	event_manager_register_callback("button_ui_dice_shop_buy2", &buy_dice_2, self, script);
+	event_manager_register_callback("button_ui_dice_shop_buy3", &buy_dice_3, self, script);
+	event_manager_register_callback("button_ui_dice_shop_buy4", &buy_dice_4, self, script);
+}
+void script_shopui_unregister_callbacks() {
+	event_manager_unregister_callback("button_ui_dice_shop_buy1", &buy_dice_1);
+	event_manager_unregister_callback("button_ui_dice_shop_buy2", &buy_dice_2);
+	event_manager_unregister_callback("button_ui_dice_shop_buy3", &buy_dice_3);
+	event_manager_unregister_callback("button_ui_dice_shop_buy4", &buy_dice_4);
 }
 
 ShopUIData* script_shopui_newdata() {
@@ -45,6 +138,7 @@ ShopUIData* script_shopui_newdata() {
 		return NULL;
 	}
 	data->state = ShopUIState_HIDDEN;
+	data->daysLocked = 0;
 	return data;
 }
 
@@ -57,14 +151,17 @@ void script_shopui_toggle(Entity* entity, Script* script) {
 	if (!entity || !script->data || !script) return;
 	switch (((ShopUIData*)script->data)->state) {
 	case ShopUIState_HIDDEN:
-		if (script_manager_getmetastate() == INMENU)
+		//  You aren't supposed to be able to open shop if another menu is open 
+		//	OR if the shop is still locked
+		if (script_manager_getmetastate() == INMENU ||
+			((ShopUIData*)script->data)->daysLocked > 0)
 		{
-			//  You aren't supposed to be able to open shop if another menu is open.
 			return;
 		}
 
 		((ShopUIData*)script->data)->state = ShopUIState_VISIBLE;
 		script_ui_sethidden(entity, false);
+		set_sprites(entity, script);
 		for (int i = 0; i < gfc_list_get_count(entity->children); i++) {
 			script_ui_sethidden(gfc_list_get_nth(entity->children, i), false);
 		}
@@ -84,13 +181,27 @@ void script_shopui_toggle(Entity* entity, Script* script) {
 void script_shopui_hide(Entity* entity, Script* script) {
 	if (!entity || !script) return;
 	((ShopUIData*)script->data)->state = ShopUIState_VISIBLE;
-	script_inventoryui_toggle(entity, script);
+	script_shopui_toggle(entity, script);
 }
+
+void script_shopui_newday(Entity* entity, Script* script) {
+	if (!entity || !script || !script->data) return;
+	script_shopui_hide(entity, script);
+
+	if (((ShopUIData*)script->data)->daysLocked > 0)	
+		((ShopUIData*)script->data)->daysLocked -= 1;
+	if (((ShopUIData*)script->data)->daysLocked == 0) {
+		update_shop(script);
+	}
+}
+
 /**
  * @brief Called when a script is created.
  */
 static void Start(Entity* self, Script* script) {
 	script->data = script_shopui_newdata();
+	update_shop(script);
+	script_shopui_register_callbacks(self, script);
 }
 /**
  * @brief Called when a script is created.
@@ -107,6 +218,7 @@ static void Update(Entity* self, Script* script) {
  */
 static void Destroy(Entity* self, Script* script) {
 	script_shopui_freedata(script);
+	script_shopui_unregister_callbacks();
 }
 static void Arguments(Entity* self, Script* script, SJson* json) {
 }
