@@ -1,0 +1,45 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+/*  EditorWindow  */
+#EditorWindow {
+  display: flex;
+  flex-direction: row;
+}
+#DiceList, #Editor {
+  border: 1px solid;
+  flex-grow: 1;
+  padding: 10px;
+}
+
+/*  Dice List */
+.dice-item {
+  background-color: #cfcfcf;
+  border: 2px solid;
+  cursor: pointer;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+.dice-item:hover {
+  background-color: #aeaeae;
+}
+.selected {
+  filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(180deg);
+}
+
+/*  Editor  */
+.dice-input {
+  display: block;
+}
+.dicetype-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.sides-input, .sides-input > * {
+  border: 1px solid;
+}
