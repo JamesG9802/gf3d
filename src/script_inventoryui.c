@@ -314,7 +314,7 @@ static void Think(Entity* self, Script* script) {
         if (changingSprite) {
             List* dices = get_current_dice_inventory(script);
             //  Can't select a dice past the current page or if there aren't any more dice
-            if (selectedDiceIndex >= diceIndex + 3 || selectedDiceIndex >= (Sint32)gfc_list_get_count(dices))
+            if (selectedDiceIndex > diceIndex + 3 || selectedDiceIndex >= (Sint32)gfc_list_get_count(dices))
                 ((InventoryUIData*)script->data)->selectedDiceIndex = diceIndex;
             //  Can't select a dice before the current page
             else if (selectedDiceIndex < diceIndex) {

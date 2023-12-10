@@ -18,26 +18,15 @@
 #include "script_manager.h"
 #include "script_dice.h"
 
+//****************************************************************
+//  This script is deprecated and only used for testing purposes.
+//****************************************************************
+
+
 /**
  * @brief Called when a script is created.
  */
 static void Start(Entity* self, Script* script) {
-    {
-        Dice* dice;
-        DiceValue* diceValues = malloc(sizeof(DiceValue) * 4);
-        diceValues[0] = dicevalue_new(Mana, 1);
-        diceValues[1] = dicevalue_new(Mana, 2);
-        diceValues[2] = dicevalue_new(Mana, 3);
-        diceValues[3] = dicevalue_new(Mana, 4);
-        double* sideWeights = malloc(sizeof(double) * 4);
-        sideWeights[0] = 1;
-        sideWeights[1] = 1;
-        sideWeights[2] = 1;
-        sideWeights[3] = 1;
-        dice = dice_new(true, 0, 4, diceValues, sideWeights, 10, 0);
-        dice_to_texture(dice, self);
-        dice_free(dice);
-    }
 }
 /**
  * @brief Called when a script is created.

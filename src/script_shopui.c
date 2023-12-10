@@ -31,8 +31,6 @@ void set_sprites(Entity* self, Script* script) {
 			slog("Missing UIData for child");
 			continue;
 		}
-		if(((UIData*)child->customData)->sprite)
-			gf2d_sprite_free(((UIData*)child->customData)->sprite);
 		dice_to_ui(&((ShopUIData*)script->data)->diceInventory[i], child);
 	}
 }
@@ -43,31 +41,8 @@ void set_sprites(Entity* self, Script* script) {
 /// <param name="script"></param>
 void update_shop(Script* script) {
 	if (!script || !script->data) return;
-	SJson* shopdata = sj_load("config/diceshop.json");
-	SJson* array;
-	if (!shopdata) {
-		slog("Couldn't load dice shop data.");
-		return;
-	}
-	List* dices = gfc_list_new();
-	if (!dices)
-	{
-		slog("Could not allocate memoru for dice shop list.");
-		goto fail;
-	}
+	List* dices = dice_list_load("config/diceshop.json");
 
-	if (!(array = sj_object_get_value(shopdata, "dices")) || !sj_is_array(array)) {
-		slog("Dice shop data not properly formatted");
-		goto listfail;
-	}
-
-	for (int i = 0; i < sj_array_get_count(array); i++) {
-		Dice* dice = dice_load(sj_array_get_nth(array, i));
-		if (!dice) {
-			goto listfail;
-		}
-		gfc_list_append(dices, dice);
-	}
 	//	If the number of dice available to pick from is >= 4 
 	//	we can delete a dice to prevent duplicates
 	Bool largeEnough = gfc_list_get_count(dices) >= 4;
@@ -83,11 +58,7 @@ void update_shop(Script* script) {
 			gfc_list_delete_nth(dices, index);
 		}
 	}
-
-listfail:
 	gfc_list_delete(dices);
-fail:
-	sj_free(shopdata);
 }
 
 /// <summary>
@@ -179,7 +150,7 @@ void script_shopui_toggle(Entity* entity, Script* script) {
 }
 
 void script_shopui_hide(Entity* entity, Script* script) {
-	if (!entity || !script) return;
+	if (!entity || !script || !script->data) return;
 	((ShopUIData*)script->data)->state = ShopUIState_VISIBLE;
 	script_shopui_toggle(entity, script);
 }

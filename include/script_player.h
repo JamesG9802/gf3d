@@ -7,9 +7,15 @@
 
 #include "inventory.h"
 
+
 typedef struct PlayerData {
 	Inventory* inventory;
+	
 	Entity* diceEntity;	//	entity representing the dice
+	Bool throwingDice;	//	whether the dice is being thrown
+	Vector3D diceVelocity;
+	Vector3D angularVelocity;
+
 	Sound* soundDice;		//	sound effect for dice
 	int selectedDiceIndex;	//	current dice selected from loadout
 	int currentHealth;

@@ -31,6 +31,13 @@ typedef struct Dice {
 Dice* dice_load(SJson* json);
 
 /// <summary>
+/// Creates a list of dice from a json.
+/// </summary>
+/// <param name="json"></param>
+/// <returns></returns>
+List* dice_list_load(char* path);
+
+/// <summary>
 /// Creates a new dice object.
 /// </summary>
 /// <returns></returns>

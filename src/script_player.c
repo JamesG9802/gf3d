@@ -7,6 +7,8 @@
 #include "gfc_input.h"
 
 #include "gf3d_camera.h"
+#include "gf3d_vgraphics.h"
+#include "gf3d_buffers.h"
 
 #include "engine_time.h"
 #include "engine_utility.h"
@@ -50,11 +52,15 @@ void createDiceEntity() {
     Entity* diceInfoWindow = script_manager_getentity("ui_combatdiceinformation");
     if (!diceInfoWindow) return;
     dice_to_ui(dice, diceInfoWindow);
+    dice_to_texture(dice, data->diceEntity);
 }
 
 PlayerData script_player_newplayerdata() {
     PlayerData playerData = {0};
     playerData.diceEntity = NULL;
+    playerData.throwingDice = false;
+    playerData.diceVelocity = vector3d(0, 0, 0);
+    playerData.angularVelocity = vector3d(0, 0, 0);
     playerData.soundDice = gfc_sound_load("sounds/diceroll.wav", 1, -1);
     playerData.selectedDiceIndex = 0;
     playerData.currentHealth = 30;
@@ -62,59 +68,17 @@ PlayerData script_player_newplayerdata() {
     playerData.currentMana = 10;
     playerData.maxMana = 10;
     playerData.inventory = inventory_new();
-    {
-        Dice* dice;
-        DiceValue* diceValues = malloc(sizeof(DiceValue) * 6);
-        diceValues[0] = dicevalue_new(Mana, 4);
-        diceValues[1] = dicevalue_new(Mana, 4);
-        diceValues[2] = dicevalue_new(Mana, 4);
-        diceValues[3] = dicevalue_new(Mana, 5);
-        diceValues[4] = dicevalue_new(Mana, 5);
-        diceValues[5] = dicevalue_new(Mana, 5);
-        double* sideWeights = malloc(sizeof(double) * 6);
-        sideWeights[0] = 1;
-        sideWeights[1] = 1;
-        sideWeights[2] = 1;
-        sideWeights[3] = 1;
-        sideWeights[4] = 1;
-        sideWeights[5] = 1;
-        dice = dice_new(true, 0, 6, diceValues, sideWeights, 10, 0);
-        gfc_list_append(playerData.inventory->diceSeeds, dice);
+    
+    List* dices = dice_list_load("config/diceinventory.json");
+    for (int i = 0; i < gfc_list_get_count(dices); i++) {
+        if (((Dice*)gfc_list_get_nth(dices, i))->isSeed) {
+            gfc_list_append(playerData.inventory->diceSeeds, gfc_list_get_nth(dices, i));
+        }
+        else {
+            gfc_list_append(playerData.inventory->diceInventory, gfc_list_get_nth(dices, i));
+        }
     }
-    {
-        Dice* dice;
-        DiceValue* diceValues = malloc(sizeof(DiceValue) * 6);
-        diceValues[0] = dicevalue_new(Fire, 20);
-        diceValues[1] = dicevalue_new(Fire, 15);
-        diceValues[2] = dicevalue_new(Fire, 10);
-        diceValues[3] = dicevalue_new(Fire, 10);
-        diceValues[4] = dicevalue_new(Heart, 8);
-        diceValues[5] = dicevalue_new(Heart, 8);
-        double* sideWeights = malloc(sizeof(double) * 6);
-        sideWeights[0] = 1;
-        sideWeights[1] = 1;
-        sideWeights[2] = 1;
-        sideWeights[3] = 1;
-        sideWeights[4] = 1;
-        sideWeights[5] = 1;
-        dice = dice_new(true, 0, 6, diceValues, sideWeights, 10, 0);
-        gfc_list_append(playerData.inventory->diceSeeds, dice);
-    }
-    {
-        Dice* dice;
-        DiceValue* diceValues = malloc(sizeof(DiceValue) * 4);
-        diceValues[0] = dicevalue_new(Fire, 12);
-        diceValues[1] = dicevalue_new(Fire, 12);
-        diceValues[2] = dicevalue_new(Fire, 10);
-        diceValues[3] = dicevalue_new(Fire, 10);
-        double* sideWeights = malloc(sizeof(double) * 4);
-        sideWeights[0] = 1;
-        sideWeights[1] = 1;
-        sideWeights[2] = 1;
-        sideWeights[3] = 1;
-        dice = dice_new(true, 0, 4, diceValues, sideWeights, 10, 0);
-        gfc_list_append(playerData.inventory->diceSeeds, dice);
-    }
+    gfc_list_delete(dices);
     return playerData;
 }
 
@@ -293,33 +257,89 @@ static void Update(Entity* self, Script* script) {
 
         PlayerData* data = script_player_getplayerdata();
         if (data->diceEntity) {
-            Vector3D position = engine_utility_mouseprojectray();
-            vector3d_scale(position, position, 40);
-            Vector3D cameraPos = { 0 };
-            gf3d_camera_get_position(&cameraPos);
-            vector3d_add(position, position, cameraPos);
-            data->diceEntity->position = vector3d(position.x, position.y, position.z);
+            if (!data->throwingDice) {
+                Vector3D position = engine_utility_mouseprojectray();
+                vector3d_scale(position, position, 40);
+                Vector3D cameraPos = { 0 };
+                gf3d_camera_get_position(&cameraPos);
+                vector3d_add(position, position, cameraPos);
+                data->diceEntity->position = vector3d(position.x, position.y, position.z);
 
-            if (gfc_list_get_count(data->inventory->diceLoadout) == 0) {
-                slog("You don't have dice in your loadout");
-                return;
+                data->diceEntity->rotation.x += 2 * GFC_2PI * engine_time_delta();
+                data->diceEntity->rotation.z += 2 * GFC_2PI * engine_time_delta();
             }
-            Dice* dice = gfc_list_get_nth(data->inventory->diceLoadout, data->selectedDiceIndex);
-            if (!dice)
-            {
-                slog("Couldn't find dice");
-                return;
+            else {
+                //  Gravity Decay   -   not strictly mathematically accurate due to derivatives with time
+                data->diceVelocity.z -= engine_time_delta() * 50;
+                
+                Vector3D velocity;
+                vector3d_scale(velocity, data->diceVelocity, engine_time_delta());
+
+                vector3d_add(data->diceEntity->position, data->diceEntity->position, velocity);
+
+                //  Angular Velocity
+                Vector3D angularVelocity;
+                vector3d_scale(angularVelocity, data->angularVelocity, engine_time_delta());
+
+                vector3d_add(data->diceEntity->rotation, data->diceEntity->rotation, angularVelocity);
+
+                //  Camera position
+                Vector3D newPos = vector3d(-data->diceVelocity.x, -data->diceVelocity.y, 50);
+                vector3d_add(newPos, newPos, data->diceEntity->position);
+                gf3d_camera_set_position(newPos);
+                gf3d_camera_set_rotation(vector3d(-1.4, 0, 0));
+
             }
-            dice_to_texture(dice, data->diceEntity);
         }
-        if (engine_utility_isleftmousereleased()) {
-            Dice* dice = gfc_list_get_nth(data->inventory->diceLoadout, data->selectedDiceIndex);
-            if (!dice || !data->diceEntity) return;
-            dice_activate_effect(dice);
-            entity_free(data->diceEntity);
-            data->diceEntity = NULL;
-            script_manager_getdata()->turn = Monster;
-            gfc_sound_play(data->soundDice, 0, 1, -1, -1);
+        if (!data->throwingDice && engine_utility_isleftmousereleased()) {
+            data->throwingDice = true;
+            data->diceVelocity = engine_utility_mouseprojectray();
+            data->diceVelocity.z = 2;
+            vector3d_scale(data->diceVelocity, data->diceVelocity, 10 + gfc_random() * 5);
+            data->angularVelocity.x = 2 * GFC_2PI;
+            data->angularVelocity.z = 2 * GFC_2PI;
+
+
+
+            Mesh* mesh = data->diceEntity->model->mesh;
+            Face* faces;
+            VkDevice device = gf3d_vgraphics_get_default_logical_device();
+            VkDeviceSize bufferSize = sizeof(Face) * mesh->faceCount;
+
+            VkBuffer stagingBuffer;
+            VkDeviceMemory stagingBufferMemory;
+
+            gf3d_buffer_create(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
+                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 
+                &stagingBuffer, &stagingBufferMemory);
+            gf3d_buffer_copy(mesh->faceBuffer, stagingBuffer, bufferSize);
+
+            void* _data;
+            vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &_data);
+
+            // Allocate memory for faces and copy data from staging buffer
+            faces = malloc(bufferSize);
+            memcpy(faces, _data, (size_t)bufferSize);
+
+            vkUnmapMemory(device, stagingBufferMemory);
+
+            vkDestroyBuffer(device, stagingBuffer, NULL);
+            vkFreeMemory(device, stagingBufferMemory, NULL);
+            
+
+            for (int i = 0; i < mesh->faceCount; i++) {
+                slog("%d %d %d", faces[i].verts[0], faces[i].verts[1], faces[i].verts[2]);
+            }
+
+            /*
+                Dice* dice = gfc_list_get_nth(data->inventory->diceLoadout, data->selectedDiceIndex);
+                if (!dice || !data->diceEntity) return;
+                dice_activate_effect(dice);
+                entity_free(data->diceEntity);
+                data->diceEntity = NULL;
+                script_manager_getdata()->turn = Monster;
+                gfc_sound_play(data->soundDice, 0, 1, -1, -1);
+            */
         }
     }
 }

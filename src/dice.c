@@ -111,6 +111,40 @@ fail:
 	return NULL;
 }
 
+List* dice_list_load(char* path) {
+	SJson* json = sj_load(path);
+	SJson* array;
+	if (!json) {
+		slog("Couldn't load dice shop data.");
+		return;
+	}
+	List* dices = gfc_list_new();
+	if (!dices)
+	{
+		slog("Could not allocate memory for dice shop list.");
+		goto jsonfail;
+	}
+
+	if (!(array = sj_object_get_value(json, "dices")) || !sj_is_array(array)) {
+		slog("Dice shop data not properly formatted");
+		goto listfail;
+	}
+
+	for (int i = 0; i < sj_array_get_count(array); i++) {
+		Dice* dice = dice_load(sj_array_get_nth(array, i));
+		if (!dice) {
+			goto listfail;
+		}
+		gfc_list_append(dices, dice);
+	}
+	sj_free(json);
+	return dices;
+listfail:
+	gfc_list_delete(dices);
+jsonfail:
+	sj_free(json);
+	return NULL;
+}
 Dice* dice_new(Bool isSeed, int age, int sideCount, DiceValue* sideValues, double* sideWeights, int maxLifespan, int manaCost) {
 	Dice* dice = malloc(sizeof(Dice));
 	if (!dice) return NULL;
@@ -136,6 +170,7 @@ void dice_free(Dice* dice) {
 	{
 		free(dice->sideWeights);
 	}
+	free(dice);
 }
 Dice* dice_seed_reward(int manacost) {
 	int numSides = 0;
