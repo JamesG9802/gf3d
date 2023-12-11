@@ -27,7 +27,7 @@
 			]
 		},
 		{
-			"model":"models/dice6.model",
+			"model":"models/ground.model",
 			"position":[0,0,-5],
 			"scale":[800,800,2],
 			"rotation":[0,0,0]

@@ -245,14 +245,8 @@ void dice_harvest(Dice* dice) {
 	}
 }
 
-void dice_activate_effect(Dice* dice) {
-	Entity* battlingmonster = script_monster_getbattlingmonster(); 
-	if (dice->manaCost > script_player_getplayerdata()->currentMana) {
-		script_player_getplayerdata()->currentMana = script_player_getplayerdata()->currentMana + 5;
-		return;
-	}
-	script_player_getplayerdata()->currentMana = script_player_getplayerdata()->currentMana - dice->manaCost;
-	
+int dice_choose_side(Dice* dice) {
+	if (!dice) return;
 	float sumweights = 0;
 	for (int i = 0; i < dice->sideCount; i++) {
 		sumweights = sumweights + dice->sideWeights[i];
@@ -263,10 +257,24 @@ void dice_activate_effect(Dice* dice) {
 		sumweights = sumweights + dice->sideWeights[i];
 		if (random < sumweights)
 		{
-			dicevalue_activate_effect(dice->sideValues[i]);
-			return;
+			return i;
 		}
 	}
+	return dice->sideCount - 1;
+}
+
+void dice_activate_effect(Dice* dice, int desiredSide) {
+	if (!dice) return;
+	Entity* battlingmonster = script_monster_getbattlingmonster(); 
+	if (dice->manaCost > script_player_getplayerdata()->currentMana) {
+		script_player_getplayerdata()->currentMana = script_player_getplayerdata()->currentMana + 5;
+		return;
+	}
+	script_player_getplayerdata()->currentMana = script_player_getplayerdata()->currentMana - dice->manaCost;
+	if(desiredSide != -1)
+		dicevalue_activate_effect(dice->sideValues[dice_choose_side(dice)]);
+	else
+		dicevalue_activate_effect(dice->sideValues[dice_choose_side(desiredSide)]);
 }
 
 //	Dice to texture helper functions

@@ -1,0 +1,7 @@
+{
+    "model":
+    {
+        "model":"meshes/dice6.obj",
+        "texture":"images/grid.png"
+    }
+}

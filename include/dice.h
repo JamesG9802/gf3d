@@ -63,10 +63,18 @@ Dice* dice_seed_reward(int manacost);
 void dice_harvest(Dice* dice);
 
 /// <summary>
-/// Roll the dice and activate a random effect
+///	Based on dice's weights, choose a random side.
 /// </summary>
 /// <param name="dice"></param>
-void dice_activate_effect(Dice* dice);
+/// <returns></returns>
+int dice_choose_side(Dice* dice);
+
+/// <summary>
+/// Roll the dice and activate a random effect. If desiredSide != -1, then that side will be chosen deterministically.
+/// </summary>
+/// <param name="dice"></param>
+/// <param name="dice"></param>
+void dice_activate_effect(Dice* dice, int desiredSide);
 
 /// <summary>
 /// Sets the dice's sides as the texture for the entity.

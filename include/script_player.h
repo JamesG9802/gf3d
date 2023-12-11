@@ -15,6 +15,9 @@ typedef struct PlayerData {
 	Bool throwingDice;	//	whether the dice is being thrown
 	Vector3D diceVelocity;
 	Vector3D angularVelocity;
+	int chosenSide;	
+	float timeDelta;
+	Bool stopped;
 
 	Sound* soundDice;		//	sound effect for dice
 	int selectedDiceIndex;	//	current dice selected from loadout
