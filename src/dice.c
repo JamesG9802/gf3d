@@ -186,10 +186,10 @@ Dice* dice_seed_reward(int manacost) {
 
 	for (int i = 0; i < numSides; i++) {
 		random = gfc_random();
-		if (random > .33) {
+		if (random > .67) {
 			values[i].type = Mana;
 		}
-		else if (random > .66) {
+		else if (random > .5) {
 			values[i].type = Fire;
 		}
 		else {
@@ -220,12 +220,16 @@ void dice_harvest(Dice* dice) {
 				dice->manaCost = dice->manaCost - 1;
 			}
 		}
-		if (gfc_random() > .5)
+		//	5% chance to change type
+		if (gfc_random() < .05)
 		{
-			if (gfc_random() > .5)
+			//	33% chance to be mana
+			if (gfc_random() > .67)
 				dice->sideValues[i].type = Mana;
+			//	67% && 50% = ~33% chance to be fire
 			else if (gfc_random() > .5)
 				dice->sideValues[i].type = Fire;
+			//	remaining 33% chance to be Heart
 			else
 				dice->sideValues[i].type = Heart;
 		}
@@ -237,7 +241,7 @@ void dice_harvest(Dice* dice) {
 			dice->sideValues[i].value = dice->sideValues[i].value - .1;
 	}
 	if (gfc_random() > .5) {
-		if(dice->maxLifespan > 0)
+		if(dice->maxLifespan > 1)	//	cannot go below 1
 			dice->maxLifespan = dice->maxLifespan - 1;
 	}
 	else {
@@ -246,7 +250,7 @@ void dice_harvest(Dice* dice) {
 }
 
 int dice_choose_side(Dice* dice) {
-	if (!dice) return;
+	if (!dice) return 0;
 	float sumweights = 0;
 	for (int i = 0; i < dice->sideCount; i++) {
 		sumweights = sumweights + dice->sideWeights[i];
@@ -272,9 +276,9 @@ void dice_activate_effect(Dice* dice, int desiredSide) {
 	}
 	script_player_getplayerdata()->currentMana = script_player_getplayerdata()->currentMana - dice->manaCost;
 	if(desiredSide != -1)
-		dicevalue_activate_effect(dice->sideValues[dice_choose_side(dice)]);
+		dicevalue_activate_effect(dice->sideValues[desiredSide]);
 	else
-		dicevalue_activate_effect(dice->sideValues[dice_choose_side(desiredSide)]);
+		dicevalue_activate_effect(dice->sideValues[dice_choose_side(dice)]);
 }
 
 //	Dice to texture helper functions

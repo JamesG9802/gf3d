@@ -35,7 +35,9 @@ Vector3D desiredRotation(int sideCount, int desiredSide) {
         switch (desiredSide) {
         default:
         case 0:
-            return vector3d(0, 0, 0);
+            return vector3d(52.3715 * GFC_DEGTORAD,
+                -131.5 * GFC_DEGTORAD,
+                -215 * GFC_DEGTORAD);
         case 1:
             return vector3d(0, 110 * GFC_DEGTORAD, 0);
         case 2:
@@ -43,23 +45,21 @@ Vector3D desiredRotation(int sideCount, int desiredSide) {
                 -131.5 * GFC_DEGTORAD,
                 215 * GFC_DEGTORAD);
         case 3:
-            return vector3d(52.3715 * GFC_DEGTORAD,
-                -131.5 * GFC_DEGTORAD,
-                -215 * GFC_DEGTORAD);
+            return vector3d(0, 0, 0);
         }
     case 6:
         switch (desiredSide) {
         default:
         case 0:
-            return vector3d(0, 0, 0);
-        case 1:
             return vector3d(0, GFC_HALF_PI, 0);
+        case 1:
+            return vector3d(0, 0, 0);
         case 2:
-            return vector3d(0, -GFC_HALF_PI, 0);
+            return vector3d(GFC_HALF_PI, 0, 0);
         case 3:
             return vector3d(0, GFC_PI, 0);
         case 4:
-            return vector3d(GFC_HALF_PI, 0, 0);
+            return vector3d(0, -GFC_HALF_PI, 0);
         case 5:
             return vector3d(-GFC_HALF_PI, 0, 0);
         }
@@ -244,7 +244,6 @@ void ImpulseResolveCollision(PlayerData* data) {
         //  Cheating (?) by calculating the normal of the colliding face and determining the angular velocity needed
         //  to make it face the ground (0, 0, -1)
 
-        // Calculate the angles needed to rotate faceNormal to point towards (0, 0, -1
         Vector3D targetAngles = desiredRotation(((Dice*)gfc_list_get_nth(data->inventory->diceLoadout, data->selectedDiceIndex))->sideCount, data->chosenSide);
         
         //  show upside down so the player can actually see the value
@@ -255,7 +254,7 @@ void ImpulseResolveCollision(PlayerData* data) {
         slog("%d", data->chosenSide);
         //slog("%f %f", data->diceEntity->rotation.x, data->diceEntity->rotation.z);
         // Rotate faceNormal using the calculated angles
-        float angularWeight = .75;
+        float angularWeight = .8;
         float existingWeight = 1 - angularWeight;
 
         data->angularVelocity.x = angularWeight * (-data->diceEntity->rotation.x + targetAngles.x) + existingWeight * (data->angularVelocity.x);

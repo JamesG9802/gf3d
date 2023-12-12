@@ -33,6 +33,8 @@ extern Entity* player;
 
 int main(int argc,char *argv[])
 {
+    srand(time(0));
+
     int done = 0;
     int a;
     
