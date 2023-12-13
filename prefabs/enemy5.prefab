@@ -1,7 +1,7 @@
 {
-	"model": "models/sphere.model"
+	"model": "models/enemy5.model"
 	"position":[0,0,0],
-	"scale":[4,4,4],
+	"scale":[2,2,2],
 	"rotation":[0,0,0],
 	"scripts": [	
 		{

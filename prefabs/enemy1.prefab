@@ -1,5 +1,5 @@
 {
-	"model": "models/dice4.model"
+	"model": "models/enemy1.model"
 	"position":[0,0,0],
 	"scale":[4,4,4],
 	"rotation":[0,0,0],

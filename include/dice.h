@@ -50,6 +50,12 @@ Dice* dice_new(Bool isSeed, int age, int sideCount, DiceValue* sideValues, doubl
 void dice_free(Dice* dice);
 
 /// <summary>
+/// Create a deep copy of a dice object.
+/// </summary>
+/// <param name="dice"></param>
+Dice* dice_copy(Dice* dice);
+
+/// <summary>
 /// Create a random dice as a reward;
 /// </summary>
 /// <param name="manacost"></param>

@@ -1,0 +1,12 @@
+{
+	"model": "models/dice4.model"
+	"position":[0,-300,20],
+	"scale":[4,4,4],
+	"rotation":[0,0,0],
+	"scripts": [				
+		{
+			"name":		"interactable",
+			"type":		"monster"
+		}
+	]
+}

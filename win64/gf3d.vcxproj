@@ -83,6 +83,7 @@
     <ClCompile Include="..\src\script_camera.c" />
     <ClCompile Include="..\src\script_debug.c" />
     <ClCompile Include="..\src\script_dice.c" />
+    <ClCompile Include="..\src\script_interactable.c" />
     <ClCompile Include="..\src\script_inventoryui.c" />
     <ClCompile Include="..\src\script_manager_flag.c" />
     <ClCompile Include="..\src\script_loader.c" />

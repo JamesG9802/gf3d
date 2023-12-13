@@ -1,0 +1,14 @@
+{
+	"model": "models/enemy1.model"
+	"position":[0,-250,20],
+	"scale":[4,4,4],
+	"rotation":[0,0,0],
+	"scripts": [				
+		{
+			"name":		"monster",
+			"ai":		"special1",
+			"maxHealth":	"50",
+			"dayMonster":	"true"
+		}
+	]
+}

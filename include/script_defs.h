@@ -84,4 +84,10 @@ Script* script_new_monster();
 /// <returns></returns>
 Script* script_new_shopui();
 
+/// <summary>
+/// Script to control the different interactables
+/// </summary>
+/// <returns></returns>
+Script* script_new_interactable();
+
 /*eol@eof*/

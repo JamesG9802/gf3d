@@ -31,34 +31,8 @@ void set_sprites(Entity* self, Script* script) {
 			slog("Missing UIData for child");
 			continue;
 		}
-		dice_to_ui(&((ShopUIData*)script->data)->diceInventory[i], child);
+		dice_to_ui(gfc_list_get_nth(((ShopUIData*)script->data)->diceInventory, i), child);
 	}
-}
-
-/// <summary>
-/// Updates the shop inventory with random dice from the config file.
-/// </summary>
-/// <param name="script"></param>
-void update_shop(Script* script) {
-	if (!script || !script->data) return;
-	List* dices = dice_list_load("config/diceshop.json");
-
-	//	If the number of dice available to pick from is >= 4 
-	//	we can delete a dice to prevent duplicates
-	Bool largeEnough = gfc_list_get_count(dices) >= 4;
-
-	for (int i = 0; i < 4; i++) {
-		int index = (int)(gfc_random() * gfc_list_get_count(dices));
-		memcpy(
-			&((ShopUIData*)script->data)->diceInventory[i],
-			gfc_list_get_nth(dices, index),
-			sizeof(Dice)
-		);
-		if (largeEnough) {
-			gfc_list_delete_nth(dices, index);
-		}
-	}
-	gfc_list_delete(dices);
 }
 
 /// <summary>
@@ -69,16 +43,17 @@ void update_shop(Script* script) {
 /// <param name="number"></param>
 void buy_dice(Entity* entity, Script* script, int number) {
 	if (!entity || !script || !script->data || number < 0 || number > 3) return;
-	Dice* dice = malloc(sizeof(Dice));
-	memcpy(dice, &((ShopUIData*)script->data)->diceInventory[number], sizeof(Dice));
-
-	if (dice->isSeed) {
-		gfc_list_append(script_player_getplayerdata()->inventory->diceSeeds, dice);
+	Dice* dice = gfc_list_get_nth(((ShopUIData*)script->data)->diceInventory, number);
+	gfc_list_delete_nth(((ShopUIData*)script->data)->diceInventory, number);
+	if (dice)
+	{
+		if (dice->isSeed) {
+			gfc_list_append(script_player_getplayerdata()->inventory->diceSeeds, dice);
+		}
+		else {
+			gfc_list_append(script_player_getplayerdata()->inventory->diceInventory, dice);
+		}
 	}
-	else {
-		gfc_list_append(script_player_getplayerdata()->inventory->diceInventory, dice);
-	}
-
 	((ShopUIData*)script->data)->daysLocked = 3;
 	script_shopui_hide(entity, script);
 }
@@ -110,6 +85,7 @@ ShopUIData* script_shopui_newdata() {
 	}
 	data->state = ShopUIState_HIDDEN;
 	data->daysLocked = 0;
+	data->diceInventory = gfc_list_new();
 	return data;
 }
 
@@ -162,8 +138,47 @@ void script_shopui_newday(Entity* entity, Script* script) {
 	if (((ShopUIData*)script->data)->daysLocked > 0)	
 		((ShopUIData*)script->data)->daysLocked -= 1;
 	if (((ShopUIData*)script->data)->daysLocked == 0) {
-		update_shop(script);
+		script_shopui_update_shop(script, false);
 	}
+}
+
+void script_shopui_update_shop(Script* script, Bool sellingSpecialDice) {
+	if (!script || !script->data) return;
+
+	for (int i = 0; i < gfc_list_get_count(((ShopUIData*)script->data)->diceInventory); i++) {
+		if (gfc_list_get_nth(((ShopUIData*)script->data)->diceInventory, i)) {
+			dice_free(gfc_list_get_nth(((ShopUIData*)script->data)->diceInventory, i));
+		}
+		gfc_list_delete_nth(((ShopUIData*)script->data)->diceInventory, i);
+		i--;
+	}
+
+	List* dices = sellingSpecialDice ? dice_list_load("config/dicespecial.json") : dice_list_load("config/diceshop.json");
+	if (!dices) {
+		return;
+	}
+	//	If the number of dice available to pick from is >= 4 
+	//	we can delete a dice to prevent duplicates
+	Bool largeEnough = gfc_list_get_count(dices) >= 4;
+
+	for (int i = 0; i < 4; i++) {
+		int index = (int)(gfc_random() * gfc_list_get_count(dices));
+		if (largeEnough) {
+			gfc_list_append(
+				((ShopUIData*)script->data)->diceInventory,
+				gfc_list_get_nth(dices, index));
+			gfc_list_delete_nth(dices, index);
+		}
+		else {
+			gfc_list_append(
+				((ShopUIData*)script->data)->diceInventory,
+				dice_copy(gfc_list_get_nth(dices, index)));
+		}
+	}
+	for (int i = 0; i < gfc_list_get_count(dices); i++) {
+		dice_free(gfc_list_get_nth(dices, i));
+	}
+	gfc_list_delete(dices);
 }
 
 /**
@@ -171,7 +186,7 @@ void script_shopui_newday(Entity* entity, Script* script) {
  */
 static void Start(Entity* self, Script* script) {
 	script->data = script_shopui_newdata();
-	update_shop(script);
+	script_shopui_update_shop(script, false);
 	script_shopui_register_callbacks(self, script);
 }
 /**

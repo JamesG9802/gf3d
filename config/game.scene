@@ -11,7 +11,7 @@
 		},
 		{
 			"model":"models/dino.model",
-			"position":[-5.5, -240, 0],
+			"position":[-5.5, -240, 30],
 			"scale":[1,1,1],
 			"rotation":[-.22,0,0],
 			"scripts": [

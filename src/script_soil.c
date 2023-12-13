@@ -30,6 +30,9 @@ static void plant_dice(Entity* entity, Script* script) {
 		cancel_plant(entity, script);
 		return;
 	}
+
+	gfc_sound_play(((SoilData*)script->data)->soundPlant, 0, 1, -1, -1);
+
 	script_inventoryui_deleteselecteddice(inventory, entity_get_script(inventory, "inventoryui"));
 	((SoilData*)script->data)->state = GROWING;
 	((SoilData*)script->data)->daysRemaining = 3;
@@ -60,6 +63,7 @@ SoilData* script_soil_newdata() {
 	if (!data) return NULL;
 	data->state = IDLE;
 	data->dice = NULL;
+	data->soundPlant= gfc_sound_load("sounds/seedplant.wav", 1, -1);
 	data->daysRemaining = 0;
 	return data;
 }
@@ -71,6 +75,7 @@ SoilData* script_soil_newdata() {
 void script_soil_freedata(Script* script) {
 	if (!script || !script->data) return;
 	dice_free(((SoilData*)script->data)->dice);
+	if (((SoilData*)(script->data))->soundPlant) gfc_sound_free(((SoilData*)(script->data))->soundPlant);
 	free(script->data);
 }
 

@@ -1,7 +1,7 @@
 {
     "model":
     {
-        "model": [
+        "frames": [
 		"models/dino/dino_skin5.obj",
 		"models/dino/dino_skin6.obj",
 		"models/dino/dino_skin7.obj",

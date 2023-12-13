@@ -300,6 +300,9 @@
     <ClCompile Include="..\src\script_shopui.c">
       <Filter>Source Files\script</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\script_interactable.c">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\agumon.h">

@@ -32,6 +32,8 @@ MonsterData* script_monster_newmonsterdata() {
     data->currentHealth = 30;
     data->maxHealth = 30;
     data->cooldown = 0;
+
+    data->dayMonster = false;
     return data;
 }
 
@@ -108,29 +110,7 @@ void script_monster_ai_t_m4(Entity* self, Script* script) {
     script_monster_ai_t_m3(self, script);
 }
 void script_monster_ai_t_m5(Entity* self, Script* script) {
-    Vector3D position;
-    if (script_monster_getbattlingmonsterdata()->cooldown != 0)
-    {
-        position = vector3d(0, 1, 0);
-        vector3d_rotate_about_z(&position, script_player_getplayer()->rotation.z);
-        vector3d_scale(position, position, -30.0);
-        vector3d_add(position, position, script_player_getplayer()->position);
-        vector3d_add(position, position, vector3d(0, 0, 5 * sinf(engine_time_since_start()) + 5));
-        self->position.x = position.x;
-        self->position.y = position.y;
-        self->position.z = position.z;
-    }
-    else
-    {
-        ((MonsterData*)script->data)->timeDelta = ((MonsterData*)script->data)->timeDelta + 5 * engine_time_delta();
-        position = vector3d(0, 1, 0);
-        vector3d_rotate_about_z(&position, script_player_getplayer()->rotation.z);
-        vector3d_scale(position, position, -30.0 + 30.0 * ((MonsterData*)script->data)->timeDelta);
-        vector3d_add(position, position, script_player_getplayer()->position);
-        self->position.x = position.x;
-        self->position.y = position.y;
-        self->position.z = position.z;
-    }
+    script_monster_ai_t_m3(self, script);
 }
 void script_monster_ai_t_b1(Entity* self, Script* script) {
     Vector3D position;
@@ -141,6 +121,9 @@ void script_monster_ai_t_b1(Entity* self, Script* script) {
     self->position.x = position.x;
     self->position.y = position.y;
     self->position.z = position.z;
+}
+void script_monster_ai_t_s1(Entity* self, Script* script) {
+    script_monster_ai_t_m1(self, script);
 }
 
 //  Monster AI attack execution logic
@@ -180,6 +163,12 @@ void script_monster_ai_x_m5(Entity* self, Script* script) {
 void script_monster_ai_x_b1(Entity* self, Script* script) {
     script_player_getplayerdata()->currentHealth -= 4;
 }
+void script_monster_ai_x_s1(Entity* self, Script* script) {
+    int monsterHealth = script_monster_getbattlingmonsterdata()->currentHealth;
+    int playerHealth = script_player_getplayerdata()->currentHealth;
+    script_monster_getbattlingmonsterdata()->currentHealth = playerHealth;
+    script_player_getplayerdata()->currentHealth = monsterHealth;
+}
 
 /// <summary>
 /// Runs the think for each different monster.
@@ -213,6 +202,9 @@ void script_monster_aithink(Entity* self, Script* script) {
     case BOSS1:
         script_monster_ai_t_b1(self, script);
         break;
+    case SPECIAL1:
+        script_monster_ai_t_s1(self, script);
+        break;
     }
     if (((MonsterData*)script->data)->timeDelta >= 1) {
         gfc_sound_play(((MonsterData*)script->data)->soundAttack, 0, 1, -1, -1);
@@ -236,6 +228,9 @@ void script_monster_aithink(Entity* self, Script* script) {
             break;
         case BOSS1:
             script_monster_ai_x_b1(self, script);
+            break;
+        case SPECIAL1:
+            script_monster_ai_x_s1(self, script);
             break;
         }
         ((MonsterData*)script->data)->timeDelta = 0;
@@ -262,11 +257,58 @@ static void Think(Entity* self, Script* script) {
     if (!script->data)   return;
 
     if (((MonsterData*)script->data)->currentHealth <= 0) {
+        Bool isDayMonster = ((MonsterData*)script->data)->dayMonster;
         battlingmonster = NULL;
         entity_free(self);
         Dice* dice = dice_seed_reward(script_manager_getdata()->currentDay);
         gfc_list_append(script_player_getplayerdata()->inventory->diceSeeds, dice);
-        event_manager_fire_event("transition_nighttoday");
+
+        if(!isDayMonster)
+            event_manager_fire_event("transition_nighttoday");
+        else {
+            script_ui_sethidden(
+                script_manager_getentity("indicator_health"),
+                true
+            );
+            script_ui_sethidden(
+                script_manager_getentity("indicator_mana"),
+                true
+            );
+            script_ui_sethidden(
+                script_manager_getentity("indicator_enemyhealth"),
+                true
+            );
+            script_ui_sethidden(
+                script_manager_getentity("ui_combatdiceinformation"),
+                true
+            );
+            //	Enable Day time indicators
+            script_manager_getdata()->gamestate = GROW;
+            script_ui_sethidden(
+                script_manager_getentity("button_timetransition"),
+                false
+            );
+            script_ui_setframenum(
+                script_manager_getentity("indicator_time"),
+                0
+            );
+            script_inventoryui_hide(
+                script_manager_getentity("indicator_inventory"),
+                entity_get_script(script_manager_getentity("indicator_inventory"), "inventoryui")
+            );
+            script_shopui_newday(
+                script_manager_getentity("indicator_shop"),
+                entity_get_script(script_manager_getentity("indicator_shop"), "shopui")
+            );
+            script_ui_sethidden(
+                script_manager_getentity("ui_diceshop"),
+                false
+            );
+
+            //  Reward increases player maxhp and mana
+            script_player_getplayerdata()->maxHealth += 10;
+            script_player_getplayerdata()->maxMana += 10;
+        }
     }
     if (script_manager_getgamestate() == BATTLE && ((MonsterData*)script->data)->state == MONSTER_IDLE &&
         vector3d_magnitude_between(script_player_getplayer()->position, self->position) < 100.0) {
@@ -326,10 +368,43 @@ static void Arguments(Entity* self, Script* script, SJson* json) {
         else if (strcmp(sj_get_string_value(sj_object_get_value(json, "ai")), "boss1") == 0) {
             data->controller = BOSS1;
         }
+        else if (strcmp(sj_get_string_value(sj_object_get_value(json, "ai")), "special1") == 0) {
+            data->controller = SPECIAL1;
+        }
     }
     if (sj_get_integer_value(sj_object_get_value(json, "cooldown"), NULL)) {
         if (script->data) {
             sj_get_integer_value(sj_object_get_value(json, "cooldown"), &((MonsterData*)script->data)->cooldown);
+        }
+    }
+    if (sj_get_integer_value(sj_object_get_value(json, "maxHealth"), NULL)) {
+        if (script->data) {
+            sj_get_integer_value(sj_object_get_value(json, "maxHealth"), &((MonsterData*)script->data)->maxHealth);
+
+            sj_get_integer_value(sj_object_get_value(json, "maxHealth"), &((MonsterData*)script->data)->currentHealth);
+        }
+    }
+    if (sj_get_bool_value(sj_object_get_value(json, "dayMonster"), NULL)) {
+        if (script->data) {
+            sj_get_bool_value(sj_object_get_value(json, "dayMonster"), &((MonsterData*)script->data)->dayMonster);
+            ((MonsterData*)script->data)->state = MONSTER_CHASE;
+            script_manager_setgamestate(BATTLE);
+            script_ui_sethidden(
+                script_manager_getentity("button_timetransition"),
+                true
+            );
+            script_inventoryui_hide(
+                script_manager_getentity("indicator_inventory"),
+                entity_get_script(script_manager_getentity("indicator_inventory"), "inventoryui")
+            );
+            script_ui_sethidden(
+                script_manager_getentity("ui_diceshop"),
+                true
+            );
+            script_shopui_hide(
+                script_manager_getentity("indicator_shop"),
+                entity_get_script(script_manager_getentity("indicator_shop"), "shopui")
+            );
         }
     }
 }

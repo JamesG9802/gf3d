@@ -28,18 +28,25 @@
 /// There can only be a single script_manager.
 /// </summary>
 static Script* script_manager = NULL;
+static Entity* current_day_entity = NULL;
 
 void day_to_night(Entity* entity, Script* script) {
 	script_manager_getdata()->gamestate = BATTLE;
 	script_manager_getdata()->turn = Player;
+
+	//	Delete interactable entity
+	if (current_day_entity) entity_free(current_day_entity);
+
 	if (script_manager_getdata()->currentDay > 3) {
-		script_ui_sethidden(
-			script_manager_getentity("button_timetransition"),
-			true
-		);
+		//	Show night indicators
 		script_ui_setframenum(
 			script_manager_getentity("indicator_time"),
 			1
+		);
+		//	Hide day indicators
+		script_ui_sethidden(
+			script_manager_getentity("button_timetransition"),
+			true
 		);
 		script_inventoryui_hide(
 			script_manager_getentity("indicator_inventory"),
@@ -123,6 +130,25 @@ void night_to_day(Entity* entity, Script* script) {
 		script_manager_getentity("ui_diceshop"),
 		false
 	);
+
+	//	Spawn daily interactable
+	switch (script_manager_getdata()->currentDay % 3) {
+	default:
+	case 0:
+		slog("Seeds");
+		current_day_entity = entity_load_from_prefab("prefabs/interactable_seeds.prefab", NULL);
+		break;
+	case 1:
+		slog("Trader");
+		current_day_entity = entity_load_from_prefab("prefabs/interactable_trader.prefab", NULL);
+		break;
+	case 2:
+		if (script_manager_getdata()->currentDay < 4) break;	//	do not spawn before the player has even harvested a dice yet.
+		slog("Monster");
+		current_day_entity = entity_load_from_prefab("prefabs/interactable_monster.prefab", NULL);
+		break;
+	}
+
 	Inventory* inventory = script_player_getplayerdata()->inventory;
 	for (int i = 0; i < gfc_list_get_count(inventory->diceInventory); i++) {
 		Dice* dice = gfc_list_get_nth(inventory->diceInventory, i);
@@ -148,7 +174,7 @@ void night_to_day(Entity* entity, Script* script) {
 	}
 	script_player_getplayerdata()->currentHealth = script_player_getplayerdata()->maxHealth;
 	script_player_getplayerdata()->currentMana = script_player_getplayerdata()->maxMana;
-	script_player_getplayer()->position = vector3d(-5.5, -240, 0);
+	script_player_getplayer()->position = vector3d(-5.5, -240, 30);
 	script_player_getplayer()->rotation = vector3d(-.22, 0, 0);
 
 }

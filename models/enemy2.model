@@ -1,0 +1,29 @@
+{
+    "model":
+    {
+        "frames": [
+		"models/enemy2/enemy20.obj",
+		"models/enemy2/enemy21.obj",
+		"models/enemy2/enemy22.obj",
+		"models/enemy2/enemy23.obj",
+		"models/enemy2/enemy24.obj",
+		"models/enemy2/enemy25.obj",
+		"models/enemy2/enemy26.obj",
+		"models/enemy2/enemy27.obj",
+		"models/enemy2/enemy28.obj",
+		"models/enemy2/enemy29.obj",
+		"models/enemy2/enemy210.obj",
+		"models/enemy2/enemy211.obj",
+		"models/enemy2/enemy212.obj",
+		"models/enemy2/enemy213.obj",
+		"models/enemy2/enemy214.obj",
+		"models/enemy2/enemy215.obj",
+		"models/enemy2/enemy216.obj",
+		"models/enemy2/enemy217.obj",
+		"models/enemy2/enemy218.obj",
+		"models/enemy2/enemy219.obj",
+		"models/enemy2/enemy220.obj"
+	],
+        "texture":"images/enemy2.png"
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "model":
+    {
+        "frames": [
+		"models/enemy5/enemy50.obj",
+		"models/enemy5/enemy51.obj",
+		"models/enemy5/enemy52.obj",
+		"models/enemy5/enemy53.obj",
+		"models/enemy5/enemy54.obj",
+		"models/enemy5/enemy55.obj",
+		"models/enemy5/enemy56.obj",
+		"models/enemy5/enemy57.obj",
+		"models/enemy5/enemy58.obj",
+		"models/enemy5/enemy59.obj",
+		"models/enemy5/enemy510.obj",
+		"models/enemy5/enemy511.obj",
+		"models/enemy5/enemy512.obj",
+		"models/enemy5/enemy513.obj",
+		"models/enemy5/enemy514.obj",
+		"models/enemy5/enemy515.obj",
+		"models/enemy5/enemy516.obj",
+		"models/enemy5/enemy517.obj",
+		"models/enemy5/enemy518.obj",
+		"models/enemy5/enemy519.obj",
+		"models/enemy5/enemy520.obj"
+	],
+        "texture":"images/enemy4.png"
+    }
+}

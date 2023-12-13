@@ -166,10 +166,10 @@ Model * gf3d_model_load_from_config(SJson *json, float* isAnimated)
         model = sj_get_string_value(sj_object_get_value(json, "model"));
         return gf3d_model_load_full(model, texture);
     }
-    else if (sj_is_array(sj_object_get_value(json, "model"))) {
+    else if (sj_is_array(sj_object_get_value(json, "frames"))) {
         //  instead of a Model, we return a pointer to a List containing all animation frame models.
         List* models = gfc_list_new();
-        SJson* modelArray = sj_object_get_value(json, "model");
+        SJson* modelArray = sj_object_get_value(json, "frames");
 
         for (int i = 0; i < sj_array_get_count(modelArray); i++) {
             Model* modelFrame = NULL;

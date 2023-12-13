@@ -1,0 +1,37 @@
+{
+    "model":
+    {
+        "frames": [
+		"models/enemy4/enemy40.obj",
+		"models/enemy4/enemy41.obj",
+		"models/enemy4/enemy42.obj",
+		"models/enemy4/enemy43.obj",
+		"models/enemy4/enemy44.obj",
+		"models/enemy4/enemy45.obj",
+		"models/enemy4/enemy46.obj",
+		"models/enemy4/enemy47.obj",
+		"models/enemy4/enemy48.obj",
+		"models/enemy4/enemy49.obj",
+		"models/enemy4/enemy410.obj",
+		"models/enemy4/enemy411.obj",
+		"models/enemy4/enemy412.obj",
+		"models/enemy4/enemy413.obj",
+		"models/enemy4/enemy414.obj",
+		"models/enemy4/enemy415.obj",
+		"models/enemy4/enemy416.obj",
+		"models/enemy4/enemy417.obj",
+		"models/enemy4/enemy418.obj",
+		"models/enemy4/enemy419.obj",
+		"models/enemy4/enemy420.obj",
+		"models/enemy4/enemy421.obj",
+		"models/enemy4/enemy422.obj",
+		"models/enemy4/enemy423.obj",
+		"models/enemy4/enemy424.obj",
+		"models/enemy4/enemy425.obj",
+		"models/enemy4/enemy426.obj",
+		"models/enemy4/enemy427.obj",
+		"models/enemy4/enemy428.obj"
+	],
+        "texture":"images/enemy4.png"
+    }
+}

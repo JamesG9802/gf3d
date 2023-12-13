@@ -266,6 +266,8 @@ void ImpulseResolveCollision(PlayerData* data) {
         data->angularVelocity.x *= .8;
         data->angularVelocity.y *= .8;
         data->angularVelocity.z *= .8;
+
+        gfc_sound_play(data->soundDice, 0, 1, -1, -1);
     }
 }
 
@@ -387,7 +389,7 @@ static void Think(Entity* self, Script* script) {
             event_manager_fire_event("inventoryToggle");
         }
     }
-    if (script_manager_getgamestate() == BATTLE) {
+    if ((script_manager_getgamestate() == GROW && script_manager_getmetastate() != INMENU) || script_manager_getgamestate() == BATTLE) {
         PlayerData* data = script_player_getplayerdata();
         if (data->diceEntity) {
             entity_free(data->diceEntity);
@@ -480,7 +482,7 @@ static void Update(Entity* self, Script* script) {
     if (script_manager_getgamestate() == GROW)
     {
         Vector3D position;
-        vector3d_add(position, self->position, vector3d(0, 0, 100));
+        vector3d_add(position, self->position, vector3d(0, 0, 10));
         gf3d_camera_set_position(position);
         gf3d_camera_set_rotation(self->rotation);
     }
@@ -572,7 +574,6 @@ static void Update(Entity* self, Script* script) {
                     entity_free(data->diceEntity);
                     data->diceEntity = NULL;
                     script_manager_getdata()->turn = Monster;
-                    gfc_sound_play(data->soundDice, 0, 1, -1, -1);
                     data->throwingDice = false;
                 }
             }

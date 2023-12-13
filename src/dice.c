@@ -172,6 +172,23 @@ void dice_free(Dice* dice) {
 	}
 	free(dice);
 }
+
+Dice* dice_copy(Dice* dice) {
+	if (!dice) return NULL;
+	Dice* copy = malloc(sizeof(Dice));
+	if (!copy) return NULL;
+
+	memcpy(copy, dice, sizeof(Dice));
+
+	copy->sideValues = malloc(sizeof(DiceValue) * copy->sideCount);
+	copy->sideWeights = malloc(sizeof(double) * copy->sideCount);
+
+	memcpy(copy->sideValues, dice->sideValues, sizeof(DiceValue) * copy->sideCount);
+	memcpy(copy->sideWeights, dice->sideWeights, sizeof(double) * copy->sideCount);
+
+	return copy;
+}
+
 Dice* dice_seed_reward(int manacost) {
 	int numSides = 0;
 	float random = gfc_random();

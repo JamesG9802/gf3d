@@ -36,6 +36,8 @@ Script* script_loader_getScript(char* string) {
 		return script_new_monster();
 	if (strcmp(string, "shopui") == 0)
 		return script_new_shopui();
+	if (strcmp(string, "interactable") == 0)
+		return script_new_interactable();
 	return NULL;
 }
 

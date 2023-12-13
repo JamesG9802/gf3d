@@ -1,0 +1,38 @@
+{
+    "model":
+    {
+        "frames": [
+		"models/interactable_trader/interactable_trader01.obj",
+		"models/interactable_trader/interactable_trader02.obj",
+		"models/interactable_trader/interactable_trader03.obj",
+		"models/interactable_trader/interactable_trader04.obj",
+		"models/interactable_trader/interactable_trader05.obj",
+		"models/interactable_trader/interactable_trader06.obj",
+		"models/interactable_trader/interactable_trader07.obj",
+		"models/interactable_trader/interactable_trader08.obj",
+		"models/interactable_trader/interactable_trader09.obj",
+		"models/interactable_trader/interactable_trader010.obj",
+		"models/interactable_trader/interactable_trader011.obj",
+		"models/interactable_trader/interactable_trader012.obj",
+		"models/interactable_trader/interactable_trader013.obj",
+		"models/interactable_trader/interactable_trader014.obj",
+		"models/interactable_trader/interactable_trader015.obj",
+		"models/interactable_trader/interactable_trader016.obj",
+		"models/interactable_trader/interactable_trader017.obj",
+		"models/interactable_trader/interactable_trader018.obj",
+		"models/interactable_trader/interactable_trader019.obj",
+		"models/interactable_trader/interactable_trader020.obj",
+		"models/interactable_trader/interactable_trader021.obj",
+		"models/interactable_trader/interactable_trader022.obj",
+		"models/interactable_trader/interactable_trader023.obj",
+		"models/interactable_trader/interactable_trader024.obj",
+		"models/interactable_trader/interactable_trader025.obj",
+		"models/interactable_trader/interactable_trader026.obj",
+		"models/interactable_trader/interactable_trader027.obj",
+		"models/interactable_trader/interactable_trader028.obj",
+		"models/interactable_trader/interactable_trader029.obj",
+		"models/interactable_trader/interactable_trader030.obj"
+	],
+        "texture":"images/interactable_trader.png"
+    }
+}

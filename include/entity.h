@@ -151,7 +151,7 @@ void entity_remove_script(Entity* self, TextLine name);
 /// Loads an entity from a prefab file.
 /// </summary>
 /// <param name="file"></param>
-/// <param name="parent>Optional parent</param>
+/// <param name="parent">Optional parent</param>
 /// <returns></returns>
 Entity* entity_load_from_prefab(const char* filename, Entity* parent);
     

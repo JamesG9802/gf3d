@@ -1,5 +1,6 @@
 #pragma once
 #include "dice.h"
+#include "gfc_audio.h"
 
 typedef enum SoilState {
 	IDLE,
@@ -12,6 +13,7 @@ typedef struct SoilData {
 	SoilState state;
 	int daysRemaining;	//	days remaining before plant can be harvested
 	Dice* dice;
+	Sound* soundPlant;		//	sound effect for planting
 } SoilData;
 
 /// <summary>

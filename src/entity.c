@@ -162,7 +162,7 @@ void entity_draw(Entity *self)
                 if (self->selected)
                 {
                     gf3d_model_draw_highlight(
-                        self->model,
+                        gfc_list_get_nth(self->model, (int)self->animationFrame),
                         self->modelMat,
                         gfc_color_to_vector4f(self->selectedColor));
                 }

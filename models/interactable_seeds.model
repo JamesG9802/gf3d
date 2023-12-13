@@ -1,0 +1,7 @@
+{
+    "model":
+    {
+        "model": "meshes/interactable_seeds.obj",
+        "texture":"images/interactable_seeds.png"
+    }
+}

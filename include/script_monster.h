@@ -17,7 +17,8 @@ typedef enum MonsterController {
 	MONSTER3,
 	MONSTER4,
 	MONSTER5,
-	BOSS1
+	BOSS1,
+	SPECIAL1
 } MonsterController;
 
 typedef struct MonsterData {
@@ -28,6 +29,8 @@ typedef struct MonsterData {
 	int maxHealth;
 	double timeDelta;
 	int cooldown;
+
+	Bool dayMonster;
 } MonsterData;
 
 /// <summary>

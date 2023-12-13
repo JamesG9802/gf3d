@@ -12,7 +12,7 @@ typedef enum ShopUIState {
 typedef struct ShopUIData {
 	ShopUIState state;
 	int daysLocked;
-	Dice diceInventory[4];
+	List* diceInventory;
 } ShopUIData;
 
 /// <summary>
@@ -46,3 +46,9 @@ void script_shopui_hide(Entity* entity, Script* script);
 /// <param name="entity"></param>
 /// <param name="script"></param>
 void script_shopui_newday(Entity* entity, Script* script);
+
+/// <summary>
+/// Updates the shop inventory with random dice from the config file.
+/// </summary>
+/// <param name="script"></param>
+void script_shopui_update_shop(Script* script, Bool sellingSpecialDice);
