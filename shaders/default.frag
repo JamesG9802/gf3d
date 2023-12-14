@@ -40,7 +40,7 @@ void main()
         } 
     }
 
-    outColor = (baseColor * ambient) + baseColor * cosTheta;
+    outColor = (baseColor * ambient) + baseColor * cosTheta * .75;
     outColor.x = outColor.x * colorMod.x;
     outColor.y = outColor.y * colorMod.y;
     outColor.z = outColor.z * colorMod.z;

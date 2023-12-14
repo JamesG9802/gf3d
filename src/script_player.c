@@ -309,6 +309,7 @@ PlayerData script_player_newplayerdata() {
     playerData.stopped = false;
 
     playerData.soundDice = gfc_sound_load("sounds/diceroll.wav", 1, -1);
+    playerData.soundLostTurn = gfc_sound_load("sounds/dicepass.wav", 1, -1);
     playerData.selectedDiceIndex = 0;
     playerData.currentHealth = 30;
     playerData.maxHealth = 30;
@@ -333,6 +334,7 @@ void script_player_freeplayerdata(Script* script) {
     if (script && script->data)
     {
         if (((PlayerData*)(script->data))->soundDice) gfc_sound_free(((PlayerData*)(script->data))->soundDice);
+        if (((PlayerData*)(script->data))->soundLostTurn) gfc_sound_free(((PlayerData*)(script->data))->soundLostTurn);
         //  No need to free diceEntity because all entities will be cleaned up with their parent
         inventory_free(((PlayerData*)(script->data))->inventory);
         free(script->data);
@@ -579,26 +581,27 @@ static void Update(Entity* self, Script* script) {
             }
         }
         if (!data->throwingDice && engine_utility_isleftmousereleased()) {
-            data->throwingDice = true;
-            data->diceVelocity = engine_utility_mouseprojectray();
-            data->diceVelocity.z = 10;
-            data->chosenSide = dice_choose_side(gfc_list_get_nth(data->inventory->diceLoadout, data->selectedDiceIndex));
-
-            vector3d_scale(data->diceVelocity, data->diceVelocity, 15 + 5 * gfc_random());
-            data->angularVelocity.x = 2 + 2 * gfc_random();
-            data->angularVelocity.z = 2 + 2 * gfc_random();
-            data->timeDelta = 0;
-            data->stopped = false;
-
-            /*
-                Dice* dice = gfc_list_get_nth(data->inventory->diceLoadout, data->selectedDiceIndex);
-                if (!dice || !data->diceEntity) return;
-                dice_activate_effect(dice);
+            if (((Dice*)gfc_list_get_nth(data->inventory->diceLoadout, data->selectedDiceIndex))->manaCost > data->currentMana)
+            {
+                dice_activate_effect(gfc_list_get_nth(data->inventory->diceLoadout, data->selectedDiceIndex), data->chosenSide);
                 entity_free(data->diceEntity);
                 data->diceEntity = NULL;
+                gfc_sound_play(data->soundLostTurn, 0, 1, -1, -1);
                 script_manager_getdata()->turn = Monster;
-                gfc_sound_play(data->soundDice, 0, 1, -1, -1);
-            */
+                return;
+            }
+            else {
+                data->throwingDice = true;
+                data->diceVelocity = engine_utility_mouseprojectray();
+                data->diceVelocity.z = 10;
+                data->chosenSide = dice_choose_side(gfc_list_get_nth(data->inventory->diceLoadout, data->selectedDiceIndex));
+
+                vector3d_scale(data->diceVelocity, data->diceVelocity, 15 + 5 * gfc_random());
+                data->angularVelocity.x = 2 + 2 * gfc_random();
+                data->angularVelocity.z = 2 + 2 * gfc_random();
+                data->timeDelta = 0;
+                data->stopped = false;
+            }
         }
         else if (data->throwingDice && engine_utility_isleftmousereleased()) {
             Dice* dice = gfc_list_get_nth(data->inventory->diceLoadout, data->selectedDiceIndex);

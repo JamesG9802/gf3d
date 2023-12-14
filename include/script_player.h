@@ -20,6 +20,8 @@ typedef struct PlayerData {
 	Bool stopped;
 
 	Sound* soundDice;		//	sound effect for dice
+	Sound* soundLostTurn;	//	sound effect for missing your turn
+
 	int selectedDiceIndex;	//	current dice selected from loadout
 	int currentHealth;
 	int maxHealth;

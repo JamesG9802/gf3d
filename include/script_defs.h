@@ -90,4 +90,10 @@ Script* script_new_shopui();
 /// <returns></returns>
 Script* script_new_interactable();
 
+/// <summary>
+/// Script to control the cross breed dice UI.
+/// </summary>
+/// <returns></returns>
+Script* script_new_crossbreedui();
+
 /*eol@eof*/

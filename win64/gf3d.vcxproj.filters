@@ -303,6 +303,9 @@
     <ClCompile Include="..\src\script_interactable.c">
       <Filter>Source Files\script</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\script_crossbreedui.c">
+      <Filter>Source Files\script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\agumon.h">
@@ -525,6 +528,9 @@
       <Filter>Header Files\script</Filter>
     </ClInclude>
     <ClInclude Include="..\include\script_shopui.h">
+      <Filter>Header Files\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\script_crossbreedui.h">
       <Filter>Header Files\script</Filter>
     </ClInclude>
   </ItemGroup>

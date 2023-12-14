@@ -266,44 +266,8 @@ static void Think(Entity* self, Script* script) {
         if(!isDayMonster)
             event_manager_fire_event("transition_nighttoday");
         else {
-            script_ui_sethidden(
-                script_manager_getentity("indicator_health"),
-                true
-            );
-            script_ui_sethidden(
-                script_manager_getentity("indicator_mana"),
-                true
-            );
-            script_ui_sethidden(
-                script_manager_getentity("indicator_enemyhealth"),
-                true
-            );
-            script_ui_sethidden(
-                script_manager_getentity("ui_combatdiceinformation"),
-                true
-            );
-            //	Enable Day time indicators
+            script_manager_hidenightandshowday();
             script_manager_getdata()->gamestate = GROW;
-            script_ui_sethidden(
-                script_manager_getentity("button_timetransition"),
-                false
-            );
-            script_ui_setframenum(
-                script_manager_getentity("indicator_time"),
-                0
-            );
-            script_inventoryui_hide(
-                script_manager_getentity("indicator_inventory"),
-                entity_get_script(script_manager_getentity("indicator_inventory"), "inventoryui")
-            );
-            script_shopui_newday(
-                script_manager_getentity("indicator_shop"),
-                entity_get_script(script_manager_getentity("indicator_shop"), "shopui")
-            );
-            script_ui_sethidden(
-                script_manager_getentity("ui_diceshop"),
-                false
-            );
 
             //  Reward increases player maxhp and mana
             script_player_getplayerdata()->maxHealth += 10;
@@ -389,22 +353,8 @@ static void Arguments(Entity* self, Script* script, SJson* json) {
             sj_get_bool_value(sj_object_get_value(json, "dayMonster"), &((MonsterData*)script->data)->dayMonster);
             ((MonsterData*)script->data)->state = MONSTER_CHASE;
             script_manager_setgamestate(BATTLE);
-            script_ui_sethidden(
-                script_manager_getentity("button_timetransition"),
-                true
-            );
-            script_inventoryui_hide(
-                script_manager_getentity("indicator_inventory"),
-                entity_get_script(script_manager_getentity("indicator_inventory"), "inventoryui")
-            );
-            script_ui_sethidden(
-                script_manager_getentity("ui_diceshop"),
-                true
-            );
-            script_shopui_hide(
-                script_manager_getentity("indicator_shop"),
-                entity_get_script(script_manager_getentity("indicator_shop"), "shopui")
-            );
+            
+            script_manager_hidedayandshownight();
         }
     }
 }

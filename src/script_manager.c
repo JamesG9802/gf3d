@@ -22,6 +22,7 @@
 #include "script_ui.h"
 #include "script_inventoryui.h"
 #include "script_shopui.h"
+#include "script_crossbreedui.h"
 #include "script_player.h"
 
 /// <summary>
@@ -38,28 +39,7 @@ void day_to_night(Entity* entity, Script* script) {
 	if (current_day_entity) entity_free(current_day_entity);
 
 	if (script_manager_getdata()->currentDay > 3) {
-		//	Show night indicators
-		script_ui_setframenum(
-			script_manager_getentity("indicator_time"),
-			1
-		);
-		//	Hide day indicators
-		script_ui_sethidden(
-			script_manager_getentity("button_timetransition"),
-			true
-		);
-		script_inventoryui_hide(
-			script_manager_getentity("indicator_inventory"),
-			entity_get_script(script_manager_getentity("indicator_inventory"), "inventoryui")
-		);
-		script_ui_sethidden(
-			script_manager_getentity("ui_diceshop"),
-			true
-		);
-		script_shopui_hide(
-			script_manager_getentity("indicator_shop"),
-			entity_get_script(script_manager_getentity("indicator_shop"), "shopui")
-		);
+		script_manager_hidedayandshownight();
 		Entity* entity = NULL;
 		switch (script_manager_getdata()->currentDay) {
 		default:
@@ -90,47 +70,15 @@ void day_to_night(Entity* entity, Script* script) {
 	}
 }
 void night_to_day(Entity* entity, Script* script) {
-	//	Disable Night time indicators
-	script_ui_sethidden(
-		script_manager_getentity("indicator_health"),
-		true
-	);
-	script_ui_sethidden(
-		script_manager_getentity("indicator_mana"),
-		true
-	);
-	script_ui_sethidden(
-		script_manager_getentity("indicator_enemyhealth"),
-		true
-	);
-	script_ui_sethidden(
-		script_manager_getentity("ui_combatdiceinformation"),
-		true
-	);
-	//	Enable Day time indicators
-	script_manager_getdata()->currentDay = script_manager_getdata()->currentDay + 1;
-	script_manager_getdata()->gamestate = GROW;
-	script_ui_sethidden(
-		script_manager_getentity("button_timetransition"),
-		false
-	);
-	script_ui_setframenum(
-		script_manager_getentity("indicator_time"),
-		0
-	);
-	script_inventoryui_hide(
-		script_manager_getentity("indicator_inventory"),
-		entity_get_script(script_manager_getentity("indicator_inventory"), "inventoryui")
-	);
+	script_manager_hidenightandshowday();
+
 	script_shopui_newday(
 		script_manager_getentity("indicator_shop"),
 		entity_get_script(script_manager_getentity("indicator_shop"), "shopui")
 	);
-	script_ui_sethidden(
-		script_manager_getentity("ui_diceshop"),
-		false
-	);
 
+	script_manager_getdata()->currentDay = script_manager_getdata()->currentDay + 1;
+	script_manager_getdata()->gamestate = GROW;
 	//	Spawn daily interactable
 	switch (script_manager_getdata()->currentDay % 3) {
 	default:
@@ -188,6 +136,11 @@ void handle_shop_toggle(Entity* entity, Script* script) {
 
 	script_shopui_toggle(shop, entity_get_script(shop, "shopui"));
 }
+void handle_crossbreed_toggle(Entity* entity, Script* script) {
+	Entity* crossbreed = script_manager_getentity("indicator_crossbreed");
+
+	script_crossbreedui_toggle(crossbreed, entity_get_script(crossbreed, "crossbreedui"));
+}
 void handle_seed_prompt(Entity* entity, Script* script) {
 	Entity* inventory = script_manager_getentity("indicator_inventory");
 
@@ -227,6 +180,7 @@ void script_manager_registerCallbacks(Entity* self) {
 	event_manager_register_callback("transition_nighttoday", &night_to_day, self, script_manager);
 	event_manager_register_callback("inventoryToggle", &handle_inventory_toggle, self, script_manager);
 	event_manager_register_callback("button_ui_dice_shop", &handle_shop_toggle, self, script_manager);
+	event_manager_register_callback("button_ui_dice_crossbreed", &handle_crossbreed_toggle, self, script_manager);
 	event_manager_register_callback("seedPrompt", &handle_seed_prompt, self, script_manager);
 	event_manager_register_callback("entercombat", &entercombat, self, script_manager);
 	event_manager_register_callback("playgame", &playgame, self, script_manager);
@@ -240,6 +194,7 @@ void script_manager_unregisterCallbacks() {
 	event_manager_unregister_callback("transition_nighttoday", &night_to_day);
 	event_manager_unregister_callback("inventoryToggle", &handle_inventory_toggle);
 	event_manager_unregister_callback("button_ui_dice_shop", &handle_shop_toggle);
+	event_manager_unregister_callback("button_ui_dice_crossbreed", &handle_crossbreed_toggle);
 	event_manager_unregister_callback("seedPrompt", &handle_seed_prompt);
 	event_manager_unregister_callback("entercombat", &entercombat);
 	event_manager_unregister_callback("playgame", &playgame);
@@ -266,6 +221,79 @@ void script_manager_freedata(Script* script) {
 	script_manager_unregisterCallbacks();
 	gfc_hashmap_free(((ManagerData*)script->data)->entities);
 	free(script->data);
+}
+
+void script_manager_hidedayandshownight() {
+	//	Show night indicators
+	script_ui_setframenum(
+		script_manager_getentity("indicator_time"),
+		1
+	);
+	//	Hide day indicators
+	script_ui_sethidden(
+		script_manager_getentity("button_timetransition"),
+		true
+	);
+	script_inventoryui_hide(
+		script_manager_getentity("indicator_inventory"),
+		entity_get_script(script_manager_getentity("indicator_inventory"), "inventoryui")
+	);
+	script_ui_sethidden(
+		script_manager_getentity("ui_diceshop"),
+		true
+	);
+	script_ui_sethidden(
+		script_manager_getentity("ui_dicecrossbreed"),
+		true
+	);
+	script_shopui_hide(
+		script_manager_getentity("indicator_shop"),
+		entity_get_script(script_manager_getentity("indicator_shop"), "shopui")
+	);
+	script_crossbreedui_hide(
+		script_manager_getentity("indicator_crossbreedui"),
+		entity_get_script(script_manager_getentity("indicator_crossbreedui"), "crossbreedui")
+	);
+}
+void script_manager_hidenightandshowday() {
+	//	Disable Night time indicators
+	script_ui_sethidden(
+		script_manager_getentity("indicator_health"),
+		true
+	);
+	script_ui_sethidden(
+		script_manager_getentity("indicator_mana"),
+		true
+	);
+	script_ui_sethidden(
+		script_manager_getentity("indicator_enemyhealth"),
+		true
+	);
+	script_ui_sethidden(
+		script_manager_getentity("ui_combatdiceinformation"),
+		true
+	);
+	//	Enable Day time indicators
+	script_ui_sethidden(
+		script_manager_getentity("button_timetransition"),
+		false
+	);
+	script_ui_setframenum(
+		script_manager_getentity("indicator_time"),
+		0
+	);
+	script_inventoryui_hide(
+		script_manager_getentity("indicator_inventory"),
+		entity_get_script(script_manager_getentity("indicator_inventory"), "inventoryui")
+	);
+	script_ui_sethidden(
+		script_manager_getentity("ui_diceshop"),
+		false
+	);
+	script_ui_sethidden(
+		script_manager_getentity("ui_dicecrossbreed"),
+		false
+	);
 }
 
 Script* script_manager_get() {

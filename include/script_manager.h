@@ -50,6 +50,9 @@ ManagerData* script_manager_newdata();
 /// </summary>
 void script_manager_freedata(Script* script);
 
+void script_manager_hidedayandshownight();
+void script_manager_hidenightandshowday();
+
 /// <summary>
 /// Gets the currrent script manager.
 /// </summary>

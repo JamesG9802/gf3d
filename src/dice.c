@@ -219,6 +219,38 @@ Dice* dice_seed_reward(int manacost) {
 	return dice_new(true, 0, numSides, values, weights, lifespan, manacost);
 }
 
+Dice* dice_seed_crossbreed(Dice* parent1, Dice* parent2) {
+	if (!parent1 || !parent2) return NULL;
+
+	int sideCount = gfc_random() < .5 ? parent1->sideCount : parent2->sideCount;
+	int manaCost = (int)(0.5 * (parent1->manaCost + parent2->manaCost) + gfc_random() * 4 - 2);
+	if (manaCost < 0) 
+		manaCost = 0;
+
+	int maxLifespan = (int)(0.5 * (parent1->maxLifespan + parent2->maxLifespan) + gfc_random() * 4 - 2);
+	if (manaCost < 1)
+		manaCost = 1;
+
+	int randomParent1Index = (int)(gfc_random() * parent1->sideCount);
+	int randomParent2Index = (int)(gfc_random() * parent2->sideCount);
+
+	DiceValue* sideValues = malloc(sizeof(DiceValue) * sideCount);
+	double* sideWeights = malloc(sizeof(double) * sideCount);
+
+	for (int i = 0; i < sideCount; i++) {
+		DiceValueType type = gfc_random() < .5 ? parent1->sideValues[randomParent1Index].type : parent2->sideValues[randomParent2Index].type;
+		int value = gfc_random() < .5 ? parent1->sideValues[randomParent1Index].value : parent2->sideValues[randomParent2Index].value + (int)(gfc_random() * 2 - 1);
+		double weight = gfc_random() < .5 ? parent1->sideWeights[randomParent1Index] : parent2->sideWeights[randomParent2Index] + gfc_random() * .05;
+
+		if (value < 0)
+			value = 0;
+		sideValues[i] = dicevalue_new(type, value);
+		sideWeights[i] = weight;
+	}
+
+	return dice_new(false, 0, sideCount, sideValues, sideWeights, maxLifespan, manaCost);
+}
+
 void dice_harvest(Dice* dice) {
 	if (!dice) return;
 	dice->age;

@@ -433,6 +433,70 @@
 					]
 				}
 			]
+		},
+		{
+			"position":[.6,1,0],
+			"scale":[.5,.5,0],
+			"rotation":[0,0,0],
+			"scripts": [				
+				{
+					"name":		"ui",
+					"image":	"images/ui_cross.png",
+					"anchor":	"topmiddle",
+					"interactable":	"true",
+					"event":	"button_ui_dice_crossbreed"
+				},
+				{
+					"name":		"manager_flag",
+					"id":		"ui_dicecrossbreed"
+				}
+			]
+		},
+		{
+			"position":[0,0,0],
+			"scale":[3,2,0],
+			"rotation":[0,0,0],
+			"scripts": [				
+				{
+					"name":		"ui",
+					"image":	"images/panel.png",
+					"anchor":	"center",
+					"hidden":	"true"	
+				},
+				"crossbreedui",
+				{
+					"name":	"manager_flag",
+					"id":	"indicator_crossbreed"
+				}
+			],
+			"children": [
+				{
+					"position": [-.8,.3,0],
+					"scale": [.5,.5,1],
+					"rotation": [0,0,0],
+					"scripts": [
+						{
+							"name":		"ui",
+							"image":	"images/default.png",
+							"anchor":	"topleft",
+							"hidden":	"true"
+						}
+					]
+				},
+				{
+					"position": [.8,.3,0],
+					"scale": [.5,.5,1],
+					"rotation": [0,0,0],
+					"scripts": [
+						{
+							"name":		"ui",
+							"image":	"images/default.png",
+							"anchor":	"topright",
+							"hidden":	"true"
+						}
+					]
+				}
+			]
 		}
 	]
 }

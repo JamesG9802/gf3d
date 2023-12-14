@@ -13,40 +13,9 @@
 
 #include "script_defs.h"
 
-void script_billboard_settext(Entity* self, Script* script, const char* text) {
-	if (!self || !script || !text) {
-		return;
-	}
-	if (script->data)
-	{
-		free(script->data);
-	}
-	script->data = malloc(sizeof(char) * (strlen(text) + 1));
-
-	if (!script->data)
-	{
-		slog("Coulnd't allocate data.");
-		return;
-	}
-	strcpy(script->data, text);
-}
-
-void script_billboard_updatetexture(Entity* self, Script* script) {
-	int width, height;
-	engine_utility_settexture(
-		self,
-		engine_utility_createtexturefromtext(
-			gf2d_font_get_by_tag(FT_H1),
-			script->data,
-			self->color,
-			&width,
-			&height
-		),
-		width,
-		height,
-		50
-	);
-}
+//****************************************************************
+//  This script is deprecated and only used for testing purposes.
+//****************************************************************
 
 /// <summary>
 /// Called when a script is created.
@@ -54,10 +23,6 @@ void script_billboard_updatetexture(Entity* self, Script* script) {
 /// <param name="Script*">Caller script</param>
 /// </summary>
 static void Start(Entity* self, Script* script) {
-	if (script->data == NULL) {
-		script_billboard_settext(self, script, "Default Text");
-	}
-	script_billboard_updatetexture(self, script);
 }
 
 /// <summary>
@@ -66,7 +31,6 @@ static void Start(Entity* self, Script* script) {
 /// <param name="Script*">Caller script</param>
 /// </summary>
 static void Think(Entity* self, Script* script) {
-	//self->selected = engine_utility_ismouseover(self, NULL);
 }
 
 /// <summary>
@@ -75,7 +39,6 @@ static void Think(Entity* self, Script* script) {
 /// <param name="Script*">Caller script</param>
 /// </summary>
 static void Update(Entity* self, Script* script) {
-	gf3d_camera_get_rotation(&self->rotation);
 }
 
 /// <summary>
@@ -84,7 +47,6 @@ static void Update(Entity* self, Script* script) {
 /// <param name="Script*">Caller script</param>
 /// </summary>
 static void Destroy(Entity* self, Script* script) {
-	free(script->data);
 }
 
 /// <summary>
@@ -94,13 +56,10 @@ static void Destroy(Entity* self, Script* script) {
 /// <param name="SJson*">SJson object. Note that 'name' is a reserved field.</param>
 /// </summary>
 static void Arguments(Entity* self, Script* script, SJson* json) {
-	if (json && sj_get_string_value(sj_object_get_value(json, "text"))) {
-		script_billboard_settext(self, script, sj_get_string_value(sj_object_get_value(json, "text")));
-	}
 }
 
 Script* script_new_billboard() {
-	return script_new("billboard", &Start, &Think, &Update, &Destroy, &Arguments);
+	return NULL;
 }
 
 

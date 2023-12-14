@@ -38,6 +38,8 @@ Script* script_loader_getScript(char* string) {
 		return script_new_shopui();
 	if (strcmp(string, "interactable") == 0)
 		return script_new_interactable();
+	if (strcmp(string, "crossbreedui") == 0)
+		return script_new_crossbreedui();
 	return NULL;
 }
 

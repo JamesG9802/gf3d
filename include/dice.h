@@ -63,6 +63,14 @@ Dice* dice_copy(Dice* dice);
 Dice* dice_seed_reward(int manacost);
 
 /// <summary>
+/// Crossbreed two dice to create a child with slight mutations.
+/// </summary>
+/// <param name="parent1"></param>
+/// <param name="parent2"></param>
+/// <returns></returns>
+Dice* dice_seed_crossbreed(Dice* parent1, Dice* parent2);
+
+/// <summary>
 /// Randomly mutates and sets up a dice seed to become a real dice.
 /// </summary>
 /// <param name="dice"></param>
