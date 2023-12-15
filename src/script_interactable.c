@@ -7,6 +7,8 @@
 #include "gfc_list.h"
 #include "gfc_input.h"
 
+#include "gf3d_vgraphics.h"
+
 #include "entity.h"
 #include "script.h"
 #include "dice.h"
@@ -21,6 +23,8 @@
 #include "script_shopui.h"
 #include "dice.h"
 
+extern int __DEBUG;
+
 typedef struct InteractableData {
 	int type;
 } InteractableData;
@@ -29,7 +33,10 @@ typedef struct InteractableData {
  * @brief Called when a script is created.
  */
 static void Start(Entity* self, Script* script) {
-	self->selectedColor = gfc_color(1, 0, 0, 1);
+	if (__DEBUG)
+		self->selectedColor = gfc_color(1, 0, 0, 1);
+	else
+		self->selectedColor = gfc_color(0, 0, 0, 0);
 }
 /**
  * @brief Called when a script is created.
